@@ -56,7 +56,7 @@ All sources are fetched by `python -I scripts/download_sources.py` into `data/ra
 - `Concours de l'Etat` = DGF + Autres dotations de fonctionnement + Péréquations et compensations fiscales.
 - AFD's "119 M€ investment" = `Dépenses d'investissement hors remb` (not `Dépenses d'équipement`).
 - Capacité de désendettement = Encours / Epargne brute; not computable when épargne brute ≤ 0.
-- Caveats to display: M14→M57 switch 2023–2024; 2026 split year (outgoing/incoming mayor); Rivière-Pilote shows zero debt 2018–2025 (to verify).
+- Caveats to display: M14→M57 switch 2023–2024; 2026 split year (outgoing/incoming mayor); Rivière-Pilote shows zero debt 2013–2025 (to verify).
 
 ## MVP2 scope
 - Home: map or grid of the 34 communes → click → commune card.

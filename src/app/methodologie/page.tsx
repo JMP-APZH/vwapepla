@@ -33,7 +33,7 @@ export default async function Methodologie() {
           <li>Les chiffres portent sur le budget principal et les budgets annexes de chaque commune, consolidés (flux entre eux neutralisés), comme l&apos;Observatoire des communes de l&apos;AFD.</li>
           <li>Les communes sont passées de la nomenclature comptable M14 à la M57 en 2023-2024, ce qui peut créer de légères ruptures de séries.</li>
           <li>2026 est une année partagée entre l&apos;équipe sortante (janvier-mars) et la nouvelle équipe municipale.</li>
-          <li>Rivière-Pilote affiche une dette nulle de 2018 à 2025 dans les données officielles ; ce point est en cours de vérification.</li>
+          <li>Rivière-Pilote affiche une dette nulle de 2013 à 2025 dans les données officielles ; ce point est en cours de vérification.</li>
         </ul>
       </section>
       <section className="space-y-2">

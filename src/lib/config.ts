@@ -10,7 +10,7 @@ export const CONTACT_EMAIL = "vwapepla.org@gmail.com"; // "Droit de réponse" pa
 // Known gaps or doubts in the official data, shown on the commune card ("Informations manquantes ou à vérifier").
 // Gaps that can be detected (deputy ranks, missing years, unverified past mayors) are computed, not listed here.
 export const DATA_NOTES: Record<string, string[]> = {
-  "97220": ["Dette : les comptes officiels indiquent un encours de dette nul de 2018 à 2025. Ce point est en cours de vérification."],
+  "97220": ["Dette : les comptes officiels indiquent un encours de dette nul chaque année de 2013 à 2025 (150 000 € en 2012). Ce point est en cours de vérification."],
 };
 
 // Population strata (OFGL `tranche_population`, DGCL strata).
