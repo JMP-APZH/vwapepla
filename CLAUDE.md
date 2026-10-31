@@ -18,17 +18,37 @@ Sister projects of the same author: prix-martinique.org (cost of living, live) a
 5. **Right of reply.** Each card has a visible "Droit de réponse" contact path for the officeholder (MVP2: mailto/form, no workflow).
 6. **Reproducibility.** Data import is a script, re-runnable, idempotent, versioned. Never hand-edit figures in the database.
 
-## Stack (proposed — confirm with JM before scaffolding)
-Same as VoxPop: Next.js 14 (App Router) · TypeScript · Tailwind CSS · shadcn/ui · Supabase (Postgres) · Vercel (EU region).
-Charts: Recharts. Data import: TypeScript or Python script in `scripts/`.
+## Stack (confirmed by JM, 31 Oct 2026)
+Next.js (current stable, App Router) · TypeScript · Tailwind CSS · shadcn/ui · Recharts · Supabase (Postgres, EU) · Vercel (EU, `cdg1`).
+Commune pages pre-rendered (SSG/ISR) from Supabase. Data import: Python scripts in `scripts/` (run with `python -I`).
+Analytics: PostHog EU, cookieless (`persistence: 'memory'`). Repo: public, `JMP-APZH/vwapepla`, branches `main` (prod) + `dev`.
+Plan: `docs/PLAN.md`.
 
 ## Data sources (MVP2)
-- **Primary:** OFGL "Comptes des communes" — https://www.data.gouv.fr/datasets/comptes-des-communes-2018-2025 (origin: data.ofgl.fr). Licence Ouverte 2.0 → credit "Source : OFGL, d'après DGFiP".
-  Filter Martinique: département code 972 (INSEE commune codes 97201–97234).
-  Reference year: latest complete year (2024; 2025 is incomplete until DGFiP final balances ~end of December).
-- **Detail (later):** DGFiP "Balances comptables des communes" (account-level).
-- **Benchmark / reconciliation:** AFD "Observatoire des communes de Martinique" (5th edition, FY2023, same OFGL base). Use it to sanity-check totals (e.g., communes' debt ≈ €330M end-2023; communes' capital spending ≈ €119M in 2023).
+All sources are fetched by `python -I scripts/download_sources.py` into `data/raw/` (gitignored) with `data/raw/manifest.json`
+(url, licence, retrieval date, sha256). Never download by hand.
+- **Primary:** OFGL **"Comptes consolidés des communes"** (`ofgl-base-communes-consolidee`: main + annex budgets, cross flows
+  neutralised; this is what AFD uses). Per-budget detail: `ofgl-base-communes`. Licence Ouverte 2.0 → credit "Source : OFGL, d'après DGFiP".
+  Filter: `dep_code` 972 (INSEE 97201–97234). Coverage verified: 34/34 communes every year 2018–2025.
+  Reference year **2024**; **2025 shown as provisional** (final DGFiP balances ~end of December).
+- **Account detail:** DGFiP "Balances comptables des communes" 2012–2025 (data.economie.gouv.fr). Martinique is `ndept` **103**
+  from 2016 (972 before) → filter on `siren` starting `21972` instead. Octroi de mer = net credit on M14 **7373** / M57 **73431**.
+- **Context ("invested for your population"):** EPCI CACEM / CAESM / CAP Nord (`ofgl-base-gfp-consolidee`, `ofgl-base-ei`),
+  syndicats, CCAS, EPL, commune↔EPCI flows. Also: dotations (incl. 2026), local tax bases/rates (REI), populations, OFGL aggregate formulas.
+- **Benchmark / reconciliation:** AFD "Observatoire des communes de Martinique" 2024 (FY2023). `scripts/reconcile_afd.py` matches
+  within 1% (debt €330.0M, investment excl. repayments €119.2M, équipement €111.9M, épargne brute €56.0M, octroi de mer €244.0M).
 - **Officeholders:** RNE — Répertoire national des élus (data.gouv.fr) for current mayors' names and term start.
+- **Forecast budgets (separate layer):** budgets primitifs / DOB / ROB from the communes' own documents, entered as YAML in
+  `data/forecast/<insee>/<year>-<type>.yaml` (figure + source URL + page), PDFs archived in Supabase Storage. Always labelled
+  "Prévisionnel"; never mixed with or charted on the same series as actuals (OFGL).
+
+### Mapping notes (validated)
+- `Recettes de fonctionnement` = Impôts et taxes + Concours de l'Etat + Subventions reçues + Ventes de biens et services + Autres recettes.
+- `Impôts et taxes` = `Impôts locaux` + `Autres impôts et taxes`. **`Fiscalité reversée` is a subset of `Impôts locaux`** (OFGL formula, CN732).
+- `Concours de l'Etat` = DGF + Autres dotations de fonctionnement + Péréquations et compensations fiscales.
+- AFD's "119 M€ investment" = `Dépenses d'investissement hors remb` (not `Dépenses d'équipement`).
+- Capacité de désendettement = Encours / Epargne brute; not computable when épargne brute ≤ 0.
+- Caveats to display: M14→M57 switch 2023–2024; 2026 split year (outgoing/incoming mayor); Rivière-Pilote shows zero debt 2018–2025 (to verify).
 
 ## MVP2 scope
 - Home: map or grid of the 34 communes → click → commune card.
