@@ -1,0 +1,147 @@
+# Town-hall website audit — criteria (DRAFT, to be validated by JM before the audit).
+# family: legal = obligation in law (cite it) · quality = DINUM references for public online services ·
+#         civic = civic-information good practice (not an obligation — never presented as one).
+# applies_if: null = every commune; otherwise a condition (population from OFGL, agents from the commune's accounts).
+# ref_status: verified = text/official source checked · to_confirm = reference to check on Légifrance before publication.
+# Each audited item records: yes / partial / no / na, an evidence URL, an archived copy and the audit date.
+
+criteria:
+  - key: site_officiel
+    family: quality
+    label_fr: La commune a un site internet officiel identifiable
+    description_fr: Site au nom de la commune, édité par la mairie (pas seulement une page de réseau social).
+    legal_ref: null
+    applies_if: null
+
+  # --- Obligations légales ---
+  - key: budget_en_ligne
+    family: legal
+    label_fr: Documents budgétaires et présentation brève et synthétique en ligne
+    description_fr: Budget primitif et compte administratif / compte financier unique, avec la note de présentation brève et synthétique, mis en ligne après leur adoption.
+    legal_ref: CGCT art. L2313-1 et R2313-8 (délai d'un mois)
+    ref_status: verified        # L2313-1 (Légifrance); délai d'un mois cité par circulaire préfectorale — à relire dans R2313-8
+    applies_if: population >= 3500
+  - key: actes_publies
+    family: legal
+    label_fr: Actes réglementaires et décisions publiés sous forme électronique
+    description_fr: Depuis le 1er juillet 2022, publication électronique des actes réglementaires et des décisions ni réglementaires ni individuelles sur le site. Les communes de moins de 3 500 habitants ont pu choisir un autre mode par délibération.
+    legal_ref: CGCT art. L2131-1 (ordonnance n° 2021-1310 et décret n° 2021-1311 du 7 octobre 2021)
+    ref_status: verified
+    applies_if: null            # < 3 500 hab. : "na" si la commune a délibéré pour l'affichage ou le papier
+  - key: liste_deliberations
+    family: legal
+    label_fr: Liste des délibérations publiée après chaque conseil
+    description_fr: Liste des délibérations examinées en séance, publiée dans la semaine.
+    legal_ref: CGCT art. L2121-25
+    ref_status: to_confirm
+    applies_if: null
+  - key: proces_verbaux
+    family: legal
+    label_fr: Procès-verbaux des séances du conseil municipal publiés
+    description_fr: Procès-verbal arrêté au commencement de la séance suivante et publié sur le site.
+    legal_ref: CGCT art. L2121-15
+    ref_status: to_confirm
+    applies_if: null
+  - key: open_data
+    family: legal
+    label_fr: Données publiques ouvertes (open data)
+    description_fr: Publication en ligne des documents et bases de données de la commune dans un format ouvert (portail, data.gouv.fr).
+    legal_ref: CRPA art. L312-1-1 (loi pour une République numérique, 2016)
+    ref_status: verified        # seuils : 3 500 habitants et 50 agents (équivalent temps plein), décret d'application
+    applies_if: population >= 3500 and agents >= 50
+  - key: subventions_publiees
+    family: legal
+    label_fr: Subventions versées publiées (données essentielles)
+    description_fr: Publication des données essentielles des conventions de subvention au-delà du seuil réglementaire.
+    legal_ref: Loi n° 2000-321 art. 10 et décret n° 2017-779 (seuil de 23 000 €)
+    ref_status: to_confirm
+    applies_if: population >= 3500 and agents >= 50
+  - key: accessibilite
+    family: legal
+    label_fr: Mention et déclaration d'accessibilité
+    description_fr: Mention du niveau de conformité au RGAA sur la page d'accueil, avec une déclaration d'accessibilité (même si le site n'est pas conforme).
+    legal_ref: Loi n° 2005-102 art. 47 ; décret n° 2019-768 du 24 juillet 2019
+    ref_status: verified
+    applies_if: null
+  - key: mentions_legales
+    family: legal
+    label_fr: Mentions légales
+    description_fr: Identité de l'éditeur, du directeur de la publication et de l'hébergeur.
+    legal_ref: Loi n° 2004-575 (LCEN) art. 6
+    ref_status: to_confirm
+    applies_if: null
+  - key: donnees_personnelles
+    family: legal
+    label_fr: Information sur les données personnelles
+    description_fr: Page expliquant l'usage des données collectées (formulaires, cookies) et les droits des personnes.
+    legal_ref: RGPD art. 13
+    ref_status: verified
+    applies_if: null            # "na" si le site ne collecte aucune donnée
+
+  # --- Qualité du service en ligne (références DINUM) ---
+  - key: https
+    family: quality
+    label_fr: Connexion sécurisée (HTTPS)
+    legal_ref: null
+    applies_if: null
+  - key: mobile
+    family: quality
+    label_fr: Site lisible sur téléphone
+    description_fr: Mise en page adaptée à un écran de téléphone (la majorité des visites).
+    legal_ref: null
+    applies_if: null
+  - key: demarches
+    family: quality
+    label_fr: Démarches en ligne accessibles
+    description_fr: Liens directs vers les démarches courantes (état civil, urbanisme, inscriptions scolaires…), sur le site ou via service-public.fr.
+    legal_ref: null
+    applies_if: null
+  - key: contact
+    family: quality
+    label_fr: Contact et horaires de la mairie
+    description_fr: Adresse, téléphone, courriel ou formulaire, et horaires d'ouverture.
+    legal_ref: null
+    applies_if: null
+  - key: a_jour
+    family: quality
+    label_fr: Information à jour
+    description_fr: Au moins une actualité ou une mise à jour datée de moins de trois mois au jour de l'audit.
+    legal_ref: null
+    applies_if: null
+
+  # --- Information civique (bonnes pratiques, pas des obligations) ---
+  - key: elus_presentes
+    family: civic
+    label_fr: Élus et délégations présentés
+    description_fr: Liste du maire, des adjoints et de leurs délégations, et des conseillers municipaux.
+    legal_ref: null
+    applies_if: null
+  - key: calendrier_conseils
+    family: civic
+    label_fr: Dates des conseils municipaux annoncées
+    description_fr: Date, heure et ordre du jour des prochaines séances publiques.
+    legal_ref: null
+    applies_if: null
+  - key: rob_publie
+    family: civic
+    label_fr: Rapport d'orientation budgétaire en ligne
+    description_fr: Bonne pratique — la loi n'impose en ligne que la présentation brève et synthétique (réponse ministérielle, Sénat, 2024).
+    legal_ref: null
+    applies_if: population >= 3500
+  - key: budget_explique
+    family: civic
+    label_fr: Budget expliqué simplement
+    description_fr: Présentation du budget en langage courant (infographie, page « le budget en bref »).
+    legal_ref: null
+    applies_if: null
+
+# Visitor opinion (separate block, never mixed with the checklist). 1 to 5. Adapted from DINUM "Je donne mon avis".
+vote_questions:
+  - key: facile_a_trouver
+    label_fr: L'information est facile à trouver
+  - key: a_jour
+    label_fr: L'information est à jour
+  - key: comprehensible
+    label_fr: L'information est compréhensible
+  - key: demarches
+    label_fr: Le site me permet de faire mes démarches
