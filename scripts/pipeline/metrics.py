@@ -120,6 +120,11 @@ METRICS = [
     ("versement_transport", "other", None, "Versement mobilité", "ofgl:Versement transport", False, None),
     ("taxe_sejour_reversee", "other", None, "Reversements de taxe de séjour", "ofgl:Reversements de taxe de séjour",
      False, None),
+    # --- Only in the 2012-2017 archives ---
+    ("detr", "other", None, "dont DETR (dotation d'équipement des territoires ruraux)", "ofgl:DETR", False,
+     "Subvention d'investissement de l'État ; agrégat publié par l'OFGL jusqu'en 2017."),
+    ("fonds_emprunts_risque", "other", None, "Fonds de soutien aux emprunts à risque",
+     "ofgl:Fonds de soutien aux emprunts à risque", False, "Agrégat publié par l'OFGL jusqu'en 2017."),
 ]
 
 OCTROI_ACCOUNTS = {"7373", "73431"}  # M14 / M57 (M57A uses 73431 too)
