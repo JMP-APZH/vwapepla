@@ -6,7 +6,7 @@ row count and sha256 for each file, so every figure can be traced back to its so
 
 Usage: python -I scripts/download_sources.py [--force] [--only <dataset_id> ...]
 """
-import csv, datetime, hashlib, json, pathlib, sys, time, urllib.parse, urllib.request
+import csv, datetime, hashlib, io, json, pathlib, sys, tempfile, time, urllib.parse, urllib.request, zipfile
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 RAW = ROOT / "data" / "raw"
@@ -76,7 +76,64 @@ FILES = [
      "Répertoire national des élus — conseillers municipaux",
      "https://www.data.gouv.fr/datasets/repertoire-national-des-elus-1/", "Ministère de l'Intérieur, RNE",
      "Répertoire national des élus — municipal councillors. National file; filtered on 972 at import."),
+    # Ministry of the Interior municipal election results (lists, heads of list, seats) — used to seed past mayors.
+    ("elections", "municipales-2014-t1", "https://www.data.gouv.fr/datasets/r/936f6d38-5969-46e5-8b9d-c7646d6390ec",
+     "Élections municipales 2014 — résultats 1er tour (communes de 1 000 hab. et plus)",
+     "https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-1er-tour/", "Ministère de l'Intérieur",
+     "2014 results, round 1. National, latin-1; Martinique = département code ZB."),
+    ("elections", "municipales-2014-t2", "https://www.data.gouv.fr/datasets/r/28ed59fd-d285-42f1-9eb6-d82ff2eaa4b3",
+     "Élections municipales 2014 — résultats 2nd tour (communes de 1 000 hab. et plus)",
+     "https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-2eme-tour/", "Ministère de l'Intérieur",
+     "2014 results, round 2."),
+    ("elections", "municipales-2020-t1", "https://www.data.gouv.fr/datasets/r/5129e7cf-2999-4eaf-8dd7-3bcda37bd0a3",
+     "Élections municipales 2020 — résultats 1er tour (communes de 1 000 hab. et plus)",
+     "https://www.data.gouv.fr/datasets/elections-municipales-2020-resultats-1er-tour/", "Ministère de l'Intérieur",
+     "2020 results, round 1."),
+    ("elections", "municipales-2020-t2", "https://www.data.gouv.fr/datasets/r/e7cae0aa-5e36-4370-b724-6f233014d0d6",
+     "Élections municipales 2020 — résultats 2nd tour (communes de 1 000 hab. et plus)",
+     "https://www.data.gouv.fr/datasets/municipales-2020-resultats-2nd-tour/", "Ministère de l'Intérieur",
+     "2020 results, round 2."),
 ]
+
+# OFGL yearly archives (national zip per year, 2012-2017): streamed, filtered on département 972, written with the same
+# field names and number format as the live API export so build.py reads every year the same way.
+ARCHIVE_YEARS = range(2012, 2018)
+ARCHIVE_URL = ("https://data.ofgl.fr/api/v2/catalog/datasets/ofgl-base-communes-consolidee/attachments/"
+               "ofgl_base_communes_{year}_consolidee_pj_zip")
+NUMERIC = {"montant", "montant_bp", "montant_ba", "montant_flux", "montant_en_millions", "euros_par_habitant"}
+
+
+def fetch_archives(dest):
+    with urllib.request.urlopen(f"{OFGL}/ofgl-base-communes-consolidee", timeout=60) as r:
+        label2name = {f["label"]: f["name"] for f in json.load(r)["fields"]}
+    out_fields, written = None, 0
+    with open(dest.with_suffix(".part"), "w", encoding="utf-8", newline="") as out:
+        writer = None
+        for year in ARCHIVE_YEARS:
+            with tempfile.TemporaryDirectory() as tmp:
+                z = pathlib.Path(tmp) / "a.zip"
+                print(f"     archive {year} ...", flush=True)
+                fetch(ARCHIVE_URL.format(year=year), z)
+                with zipfile.ZipFile(z) as zf:
+                    with io.TextIOWrapper(zf.open(zf.namelist()[0]), encoding="utf-8-sig", newline="") as f:
+                        reader = csv.reader(f, delimiter=";")
+                        header = [label2name.get(h, h) for h in next(reader)]
+                        if writer is None:
+                            out_fields = header
+                            writer = csv.writer(out, delimiter=";")
+                            writer.writerow(out_fields)
+                        elif header != out_fields:
+                            raise SystemExit(f"archive {year}: columns differ from {ARCHIVE_YEARS[0]}")
+                        dep = header.index("dep_code")
+                        num = [i for i, h in enumerate(header) if h in NUMERIC]
+                        for row in reader:
+                            if row[dep] == "972":
+                                for i in num:
+                                    row[i] = row[i].replace(",", ".")
+                                writer.writerow(row)
+                                written += 1
+    dest.with_suffix(".part").replace(dest)
+    print(f"     {written} Martinique rows kept")
 
 
 def fetch(url, dest, tries=3):
@@ -113,6 +170,10 @@ def main():
             for folder, ds, base, params, credit, purpose in SOURCES]
     jobs += [(folder, ds, url, lambda title=title: title, page, credit, purpose, "")
              for folder, ds, url, title, page, credit, purpose in FILES]
+    jobs.append(("ofgl", "ofgl-base-communes-consolidee-archives", ARCHIVE_URL.format(year="{2012..2017}"),
+                 lambda: "Comptes consolidés des communes 2012-2017 (archives)",
+                 "https://data.ofgl.fr/explore/dataset/ofgl-base-communes-consolidee/", "OFGL, d'après DGFiP",
+                 "Consolidated commune accounts 2012-2017 (yearly national archives), filtered on 972.", "_972"))
     for folder, ds, url, title, page, credit, purpose, scope in jobs:
         if only and ds not in only:
             continue
@@ -122,9 +183,10 @@ def main():
             print(f"skip {dest.name} (exists)")
         else:
             print(f"get  {ds} ...", flush=True)
-            fetch(url, dest)
+            fetch_archives(dest) if ds.endswith("-archives") else fetch(url, dest)
         data = dest.read_bytes()
-        with open(dest, encoding="utf-8-sig", newline="") as f:  # count records, not lines (fields may hold newlines)
+        enc = "latin-1" if folder == "elections" else "utf-8-sig"
+        with open(dest, encoding=enc, newline="") as f:  # count records, not lines (fields may hold newlines)
             rows = sum(1 for _ in csv.reader(f, delimiter=";")) - 1
         manifest[ds] = {
             "file": str(dest.relative_to(ROOT)).replace("\\", "/"), "url": url, "title": title(),
