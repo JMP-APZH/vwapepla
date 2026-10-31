@@ -6,6 +6,7 @@ import { CONTACT_EMAIL, HEADLINE_SETS, PROVISIONAL_YEARS, REFERENCE_YEAR, STRATA
 import { getCommuneBySlug, getCommunes, getCommuneYears, getMayor, getSources, getYearActuals } from "@/lib/data";
 import { computeHeadline, headlineKeys } from "@/lib/headline";
 import { int } from "@/lib/format";
+import { deCommune } from "@/lib/grammar";
 import { t } from "@/i18n/strings";
 
 export async function generateStaticParams() {
@@ -14,7 +15,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps<"/commune/[slug]">): Promise<Metadata> {
   const commune = await getCommuneBySlug((await params).slug);
-  return { title: commune ? `${commune.name} — budget de la commune` : "Commune" };
+  return { title: commune ? `Budget de la commune ${deCommune(commune.name)}` : "Commune" };
 }
 
 export default async function CommunePage({ params }: PageProps<"/commune/[slug]">) {
@@ -37,8 +38,10 @@ export default async function CommunePage({ params }: PageProps<"/commune/[slug]
     <article className="space-y-6">
       {/* Player card header */}
       <header className="rounded-xl bg-slate-900 p-5 text-white">
-        <p className="text-xs uppercase tracking-widest text-slate-400">Commune de</p>
-        <h1 className="mt-1 text-3xl font-semibold tracking-tight">{commune.name}</h1>
+        {/* "Commune du Lamentin", "des Anses-d'Arlet", "de La Trinité": contraction via deCommune() */}
+        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+          <span className="font-normal text-slate-400">Commune</span> {deCommune(commune.name)}
+        </h1>
         <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
           <div>
             <dt className="text-slate-400">{t.mayor.fr}</dt>
