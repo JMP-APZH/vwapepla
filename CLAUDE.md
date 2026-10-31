@@ -13,8 +13,13 @@ Sister projects of the same author: prix-martinique.org (cost of living, live) a
 ## Non-negotiable principles
 1. **Every number has a source.** Each figure displayed links to its dataset, year, and retrieval date. No unsourced figure ever reaches the UI.
 2. **Neutrality.** No global score, no ranking "best/worst mayor" in MVP2. Show statistics side by side.
+   *Amendment (JM, 31 Oct 2026):* the town-hall **website audit** (facts: dated legal/quality checklist with evidence,
+   criteria in `data/audit/criteria.yaml`) and anonymous **visitor votes on website quality** are allowed. Never a score
+   of a mayor's budget; no league table without a further decision.
 3. **Fair comparisons.** Always show per-inhabitant values, allow comparison within population strata, and display a caveat that some services (waste, water, transport) are handled by the intercommunal bodies (CACEM, CAESM, CAP Nord), which affects comparability.
 4. **Facts ≠ opinions.** Facts layer (team-managed, sourced) is strictly separated from any future citizen-comment layer. MVP2 has no comments.
+   Visitor votes (website quality only) are an opinion layer: separate block and table, shown only from 20 votes,
+   labelled "avis des visiteurs, non représentatif"; written only server-side (secret key), never by the browser.
 5. **Right of reply.** Each card has a visible "Droit de réponse" contact path for the officeholder (MVP2: mailto/form, no workflow).
 6. **Reproducibility.** Data import is a script, re-runnable, idempotent, versioned. Never hand-edit figures in the database.
 
@@ -65,6 +70,9 @@ All sources are fetched by `python -I scripts/download_sources.py` into `data/ra
 - Méthodologie page (methodology charter, caveats, sources).
 - UI in French; key labels also in Kréyòl where agreed. Mobile-first (radio audience is on phones).
 - Out of scope for MVP2: user accounts, comments, promise tracking, deputies/senators/CTM/Préfet.
+- Card v2 (approved 31 Oct 2026): mayor photo (official, credited, removable), whole council (RNE, no affiliation),
+  three terms compared (full budget years only; 2008–14 partial), town-hall website checklist + visitor votes.
+  Photos are reused from town-hall sites with credit + takedown (JM's decision; check in the pre-launch legal review).
 
 ## Working rules for Claude Code
 - Start in plan mode for any new feature; propose the plan, wait for approval.

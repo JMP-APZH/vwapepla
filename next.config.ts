@@ -1,8 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   cacheComponents: true,
+  // Official photos are served from our own Supabase Storage bucket "media" (copied with credit, removable).
+  images: {
+    remotePatterns: [{ protocol: "https", hostname: "eiwmksgeudkjsugnvsdh.supabase.co", pathname: "/storage/v1/object/public/media/**" }],
+  },
   partialPrefetching: true,
   turbopack: {
     rules: {
