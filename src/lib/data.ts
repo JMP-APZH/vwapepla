@@ -25,7 +25,7 @@ export type Source = {
 };
 export type Officeholder = {
   commune_code: string; role: "maire" | "adjoint" | "conseiller"; rank: number | null; last_name: string;
-  first_name: string; mandate_start: string; mandate_end: string | null; function_start: string | null;
+  first_name: string; sex: "F" | "M" | null; mandate_start: string; mandate_end: string | null; function_start: string | null;
   term_id: string | null; verified: boolean; source_id: string; source_url: string | null;
 };
 export type Media = {

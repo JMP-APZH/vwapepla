@@ -72,6 +72,8 @@ All sources are fetched by `python -I scripts/download_sources.py` into `data/ra
 - Out of scope for MVP2: user accounts, comments, promise tracking, deputies/senators/CTM/Préfet.
 - Card v2 (approved 31 Oct 2026): mayor photo (official, credited, removable), whole council (RNE, no affiliation),
   three terms compared (full budget years only; 2008–14 partial), town-hall website checklist + visitor votes.
+  Checklist themes (JM): basic site, follow/challenge public money, information on the commune and work done,
+  status updates for residents, participative democracy. Missing or doubtful information is always stated on the card.
   Photos are reused from town-hall sites with credit + takedown (JM's decision; check in the pre-launch legal review).
 
 ## Working rules for Claude Code

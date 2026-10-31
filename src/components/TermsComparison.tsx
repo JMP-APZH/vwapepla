@@ -15,7 +15,7 @@ export function TermsComparison({ summaries, pastMayors }: { summaries: TermSumm
               <th key={s.term.id} scope="col" className="py-2 pr-3 font-semibold">
                 Mandat {s.term.id.replace("-", "–")}
                 <span className="block text-xs font-normal text-slate-500">
-                  {mayorsOf(s.term.id).map((m) => `${m.first_name} ${m.last_name}`).join(", ") || "maire : à vérifier"}
+                  {mayorsOf(s.term.id).map((m) => `${m.first_name} ${m.last_name}`).join(", ") || "maire : en cours de vérification"}
                 </span>
                 <span className="block text-xs font-normal text-slate-500">
                   {s.partial ? `données partielles (${s.years.join(", ")})` : `années ${s.years[0]}–${s.years.at(-1)}`}

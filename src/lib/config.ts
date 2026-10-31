@@ -5,7 +5,13 @@ export const PROVISIONAL_YEARS = [2025]; // published, but subject to revision
 export const FIRST_YEAR = 2018;
 export const TERM = { start: 2026, end: 2032 };
 
-export const CONTACT_EMAIL = "contact@vwapepla.org"; // "Droit de réponse" path (MVP2: mailto)
+export const CONTACT_EMAIL = "vwapepla.org@gmail.com"; // "Droit de réponse" path (MVP2: mailto)
+
+// Known gaps or doubts in the official data, shown on the commune card ("Informations manquantes ou à vérifier").
+// Gaps that can be detected (deputy ranks, missing years, unverified past mayors) are computed, not listed here.
+export const DATA_NOTES: Record<string, string[]> = {
+  "97220": ["Dette : les comptes officiels indiquent un encours de dette nul de 2018 à 2025. Ce point est en cours de vérification."],
+};
 
 // Population strata (OFGL `tranche_population`, DGCL strata).
 export const STRATA: Record<string, string> = {

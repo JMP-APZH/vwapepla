@@ -6,12 +6,13 @@ import { MayorPhoto } from "@/components/MayorPhoto";
 import { SourceNote } from "@/components/SourceNote";
 import { TermsChart, type ChartPoint } from "@/components/TermsChart";
 import { TermsComparison } from "@/components/TermsComparison";
-import { CONTACT_EMAIL, HEADLINE_SETS, PROVISIONAL_YEARS, REFERENCE_YEAR, STRATA, TERM } from "@/lib/config";
+import { CONTACT_EMAIL, DATA_NOTES, HEADLINE_SETS, PROVISIONAL_YEARS, REFERENCE_YEAR, STRATA, TERM } from "@/lib/config";
 import {
   getCommuneActuals, getCommuneBySlug, getCommunes, getCommuneYears, getCouncil, getMayor, getMedia, getPastMayors,
   getSources, getTerms, getYearActuals,
 } from "@/lib/data";
 import { summarizeTerms } from "@/lib/terms";
+import { functionTitle, missingDeputyRanks } from "@/lib/council";
 import { computeHeadline, headlineKeys } from "@/lib/headline";
 import { int } from "@/lib/format";
 import { deCommune } from "@/lib/grammar";
@@ -56,6 +57,24 @@ export default async function CommunePage({ params }: PageProps<"/commune/[slug]
     .map((id) => sources.get(id)).filter((s) => s != null);
   const mayorSource = mayor ? sources.get(mayor.source_id) : undefined;
 
+  // Missing or doubtful information is said, never hidden (JM, 31 Oct 2026).
+  const missing: string[] = [
+    ...missingDeputyRanks(council).map((rank) =>
+      `Conseil municipal : le Répertoire national des élus ne mentionne pas de ${functionTitle({ role: "adjoint", rank, sex: null })} (poste vacant ou non déclaré).`),
+    ...(() => {
+      const ids = summaries.filter((s) => s.term.id !== `${TERM.start}-${TERM.end}`)
+        .filter((s) => !pastMayors.some((m) => m.term_id === s.term.id)).map((s) => s.term.id.replace("-", "–"));
+      return ids.length ? [`Maire ${ids.length > 1 ? "des mandats" : "du mandat"} ${ids.join(", ")} : nom en cours de vérification.`] : [];
+    })(),
+    ...(() => {
+      const have = new Set(history.filter((a) => a.metric_key === "rf_total").map((a) => a.year));
+      const all = Array.from({ length: historyYears.at(-1)! - historyYears[0] + 1 }, (_, i) => historyYears[0] + i);
+      const gaps = all.filter((y) => !have.has(y));
+      return gaps.length ? [`Comptes : aucune donnée publiée pour ${gaps.join(", ")}.`] : [];
+    })(),
+    ...(DATA_NOTES[commune.code] ?? []),
+  ];
+
   return (
     <article className="space-y-6">
       {/* Player card header */}
@@ -93,6 +112,15 @@ export default async function CommunePage({ params }: PageProps<"/commune/[slug]
           </p>
         )}
       </header>
+
+      {missing.length > 0 && (
+        <aside className="rounded-xl border border-slate-300 bg-slate-50 p-4 text-sm text-slate-700">
+          <h2 className="font-semibold">Informations manquantes ou à vérifier</h2>
+          <ul className="mt-1 list-disc space-y-0.5 pl-5">
+            {missing.map((m) => <li key={m}>{m}</li>)}
+          </ul>
+        </aside>
+      )}
 
       {/* Bidjé-a an 3 chif — three candidate sets stacked, to choose one */}
       <section>
