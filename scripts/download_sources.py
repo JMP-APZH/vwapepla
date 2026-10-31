@@ -64,6 +64,17 @@ SOURCES = [
     ("ofgl", "dates-cles-finances-locales", OFGL, {}, "OFGL", "Key dates / reforms of local finance."),
 ]
 
+# Files published as a whole (national, not filterable server-side): (folder, id, stable url, dataset page, credit, purpose).
+# data.gouv.fr /datasets/r/<resource id> always redirects to the latest version of the resource.
+FILES = [
+    ("rne", "rne-maires", "https://www.data.gouv.fr/datasets/r/2876a346-d50c-4911-934e-19ee07b0e503",
+     "https://www.data.gouv.fr/datasets/repertoire-national-des-elus-1/", "Ministère de l'Intérieur, RNE",
+     "Répertoire national des élus — mayors (name, start of term). National file; filtered on 972 at import."),
+    ("rne", "rne-conseillers-municipaux", "https://www.data.gouv.fr/datasets/r/d5f400de-ae3f-4966-8cb6-a85c70c6c24a",
+     "https://www.data.gouv.fr/datasets/repertoire-national-des-elus-1/", "Ministère de l'Intérieur, RNE",
+     "Répertoire national des élus — municipal councillors. National file; filtered on 972 at import."),
+]
+
 
 def fetch(url, dest, tries=3):
     for i in range(tries):
@@ -87,12 +98,15 @@ def main():
     today = datetime.date.today().isoformat()
     manifest_path = RAW / "manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8")) if manifest_path.exists() else {}
-    for folder, ds, base, params, credit, purpose in SOURCES:
+    jobs = [(folder, ds, f"{base}/{ds}/exports/csv?" + urllib.parse.urlencode({**params, "delimiter": ";"}),
+             f"{base.replace('/api/explore/v2.1/catalog/datasets', '')}/explore/dataset/{ds}/", credit, purpose, "_972")
+            for folder, ds, base, params, credit, purpose in SOURCES]
+    jobs += [(folder, ds, url, page, credit, purpose, "") for folder, ds, url, page, credit, purpose in FILES]
+    for folder, ds, url, page, credit, purpose, scope in jobs:
         if only and ds not in only:
             continue
         (RAW / folder).mkdir(parents=True, exist_ok=True)
-        dest = RAW / folder / f"{ds}_972_{today}.csv"
-        url = f"{base}/{ds}/exports/csv?" + urllib.parse.urlencode({**params, "delimiter": ";"})
+        dest = RAW / folder / f"{ds}{scope}_{today}.csv"
         if dest.exists() and not force:
             print(f"skip {dest.name} (exists)")
         else:
@@ -103,7 +117,7 @@ def main():
             rows = sum(1 for _ in csv.reader(f, delimiter=";")) - 1
         manifest[ds] = {
             "file": str(dest.relative_to(ROOT)).replace("\\", "/"), "url": url,
-            "dataset_page": f"{base.replace('/api/explore/v2.1/catalog/datasets', '')}/explore/dataset/{ds}/",
+            "dataset_page": page,
             "retrieved": today, "rows": rows, "sha256": hashlib.sha256(data).hexdigest(),
             "licence": LICENCE, "credit": f"Source : {credit}", "purpose": purpose,
         }
