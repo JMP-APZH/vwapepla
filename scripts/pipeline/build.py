@@ -38,7 +38,7 @@ def per_hab(amount, pop):
 
 
 # --- sources -------------------------------------------------------------------------------------------------------
-sources = [{"id": ds, "title": m["purpose"].split(":")[0][:200], "url": m["url"], "dataset_page": m["dataset_page"],
+sources = [{"id": ds, "title": m["title"], "url": m["url"], "dataset_page": m["dataset_page"],
             "licence": m["licence"], "credit": m["credit"], "retrieved": m["retrieved"], "sha256": m["sha256"],
             "rows": m["rows"], "purpose": m["purpose"]} for ds, m in sorted(MANIFEST.items())]
 
