@@ -1,6 +1,26 @@
+# Vwapepla
 data/raw/
+data/build/
 .env.local
 .env*.local
-node_modules/
 __pycache__/
-data/build/
+
+# dependencies
+/node_modules
+# testing
+/coverage
+/test-results/
+/playwright-report/
+# next.js
+/.next/
+/out/
+/build
+# misc
+.DS_Store
+*.pem
+npm-debug.log*
+# vercel
+.vercel
+# typescript
+*.tsbuildinfo
+next-env.d.ts
