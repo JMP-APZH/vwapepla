@@ -22,7 +22,10 @@ Sister projects of the same author: prix-martinique.org (cost of living, live) a
 Next.js (current stable, App Router) · TypeScript · Tailwind CSS · shadcn/ui · Recharts · Supabase (Postgres, EU) · Vercel (EU, `cdg1`).
 Commune pages pre-rendered (SSG/ISR) from Supabase. Data import: Python scripts in `scripts/` (run with `python -I`).
 Analytics: PostHog EU, cookieless (`persistence: 'memory'`). Repo: public, `JMP-APZH/vwapepla`, branches `main` (prod) + `dev`.
-Plan: `docs/PLAN.md`.
+Plan: `docs/PLAN.md`. Next.js 16 differs from older versions: read `AGENTS.md` and the bundled docs in
+`node_modules/next/dist/docs/` before writing app code (Cache Components: `'use cache'` + `cacheLife` in `src/lib/data.ts`).
+Data pipeline: `download_sources.py` → `pipeline/build.py` → `reconcile_afd.py` (gate) → `pipeline/load_supabase.py`.
+`.env` holds public values only (committed); the Supabase secret key lives in `.env.local` only.
 
 ## Data sources (MVP2)
 All sources are fetched by `python -I scripts/download_sources.py` into `data/raw/` (gitignored) with `data/raw/manifest.json`

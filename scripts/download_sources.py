@@ -64,6 +64,20 @@ SOURCES = [
     ("ofgl", "dates-cles-finances-locales", OFGL, {}, "OFGL", "Key dates / reforms of local finance."),
 ]
 
+# Files published as a whole (national, not filterable server-side): (folder, id, stable url, title, dataset page, credit,
+# purpose).
+# data.gouv.fr /datasets/r/<resource id> always redirects to the latest version of the resource.
+FILES = [
+    ("rne", "rne-maires", "https://www.data.gouv.fr/datasets/r/2876a346-d50c-4911-934e-19ee07b0e503",
+     "Répertoire national des élus — maires",
+     "https://www.data.gouv.fr/datasets/repertoire-national-des-elus-1/", "Ministère de l'Intérieur, RNE",
+     "Répertoire national des élus — mayors (name, start of term). National file; filtered on 972 at import."),
+    ("rne", "rne-conseillers-municipaux", "https://www.data.gouv.fr/datasets/r/d5f400de-ae3f-4966-8cb6-a85c70c6c24a",
+     "Répertoire national des élus — conseillers municipaux",
+     "https://www.data.gouv.fr/datasets/repertoire-national-des-elus-1/", "Ministère de l'Intérieur, RNE",
+     "Répertoire national des élus — municipal councillors. National file; filtered on 972 at import."),
+]
+
 
 def fetch(url, dest, tries=3):
     for i in range(tries):
@@ -81,18 +95,29 @@ def fetch(url, dest, tries=3):
             time.sleep(5 * (i + 1))
 
 
+def portal_title(base, ds):
+    """Official dataset title from the portal catalogue (French, as published)."""
+    with urllib.request.urlopen(f"{base}/{ds}", timeout=60) as r:
+        return json.load(r)["metas"]["default"]["title"]
+
+
 def main():
     force = "--force" in sys.argv
     only = sys.argv[sys.argv.index("--only") + 1:] if "--only" in sys.argv else None
     today = datetime.date.today().isoformat()
     manifest_path = RAW / "manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8")) if manifest_path.exists() else {}
-    for folder, ds, base, params, credit, purpose in SOURCES:
+    jobs = [(folder, ds, f"{base}/{ds}/exports/csv?" + urllib.parse.urlencode({**params, "delimiter": ";"}),
+             lambda base=base, ds=ds: portal_title(base, ds),
+             f"{base.replace('/api/explore/v2.1/catalog/datasets', '')}/explore/dataset/{ds}/", credit, purpose, "_972")
+            for folder, ds, base, params, credit, purpose in SOURCES]
+    jobs += [(folder, ds, url, lambda title=title: title, page, credit, purpose, "")
+             for folder, ds, url, title, page, credit, purpose in FILES]
+    for folder, ds, url, title, page, credit, purpose, scope in jobs:
         if only and ds not in only:
             continue
         (RAW / folder).mkdir(parents=True, exist_ok=True)
-        dest = RAW / folder / f"{ds}_972_{today}.csv"
-        url = f"{base}/{ds}/exports/csv?" + urllib.parse.urlencode({**params, "delimiter": ";"})
+        dest = RAW / folder / f"{ds}{scope}_{today}.csv"
         if dest.exists() and not force:
             print(f"skip {dest.name} (exists)")
         else:
@@ -102,8 +127,8 @@ def main():
         with open(dest, encoding="utf-8-sig", newline="") as f:  # count records, not lines (fields may hold newlines)
             rows = sum(1 for _ in csv.reader(f, delimiter=";")) - 1
         manifest[ds] = {
-            "file": str(dest.relative_to(ROOT)).replace("\\", "/"), "url": url,
-            "dataset_page": f"{base.replace('/api/explore/v2.1/catalog/datasets', '')}/explore/dataset/{ds}/",
+            "file": str(dest.relative_to(ROOT)).replace("\\", "/"), "url": url, "title": title(),
+            "dataset_page": page,
             "retrieved": today, "rows": rows, "sha256": hashlib.sha256(data).hexdigest(),
             "licence": LICENCE, "credit": f"Source : {credit}", "purpose": purpose,
         }
