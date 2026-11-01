@@ -1,17 +1,19 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { BudgetBreakdown, type BudgetYear } from "@/components/BudgetBreakdown";
 import { CouncilList } from "@/components/CouncilList";
 import { HeadlineSet } from "@/components/HeadlineSets";
 import { MayorPhoto } from "@/components/MayorPhoto";
 import { SourceNote } from "@/components/SourceNote";
 import { TermsChart, type ChartPoint } from "@/components/TermsChart";
 import { TermsComparison } from "@/components/TermsComparison";
-import { CONTACT_EMAIL, DATA_NOTES, HEADLINE_SETS, PROVISIONAL_YEARS, REFERENCE_YEAR, STRATA, TERM } from "@/lib/config";
+import { CONTACT_EMAIL, DATA_NOTES, FIRST_YEAR, HEADLINE_SETS, PROVISIONAL_YEARS, REFERENCE_YEAR, STRATA, TERM } from "@/lib/config";
 import {
-  getCommuneActuals, getCommuneBySlug, getCommunes, getCommuneYears, getCouncil, getMayor, getMedia, getPastMayors,
+  getCommuneActuals, getCommuneBySlug, getCommunes, getCommuneYears, getCouncil, getMayor, getMedia, getMetrics, getPastMayors,
   getSources, getTerms, getYearActuals,
 } from "@/lib/data";
 import { summarizeTerms } from "@/lib/terms";
+import { BLOCKS, blockLines, blockValues } from "@/lib/breakdown";
 import { functionTitle, missingDeputyRanks } from "@/lib/council";
 import { computeHeadline, headlineKeys } from "@/lib/headline";
 import { int } from "@/lib/format";
@@ -33,9 +35,10 @@ export default async function CommunePage({ params }: PageProps<"/commune/[slug]
 
   const year = REFERENCE_YEAR;
   const keys = [...new Set(HEADLINE_SETS.flatMap((s) => headlineKeys(s.figures)))];
-  const [years, rows, mayor, sources, council, media, terms, pastMayors, history] = await Promise.all([
+  const [years, rows, mayor, sources, council, media, terms, pastMayors, history, metrics, allYears] = await Promise.all([
     getCommuneYears(year), getYearActuals(year, keys), getMayor(commune.code), getSources(), getCouncil(commune.code),
-    getMedia(commune.code), getTerms(), getPastMayors(commune.code), getCommuneActuals(commune.code),
+    getMedia(commune.code), getTerms(), getPastMayors(commune.code), getCommuneActuals(commune.code), getMetrics(),
+    getCommuneYears(),
   ]);
   const portrait = media.find((m) => m.kind === "mayor_portrait");
   const councilPhoto = media.find((m) => m.kind === "council_photo");
@@ -56,6 +59,24 @@ export default async function CommunePage({ params }: PageProps<"/commune/[slug]
   const usedSources = [...new Set(sets.flatMap((s) => s.values.flatMap((v) => v.sourceIds)))]
     .map((id) => sources.get(id)).filter((s) => s != null);
   const mayorSource = mayor ? sources.get(mayor.source_id) : undefined;
+
+  // Budget blocks: every year from FIRST_YEAR, pre-rendered (the year switcher is client-side, no fetch).
+  const lines = BLOCKS.map((b) => ({ ...b, lines: blockLines(metrics, b.id) }));
+  const blockKeys = [...new Set(lines.flatMap((b) => b.lines.map((l) => l.key)))];
+  const budgetYears = historyYears.filter((y) => y >= FIRST_YEAR);
+  const yearRows = await Promise.all(budgetYears.map((y) => getYearActuals(y, blockKeys)));
+  const budget: BudgetYear[] = budgetYears.map((y, i) => {
+    const strata = new Map(allYears.filter((r) => r.year === y).map((r) => [r.commune_code, r.stratum]));
+    return {
+      year: y,
+      provisional: history.some((a) => a.year === y && a.provisional),
+      blocks: lines.map((b) => {
+        const { values, reference } = blockValues(b.lines, commune.code, yearRows[i], strata);
+        const ids = [...new Set(values.map((v) => v.sourceId).filter((s): s is string => !!s))];
+        return { id: b.id, title: b.title, values, reference, sources: ids.map((id) => sources.get(id)).filter((s) => s != null) };
+      }),
+    };
+  });
 
   // Missing or doubtful information is said, never hidden (JM, 31 Oct 2026).
   const missing: string[] = [
@@ -138,6 +159,8 @@ export default async function CommunePage({ params }: PageProps<"/commune/[slug]
         </div>
         <SourceNote sources={usedSources} year={year} />
       </section>
+
+      <BudgetBreakdown data={budget} defaultYear={budgetYears.includes(year) ? year : budgetYears.at(-1)!} />
 
       <CouncilList council={council} photo={councilPhoto} source={sources.get("rne-conseillers-municipaux")} />
 
