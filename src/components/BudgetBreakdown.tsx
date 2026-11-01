@@ -11,7 +11,7 @@ export type BlockYear = { id: string; title: string; values: LineValue[]; refere
 export type BudgetYear = { year: number; provisional: boolean; blocks: BlockYear[] };
 
 function refLabel(r: Reference) {
-  return r.kind === "stratum" ? `${t.medianStratum.fr} (${r.size} communes)` : `${t.medianMartinique.fr} (${r.size} communes)`;
+  return r.kind === "stratum" ? `communes de même taille (${r.size})` : `ensemble de la Martinique (${r.size} communes)`;
 }
 
 function Line({ v, scale, bars }: { v: LineValue; scale: number; bars: boolean }) {
@@ -57,17 +57,17 @@ export function BudgetBreakdown({ data, defaultYear }: { data: BudgetYear[]; def
       <p className="mt-1 text-sm text-slate-600">
         Comptes consolidés (budget principal et budgets annexes), en euros par habitant.
       </p>
-      <div className="mt-3 flex gap-1.5 overflow-x-auto pb-1" role="group" aria-label="Exercice">
+      <div className="mt-3 grid grid-cols-4 gap-1.5 sm:flex sm:flex-wrap" role="group" aria-label="Exercice">
         {data.map((d) => (
           <button
             key={d.year}
             type="button"
             aria-pressed={d.year === year}
             onClick={() => setYear(d.year)}
-            className={`shrink-0 rounded-full border px-3 py-1 text-sm tabular-nums ${
+            className={`min-h-10 rounded-full border px-3 text-sm tabular-nums ${
               d.year === year ? "border-slate-900 bg-slate-900 text-white" : "border-slate-300 bg-white text-slate-700"}`}
           >
-            {d.year}{d.provisional && <span className="ml-1 text-[10px] uppercase opacity-75">{t.provisional.fr}</span>}
+            {d.year}{d.provisional && <span className="block text-[9px] uppercase leading-none opacity-75">{t.provisional.fr}</span>}
           </button>
         ))}
       </div>
@@ -79,7 +79,7 @@ export function BudgetBreakdown({ data, defaultYear }: { data: BudgetYear[]; def
           return (
             <section key={b.id} className="rounded-xl border border-slate-200 bg-white p-4">
               <h3 className="font-semibold">{b.title} <span className="font-normal text-slate-500">· {current.year}</span></h3>
-              <p className="text-[11px] text-slate-500">Médiane : {refLabel(b.reference)}</p>
+              <p className="text-[11px] text-slate-500">Médiane calculée sur : {refLabel(b.reference)}</p>
               <ul className="mt-1 space-y-2 text-sm">
                 {b.values.map((v) => <Line key={v.key} v={v} scale={scale} bars={bars} />)}
               </ul>

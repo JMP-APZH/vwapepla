@@ -15,7 +15,7 @@ export function TermsChart({ title, points, bands }: { title: string; points: Ch
       <figcaption className="text-sm font-medium">{title} <span className="font-normal text-slate-500">(€ / hab.)</span></figcaption>
       <div className="mt-2 h-40">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={points} margin={{ top: 16, right: 8, bottom: 0, left: 0 }}>
+          <LineChart data={points} margin={{ top: 16, right: 18, bottom: 0, left: 0 }}>
             <CartesianGrid vertical={false} stroke="#e2e8f0" />
             {bands.map((b) => (
               <ReferenceArea key={b.id} x1={b.electionYear - 0.5} x2={b.electionYear + 0.5} fill="#f1f5f9"
