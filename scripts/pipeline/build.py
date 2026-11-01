@@ -163,7 +163,8 @@ TERMS = [
      "first_full_year": 2027, "last_full_year": 2031},
 ]
 
-# --- officeholders: whole current council (RNE), only the fields the card needs (no birth date, occupation, nationality)
+# --- officeholders: whole current council (RNE), only the fields the card needs (no birth date, occupation, nationality;
+#     sex is kept only to write function titles correctly: "1re adjointe")
 officeholders = []
 ADJ = re.compile(r"^(\d+)(?:er|ème|e) adjoint au Maire$")
 for r in raw("rne-conseillers-municipaux"):
@@ -176,6 +177,7 @@ for r in raw("rne-conseillers-municipaux"):
         errors.append(f"RNE: unknown function {fn!r}")
     officeholders.append({"commune_code": r["Code de la commune"], "role": role, "rank": rank,
                           "last_name": r["Nom de l'élu"], "first_name": r["Prénom de l'élu"],
+                          "sex": r["Code sexe"] if r["Code sexe"] in ("F", "M") else None,
                           "mandate_start": r["Date de début du mandat"],
                           "function_start": r["Date de début de la fonction"] or None, "mandate_end": None,
                           "term_id": "2026-2032", "verified": True, "source_url": None,
@@ -205,7 +207,7 @@ if history_file.exists():
             continue
         officeholders.append({"commune_code": h["commune"], "role": "maire", "rank": None,
                               "last_name": h["last_name"], "first_name": h["first_name"],
-                              "mandate_start": str(h["start"]), "function_start": str(h["start"]),
+                              "sex": h.get("sex"), "mandate_start": str(h["start"]), "function_start": str(h["start"]),
                               "mandate_end": str(h["end"]) if h.get("end") else None, "term_id": h["term"],
                               "verified": bool(h.get("verified")), "source_url": h.get("source_url"),
                               "source_id": h["source_id"]})

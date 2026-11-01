@@ -15,6 +15,7 @@ export function MayorPhoto({ name, photo, communeName }: { name: string; photo?:
           {initials}
         </div>
       )}
+      {!photo && <figcaption className="mt-1 max-w-22 text-center text-[10px] leading-tight text-slate-400">photo non disponible</figcaption>}
       {photo && (
         <figcaption className="mt-1 max-w-22 text-[10px] leading-tight text-slate-400">
           <a href={photo.source_page_url} className="underline" target="_blank" rel="noopener noreferrer">{photo.credit}</a>

@@ -1,16 +1,16 @@
 import Image from "next/image";
 import { mediaUrl, type Media, type Officeholder, type Source } from "@/lib/data";
+import { functionTitle, missingDeputyRanks } from "@/lib/council";
 import { date } from "@/lib/format";
-
-function fn(o: Officeholder) {
-  if (o.role === "maire") return "Maire";
-  if (o.role === "adjoint") return `${o.rank === 1 ? "1er" : `${o.rank}e`} adjoint·e`;
-  return null;
-}
 
 /** Whole municipal council as published in the RNE. Neutral: no list affiliation, no wording about responsibility. */
 export function CouncilList({ council, photo, source }: { council: Officeholder[]; photo?: Media; source?: Source }) {
   const executive = council.filter((o) => o.role !== "conseiller");
+  // A missing rank is shown where it belongs in the list, never silently skipped.
+  const rows = [
+    ...executive.map((o) => ({ rank: o.role === "maire" ? 0 : o.rank!, o })),
+    ...missingDeputyRanks(council).map((rank) => ({ rank, o: null })),
+  ].sort((a, b) => a.rank - b.rank);
   const others = council.filter((o) => o.role === "conseiller");
   const elected = council[0]?.mandate_start;
   return (
@@ -29,10 +29,15 @@ export function CouncilList({ council, photo, source }: { council: Officeholder[
         </figure>
       )}
       <ul className="mt-3 divide-y divide-slate-100 text-sm">
-        {executive.map((o) => (
+        {rows.map(({ rank, o }) => o ? (
           <li key={`${o.last_name}-${o.first_name}`} className="flex justify-between gap-3 py-1.5">
             <span>{o.first_name} {o.last_name}</span>
-            <span className="text-slate-500">{fn(o)}</span>
+            <span className="text-slate-500">{functionTitle(o)}</span>
+          </li>
+        ) : (
+          <li key={`missing-${rank}`} className="flex justify-between gap-3 py-1.5 italic text-slate-500">
+            <span>Non renseigné dans le Répertoire national des élus</span>
+            <span>{functionTitle({ role: "adjoint", rank, sex: null })}</span>
           </li>
         ))}
       </ul>

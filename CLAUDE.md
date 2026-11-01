@@ -56,7 +56,7 @@ All sources are fetched by `python -I scripts/download_sources.py` into `data/ra
 - `Concours de l'Etat` = DGF + Autres dotations de fonctionnement + Péréquations et compensations fiscales.
 - AFD's "119 M€ investment" = `Dépenses d'investissement hors remb` (not `Dépenses d'équipement`).
 - Capacité de désendettement = Encours / Epargne brute; not computable when épargne brute ≤ 0.
-- Caveats to display: M14→M57 switch 2023–2024; 2026 split year (outgoing/incoming mayor); Rivière-Pilote shows zero debt 2018–2025 (to verify).
+- Caveats to display: M14→M57 switch 2023–2024; 2026 split year (outgoing/incoming mayor); Rivière-Pilote shows zero debt 2013–2025 (to verify).
 
 ## MVP2 scope
 - Home: map or grid of the 34 communes → click → commune card.
@@ -72,6 +72,8 @@ All sources are fetched by `python -I scripts/download_sources.py` into `data/ra
 - Out of scope for MVP2: user accounts, comments, promise tracking, deputies/senators/CTM/Préfet.
 - Card v2 (approved 31 Oct 2026): mayor photo (official, credited, removable), whole council (RNE, no affiliation),
   three terms compared (full budget years only; 2008–14 partial), town-hall website checklist + visitor votes.
+  Checklist themes (JM): basic site, follow/challenge public money, information on the commune and work done,
+  status updates for residents, participative democracy. Missing or doubtful information is always stated on the card.
   Photos are reused from town-hall sites with credit + takedown (JM's decision; check in the pre-launch legal review).
 
 ## Working rules for Claude Code

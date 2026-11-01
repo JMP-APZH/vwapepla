@@ -1,6 +1,9 @@
 # Town-hall website audit — criteria (DRAFT, to be validated by JM before the audit).
 # family: legal = obligation in law (cite it) · quality = DINUM references for public online services ·
 #         civic = civic-information good practice (not an obligation — never presented as one).
+# theme: what the criterion helps residents do — site = basic quality of the site ·
+#        argent_public = follow and challenge the use of public money · information = know the commune and the work done ·
+#        suivi_usagers = status updates and alerts for residents · participation = take part in local decisions.
 # applies_if: null = every commune; otherwise a condition (population from OFGL, agents from the commune's accounts).
 # ref_status: verified = text/official source checked · to_confirm = reference to check on Légifrance before publication.
 # Each audited item records: yes / partial / no / na, an evidence URL, an archived copy and the audit date.
@@ -8,6 +11,7 @@
 criteria:
   - key: site_officiel
     family: quality
+    theme: site
     label_fr: La commune a un site internet officiel identifiable
     description_fr: Site au nom de la commune, édité par la mairie (pas seulement une page de réseau social).
     legal_ref: null
@@ -16,6 +20,7 @@ criteria:
   # --- Obligations légales ---
   - key: budget_en_ligne
     family: legal
+    theme: argent_public
     label_fr: Documents budgétaires et présentation brève et synthétique en ligne
     description_fr: Budget primitif et compte administratif / compte financier unique, avec la note de présentation brève et synthétique, mis en ligne après leur adoption.
     legal_ref: CGCT art. L2313-1 et R2313-8 (délai d'un mois)
@@ -23,6 +28,7 @@ criteria:
     applies_if: population >= 3500
   - key: actes_publies
     family: legal
+    theme: information
     label_fr: Actes réglementaires et décisions publiés sous forme électronique
     description_fr: Depuis le 1er juillet 2022, publication électronique des actes réglementaires et des décisions ni réglementaires ni individuelles sur le site. Les communes de moins de 3 500 habitants ont pu choisir un autre mode par délibération.
     legal_ref: CGCT art. L2131-1 (ordonnance n° 2021-1310 et décret n° 2021-1311 du 7 octobre 2021)
@@ -30,6 +36,7 @@ criteria:
     applies_if: null            # < 3 500 hab. : "na" si la commune a délibéré pour l'affichage ou le papier
   - key: liste_deliberations
     family: legal
+    theme: information
     label_fr: Liste des délibérations publiée après chaque conseil
     description_fr: Liste des délibérations examinées en séance, publiée dans la semaine.
     legal_ref: CGCT art. L2121-25
@@ -37,6 +44,7 @@ criteria:
     applies_if: null
   - key: proces_verbaux
     family: legal
+    theme: information
     label_fr: Procès-verbaux des séances du conseil municipal publiés
     description_fr: Procès-verbal arrêté au commencement de la séance suivante et publié sur le site.
     legal_ref: CGCT art. L2121-15
@@ -44,6 +52,7 @@ criteria:
     applies_if: null
   - key: open_data
     family: legal
+    theme: argent_public
     label_fr: Données publiques ouvertes (open data)
     description_fr: Publication en ligne des documents et bases de données de la commune dans un format ouvert (portail, data.gouv.fr).
     legal_ref: CRPA art. L312-1-1 (loi pour une République numérique, 2016)
@@ -51,6 +60,7 @@ criteria:
     applies_if: population >= 3500 and agents >= 50
   - key: subventions_publiees
     family: legal
+    theme: argent_public
     label_fr: Subventions versées publiées (données essentielles)
     description_fr: Publication des données essentielles des conventions de subvention au-delà du seuil réglementaire.
     legal_ref: Loi n° 2000-321 art. 10 et décret n° 2017-779 (seuil de 23 000 €)
@@ -58,6 +68,7 @@ criteria:
     applies_if: population >= 3500 and agents >= 50
   - key: accessibilite
     family: legal
+    theme: site
     label_fr: Mention et déclaration d'accessibilité
     description_fr: Mention du niveau de conformité au RGAA sur la page d'accueil, avec une déclaration d'accessibilité (même si le site n'est pas conforme).
     legal_ref: Loi n° 2005-102 art. 47 ; décret n° 2019-768 du 24 juillet 2019
@@ -65,6 +76,7 @@ criteria:
     applies_if: null
   - key: mentions_legales
     family: legal
+    theme: site
     label_fr: Mentions légales
     description_fr: Identité de l'éditeur, du directeur de la publication et de l'hébergeur.
     legal_ref: Loi n° 2004-575 (LCEN) art. 6
@@ -72,6 +84,7 @@ criteria:
     applies_if: null
   - key: donnees_personnelles
     family: legal
+    theme: site
     label_fr: Information sur les données personnelles
     description_fr: Page expliquant l'usage des données collectées (formulaires, cookies) et les droits des personnes.
     legal_ref: RGPD art. 13
@@ -81,29 +94,34 @@ criteria:
   # --- Qualité du service en ligne (références DINUM) ---
   - key: https
     family: quality
+    theme: site
     label_fr: Connexion sécurisée (HTTPS)
     legal_ref: null
     applies_if: null
   - key: mobile
     family: quality
+    theme: site
     label_fr: Site lisible sur téléphone
     description_fr: Mise en page adaptée à un écran de téléphone (la majorité des visites).
     legal_ref: null
     applies_if: null
   - key: demarches
     family: quality
+    theme: suivi_usagers
     label_fr: Démarches en ligne accessibles
     description_fr: Liens directs vers les démarches courantes (état civil, urbanisme, inscriptions scolaires…), sur le site ou via service-public.fr.
     legal_ref: null
     applies_if: null
   - key: contact
     family: quality
+    theme: site
     label_fr: Contact et horaires de la mairie
     description_fr: Adresse, téléphone, courriel ou formulaire, et horaires d'ouverture.
     legal_ref: null
     applies_if: null
   - key: a_jour
     family: quality
+    theme: information
     label_fr: Information à jour
     description_fr: Au moins une actualité ou une mise à jour datée de moins de trois mois au jour de l'audit.
     legal_ref: null
@@ -112,27 +130,186 @@ criteria:
   # --- Information civique (bonnes pratiques, pas des obligations) ---
   - key: elus_presentes
     family: civic
+    theme: information
     label_fr: Élus et délégations présentés
     description_fr: Liste du maire, des adjoints et de leurs délégations, et des conseillers municipaux.
     legal_ref: null
     applies_if: null
   - key: calendrier_conseils
     family: civic
+    theme: participation
     label_fr: Dates des conseils municipaux annoncées
     description_fr: Date, heure et ordre du jour des prochaines séances publiques.
     legal_ref: null
     applies_if: null
   - key: rob_publie
     family: civic
+    theme: argent_public
     label_fr: Rapport d'orientation budgétaire en ligne
     description_fr: Bonne pratique — la loi n'impose en ligne que la présentation brève et synthétique (réponse ministérielle, Sénat, 2024).
     legal_ref: null
     applies_if: population >= 3500
   - key: budget_explique
     family: civic
+    theme: argent_public
     label_fr: Budget expliqué simplement
     description_fr: Présentation du budget en langage courant (infographie, page « le budget en bref »).
     legal_ref: null
+    applies_if: null
+
+  # --- Suivre et contester l'usage de l'argent public (ajout JM, 31 oct. 2026) ---
+  - key: marches_publics
+    family: legal
+    theme: argent_public
+    label_fr: Marchés publics publiés (avis et données essentielles)
+    description_fr: Avis de marché et données essentielles des marchés attribués (objet, titulaire, montant, durée), accessibles depuis le site ou le profil d'acheteur.
+    legal_ref: Code de la commande publique, art. L2196-2 et R2196-1 ; arrêté du 22 décembre 2022 (données essentielles)
+    ref_status: to_confirm
+    applies_if: null
+  - key: indemnites_elus
+    family: civic
+    theme: argent_public
+    label_fr: Indemnités des élus publiées
+    description_fr: État annuel des indemnités perçues par les élus. La loi impose de le communiquer aux conseillers avant le vote du budget ; sa mise en ligne est une bonne pratique.
+    legal_ref: CGCT art. L2123-24-1-1 (communication au conseil, pas de mise en ligne obligatoire)
+    ref_status: to_confirm
+    applies_if: null
+  - key: projets_chiffres
+    family: civic
+    theme: argent_public
+    label_fr: Projets et investissements chiffrés
+    description_fr: Pour les principaux projets, le coût, les financeurs (État, CTM, Europe, emprunt), le calendrier et l'état d'avancement. Idéalement un plan pluriannuel d'investissement.
+    legal_ref: null
+    applies_if: null
+  - key: rapports_controle
+    family: civic
+    theme: argent_public
+    label_fr: Rapports de la Chambre régionale des comptes accessibles
+    description_fr: Lien vers les rapports d'observations de la Chambre régionale des comptes sur la commune et vers les suites données par la mairie.
+    legal_ref: Code des juridictions financières, art. L243-6 et L243-9 (présentation au conseil et rapport sur les suites données)
+    ref_status: to_confirm
+    applies_if: null
+  - key: question_budget
+    family: civic
+    theme: argent_public
+    label_fr: Possibilité de poser une question sur le budget
+    description_fr: Contact identifié (élu ou service des finances) ou formulaire pour poser une question sur le budget et les dépenses, avec un délai de réponse annoncé.
+    legal_ref: null
+    applies_if: null
+
+  # --- Information sur la commune et le travail réalisé (ajout JM) ---
+  - key: presentation_commune
+    family: civic
+    theme: information
+    label_fr: Présentation de la commune
+    description_fr: Chiffres clés, histoire, quartiers, équipements et services publics de la commune.
+    legal_ref: null
+    applies_if: null
+  - key: bilan_activite
+    family: civic
+    theme: information
+    label_fr: Bilan des actions réalisées
+    description_fr: Rapport d'activité, bilan annuel ou bilan de mandat des réalisations, daté.
+    legal_ref: null
+    applies_if: null
+  - key: magazine_municipal
+    family: civic
+    theme: information
+    label_fr: Magazine ou lettre municipale en ligne
+    description_fr: Numéros récents du bulletin municipal consultables en ligne.
+    legal_ref: null
+    applies_if: null
+  - key: annuaire_services
+    family: civic
+    theme: information
+    label_fr: Annuaire des services et équipements
+    description_fr: Services municipaux et équipements (écoles, salles, stades…), avec adresses et horaires.
+    legal_ref: null
+    applies_if: null
+  - key: langue_kreyol
+    family: civic
+    theme: information
+    label_fr: Information disponible en kréyòl
+    description_fr: Au moins une partie des informations essentielles proposée en kréyòl.
+    legal_ref: null
+    applies_if: null
+
+  # --- Suivi et alertes pour les usagers (ajout JM) ---
+  - key: alertes_info
+    family: civic
+    theme: suivi_usagers
+    label_fr: Alertes et informations pratiques à jour
+    description_fr: Coupures d'eau ou d'électricité, routes fermées, travaux, vigilances météo et cyclones, avec la date de mise à jour.
+    legal_ref: null
+    applies_if: null
+  - key: abonnement_alertes
+    family: civic
+    theme: suivi_usagers
+    label_fr: Abonnement aux alertes
+    description_fr: Inscription possible à une lettre d'information, à des alertes SMS ou courriel, ou à un canal officiel de messagerie.
+    legal_ref: null
+    applies_if: null
+  - key: suivi_demandes
+    family: civic
+    theme: suivi_usagers
+    label_fr: Suivi de l'avancement des demandes
+    description_fr: L'usager peut suivre où en est sa demande (état civil, urbanisme, inscription) ou reçoit un accusé de réception avec un délai.
+    legal_ref: null
+    applies_if: null
+  - key: signalement
+    family: civic
+    theme: suivi_usagers
+    label_fr: Signalement d'un problème avec suivi
+    description_fr: Formulaire pour signaler un problème (voirie, éclairage, dépôt sauvage), avec une réponse ou un statut de traitement.
+    legal_ref: null
+    applies_if: null
+  - key: risques_majeurs
+    family: legal
+    theme: suivi_usagers
+    label_fr: Information sur les risques majeurs (DICRIM)
+    description_fr: Document d'information communal sur les risques majeurs (séisme, cyclone, tsunami, inondation, volcan) avec les consignes. Le DICRIM est obligatoire ; on vérifie ici qu'il est en ligne.
+    legal_ref: Code de l'environnement, art. L125-2 et R125-11
+    ref_status: to_confirm      # obligation d'établir le DICRIM ; la mise en ligne elle-même est à confirmer
+    applies_if: null
+
+  # --- Démocratie participative (ajout JM) ---
+  - key: conseil_retransmis
+    family: civic
+    theme: participation
+    label_fr: Conseils municipaux retransmis
+    description_fr: Séances retransmises en direct ou disponibles en vidéo.
+    legal_ref: CGCT art. L2121-18 (retransmission permise, pas obligatoire)
+    ref_status: to_confirm
+    applies_if: null
+  - key: consultations
+    family: civic
+    theme: participation
+    label_fr: Consultations et concertations en ligne
+    description_fr: Concertations, enquêtes publiques (PLU, grands projets) et réunions publiques annoncées, avec leurs comptes rendus.
+    legal_ref: null
+    applies_if: null
+  - key: budget_participatif
+    family: civic
+    theme: participation
+    label_fr: Budget participatif
+    description_fr: Une part du budget dont l'usage est proposé et voté par les habitants, avec les résultats publiés.
+    legal_ref: null
+    applies_if: null
+  - key: instances_participatives
+    family: civic
+    theme: participation
+    label_fr: Instances de participation présentées
+    description_fr: Conseils de quartier, conseil municipal des jeunes, comités consultatifs, avec leur composition, leurs réunions et la façon d'y participer.
+    legal_ref: CGCT art. L2143-1 et L2143-2 (conseils de quartier obligatoires dès 80 000 habitants ; comités consultatifs facultatifs)
+    ref_status: to_confirm
+    applies_if: null
+  - key: droit_petition
+    family: civic
+    theme: participation
+    label_fr: Droit de pétition et consultation locale expliqués
+    description_fr: Explication de la façon dont les électeurs peuvent demander l'inscription d'un sujet à l'ordre du jour du conseil, ou une consultation locale.
+    legal_ref: CGCT art. L1112-15 et L1112-16
+    ref_status: to_confirm
     applies_if: null
 
 # Visitor opinion (separate block, never mixed with the checklist). 1 to 5. Adapted from DINUM "Je donne mon avis".
@@ -145,3 +322,7 @@ vote_questions:
     label_fr: L'information est compréhensible
   - key: demarches
     label_fr: Le site me permet de faire mes démarches
+  - key: argent_public
+    label_fr: Le site m'aide à comprendre comment l'argent de la commune est utilisé
+  - key: participation
+    label_fr: Le site me permet de participer à la vie de la commune
