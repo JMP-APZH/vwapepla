@@ -7,7 +7,7 @@ import { BLOCKS, blockLines } from "@/lib/breakdown";
 import { compareRows, parseCompare } from "@/lib/compare";
 import { FIRST_YEAR, PROVISIONAL_YEARS, REFERENCE_YEAR, STRATA } from "@/lib/config";
 import { getCommunes, getCommuneYears, getMetrics, getSources, getYearActuals } from "@/lib/data";
-import { int, pct, perHab, years as yrs } from "@/lib/format";
+import { eur, int, pct, years as yrs } from "@/lib/format";
 import { t } from "@/i18n/strings";
 
 export const metadata: Metadata = { title: "Comparer des communes" };
@@ -28,7 +28,7 @@ export default function ComparePage({ searchParams }: PageProps<"/comparer">) {
 }
 
 const fmt = (unit: string, v: number | null | undefined, perHabValue: number | null | undefined) =>
-  unit === "eur" ? perHab(perHabValue) : unit === "years" ? yrs(v) : pct(v);
+  unit === "eur" ? eur(perHabValue) : unit === "years" ? yrs(v) : pct(v);
 
 async function Comparison({ searchParams }: Pick<PageProps<"/comparer">, "searchParams">) {
   const sp = await searchParams;
@@ -56,7 +56,7 @@ async function Comparison({ searchParams }: Pick<PageProps<"/comparer">, "search
   const usedSources = [...new Set(rows.filter((r) => codes.includes(r.commune_code)).map((r) => r.source_id))]
     .map((id) => sources.get(id)).filter((s) => s != null);
   const provisional = PROVISIONAL_YEARS.includes(year);
-  const cell = "px-3 py-2 text-right tabular-nums align-top";
+  const cell = "whitespace-nowrap px-3 py-2 text-right tabular-nums align-top";
   const label = "sticky left-0 z-10 bg-white px-3 py-2 text-left align-top font-normal";
 
   return (
@@ -68,7 +68,10 @@ async function Comparison({ searchParams }: Pick<PageProps<"/comparer">, "search
           <caption className="sr-only">Comparaison {year}, euros par habitant</caption>
           <thead className="border-b border-slate-200 text-xs text-slate-500">
             <tr>
-              <th className={`${label} w-40 min-w-36`}>Exercice {year}{provisional && ` (${t.provisional.fr})`}</th>
+              <th className={`${label} w-40 min-w-36`}>
+                Exercice {year}{provisional && ` (${t.provisional.fr})`}
+                <span className="block">en € par habitant</span>
+              </th>
               {picked.map((p) => (
                 <th key={p.commune.code} className={`${cell} min-w-28 font-semibold text-slate-900`}>
                   <Link href={`/commune/${p.commune.slug}`} className="underline">{p.commune.name}</Link>
@@ -86,14 +89,14 @@ async function Comparison({ searchParams }: Pick<PageProps<"/comparer">, "search
             <tr className="border-b border-slate-100">
               <th className={label}>{t.stratum.fr}</th>
               {picked.map((p) => (
-                <td key={p.commune.code} className={`${cell} text-xs`}>{(p.profile?.stratum && STRATA[p.profile.stratum]) ?? "—"}</td>
+                <td key={p.commune.code} className={`${cell} whitespace-normal text-xs`}>{(p.profile?.stratum && STRATA[p.profile.stratum]) ?? "—"}</td>
               ))}
               <td className={cell} />
             </tr>
             <tr className="border-b border-slate-200">
               <th className={label}>{t.intercommunality.fr}</th>
               {picked.map((p) => (
-                <td key={p.commune.code} className={`${cell} text-xs`}>
+                <td key={p.commune.code} className={`${cell} whitespace-normal text-xs`}>
                   {p.profile?.epci_name?.replace(/^Communauté d'agglomération (du |de l'|de la )?/i, "") ?? "—"}
                 </td>
               ))}
@@ -101,8 +104,8 @@ async function Comparison({ searchParams }: Pick<PageProps<"/comparer">, "search
             </tr>
             {blocks.map((b) => [
               <tr key={b.id} className="bg-slate-50">
-                <th colSpan={picked.length + 2} className="sticky left-0 px-3 pb-1 pt-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">
-                  {b.title}
+                <th colSpan={picked.length + 2} className="px-0 pb-1 pt-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">
+                  <span className="sticky left-0 inline-block px-3">{b.title}</span>
                 </th>
               </tr>,
               ...compareRows(b.lines, codes, rows).map((r) => (
@@ -117,7 +120,7 @@ async function Comparison({ searchParams }: Pick<PageProps<"/comparer">, "search
                     </td>
                   ))}
                   <td className={`${cell} text-slate-500`}>
-                    {r.line.unit === "eur" ? perHab(r.medianMartinique) : fmt(r.line.unit, r.medianMartinique, null)}
+                    {fmt(r.line.unit, r.medianMartinique, r.medianMartinique)}
                   </td>
                 </tr>
               )),
