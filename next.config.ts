@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
     remotePatterns: [{ protocol: "https", hostname: "eiwmksgeudkjsugnvsdh.supabase.co", pathname: "/storage/v1/object/public/media/**" }],
   },
   partialPrefetching: true,
+  // QR code read on SEM radio's show: one short URL, tagged for (cookieless) analytics.
+  async redirects() {
+    return [{ source: "/sem", destination: "/?utm_source=sem&utm_medium=radio&utm_campaign=mvp2", permanent: true }];
+  },
   turbopack: {
     rules: {
       "*.css": {

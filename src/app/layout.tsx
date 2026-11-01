@@ -26,7 +26,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               {t.siteName.fr} <span className="font-normal text-slate-400">· {t.siteName.kr}</span>
             </Link>
             <nav className="flex gap-4 text-sm text-slate-300">
+              <Link href="/comparer" className="hover:text-white">{t.compare.fr}</Link>
               <Link href="/methodologie" className="hover:text-white">{t.methodology.fr}</Link>
+              <Link href="/sources" className="hover:text-white">{t.sources.fr}</Link>
             </nav>
           </div>
         </header>
