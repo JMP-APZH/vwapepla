@@ -79,17 +79,25 @@ export async function getCommuneActuals(code: string): Promise<Actual[]> {
   );
 }
 
-/** Some metrics for all 34 communes in one year (for medians and comparisons). */
+const PAGE = 1000; // PostgREST returns at most 1,000 rows per request on Supabase
+
+/** Some metrics for all 34 communes in one year (for medians and comparisons). Paged: 34 x 35 keys > 1,000. */
 export async function getYearActuals(year: number, keys: string[]): Promise<Actual[]> {
   "use cache";
   cacheLife("days");
   cacheTag("data");
-  return check(
-    await supabase.from("actuals")
-      .select("commune_code,year,metric_key,amount,eur_per_hab,provisional,source_id")
-      .eq("year", year).in("metric_key", keys).limit(5000),
-    "year actuals",
-  );
+  const out: Actual[] = [];
+  for (let from = 0; ; from += PAGE) {
+    const rows = check(
+      await supabase.from("actuals")
+        .select("commune_code,year,metric_key,amount,eur_per_hab,provisional,source_id")
+        .eq("year", year).in("metric_key", keys).order("commune_code").order("metric_key")
+        .range(from, from + PAGE - 1),
+      "year actuals",
+    );
+    out.push(...rows);
+    if (rows.length < PAGE) return out;
+  }
 }
 
 export async function getSources(): Promise<Map<string, Source>> {
