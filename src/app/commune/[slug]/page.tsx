@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BudgetBreakdown, type BudgetYear } from "@/components/BudgetBreakdown";
 import { CouncilList } from "@/components/CouncilList";
@@ -161,6 +162,9 @@ export default async function CommunePage({ params }: PageProps<"/commune/[slug]
       </section>
 
       <BudgetBreakdown data={budget} defaultYear={budgetYears.includes(year) ? year : budgetYears.at(-1)!} />
+      <p className="-mt-3 text-sm">
+        <Link href={`/comparer?c=${commune.code}`} className="underline">{t.compareWith.fr}</Link>
+      </p>
 
       <CouncilList council={council} photo={councilPhoto} source={sources.get("rne-conseillers-municipaux")} />
 
