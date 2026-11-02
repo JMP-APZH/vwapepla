@@ -1,0 +1,1023 @@
+# Past mayors by term. Seeded from official results (head of the winning list), then checked by hand.
+# Set verified: true only after checking (council deliberation, prefecture, press). Card shows verified rows only.
+- commune: '97201'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97201'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: BONTE
+  first_name: Maurice
+  source_id: municipales-2014-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-1er-tour/
+  note: 'Tête de la liste « FORCE BOUILLONNAISE » (17 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97201'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: BONTE
+  first_name: Maurice
+  source_id: municipales-2020-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2020-resultats-1er-tour/
+  note: 'Tête de la liste « FORCES BOUILLONNAISES » (19 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97202'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97202'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: LARCHER
+  first_name: Eugène
+  source_id: municipales-2014-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-1er-tour/
+  note: 'Tête de la liste « TJENBE LAREL POU LEZANS » (23 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97202'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: LARCHER
+  first_name: Eugène
+  source_id: municipales-2020-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2020-resultats-1er-tour/
+  note: 'Tête de la liste « KONTINIE TJENBE LAREL POU LEZANS » (22 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97203'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97203'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: CASIMIRIUS
+  first_name: Marie-Urbain-Thérèse
+  source_id: municipales-2014-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-1er-tour/
+  note: 'Tête de la liste « DYNAMIQUE POINTOISE » (22 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97203'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: CASIMIRIUS
+  first_name: Marie-Thérèse
+  source_id: municipales-2020-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2020-resultats-1er-tour/
+  note: 'Tête de la liste « DYNAMIQUE POINTOISE » (18 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97204'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97204'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: ECANVIL
+  first_name: Jean-Claude
+  source_id: municipales-2014-t2
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-2eme-tour/
+  note: 'Tête de la liste « REUNIR POUR REUSSIR LE CARBET » (22 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97204'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: ECANVIL
+  first_name: Bruno Jean-Claude
+  source_id: municipales-2020-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2020-resultats-1er-tour/
+  note: 'Tête de la liste « REUNIR POUR REUSSIR LE CARBET » (21 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97205'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97205'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: MONPLAISIR
+  first_name: Ralph
+  source_id: municipales-2014-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-1er-tour/
+  note: 'Tête de la liste « TOUS POUR CASE-PILOTE » (21 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97205'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: MONPLAISIR
+  first_name: Ralph
+  source_id: municipales-2020-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2020-resultats-1er-tour/
+  note: 'Tête de la liste « TOUS POUR CASE-PILOTE » (21 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97206'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97206'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: EUSTACHE
+  first_name: Gilbert
+  source_id: municipales-2014-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-1er-tour/
+  note: 'Tête de la liste « AGIR ENSEMBLE POUR LE DIAMANT » (22 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97206'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: TOUSSAY
+  first_name: Hugues
+  source_id: municipales-2020-t2
+  source_url: https://www.data.gouv.fr/datasets/municipales-2020-resultats-2nd-tour/
+  note: 'Tête de la liste « LIANNAJ DES FORCES DIAMANTINOISES » (22 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97207'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97207'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: MENCE
+  first_name: Charles-André
+  source_id: municipales-2014-t2
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-2eme-tour/
+  note: 'Tête de la liste « DUCOS EN AVANT » (25 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97207'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: NELLA
+  first_name: Aurélie
+  source_id: municipales-2020-t2
+  source_url: https://www.data.gouv.fr/datasets/municipales-2020-resultats-2nd-tour/
+  note: 'Tête de la liste « DUCOS S''ENGAGE » (25 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97208'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97208'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter (commune de moins de 1 000 hab. ou résultats absents)
+- commune: '97208'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter (commune de moins de 1 000 hab. ou résultats absents)
+- commune: '97209'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97209'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: LAGUERRE
+  first_name: Didier
+  source_id: municipales-2014-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-1er-tour/
+  note: 'Tête de la liste « DEMOCRATES ET PROGRESSISTES » (42 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97209'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: LAGUERRE
+  first_name: Didier
+  source_id: municipales-2020-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2020-resultats-1er-tour/
+  note: 'Tête de la liste « LISTE DES DEMOCRATES ET PROGRESSISTES » (46 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97210'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97210'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: ANTISTE
+  first_name: Maurice
+  source_id: municipales-2014-t2
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-2eme-tour/
+  note: 'Tête de la liste « ENSEMBLE, CONTINUONS » (25 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97210'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: TAVERNIER
+  first_name: Samuel
+  source_id: municipales-2020-t2
+  source_url: https://www.data.gouv.fr/datasets/municipales-2020-resultats-2nd-tour/
+  note: 'Tête de la liste « AN LOT BALAN BA FRANSWA » (25 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97211'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97211'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter (commune de moins de 1 000 hab. ou résultats absents)
+- commune: '97211'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter (commune de moins de 1 000 hab. ou résultats absents)
+- commune: '97212'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97212'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: COUTURIER
+  first_name: Gilbert
+  source_id: municipales-2014-t2
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-2eme-tour/
+  note: 'Tête de la liste « UNITE GROS-MORNAISE » (24 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97212'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: COUTURIER
+  first_name: Gilbert
+  source_id: municipales-2020-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2020-resultats-1er-tour/
+  note: 'Tête de la liste « UNITE GROS-MORNAISE » (24 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97213'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97213'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: SAMOT
+  first_name: Pierre
+  source_id: municipales-2014-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-1er-tour/
+  note: 'Tête de la liste « LE LAMENTIN TOUJOURS ! » (31 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97213'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: ZOBDA
+  first_name: David
+  source_id: municipales-2020-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2020-resultats-1er-tour/
+  note: 'Tête de la liste « LE LAMENTIN PLUS GRAND ! » (31 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97214'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97214'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: PAMPHILE
+  first_name: Justin
+  source_id: municipales-2014-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-1er-tour/
+  note: 'Tête de la liste « RASSEMBLEMENT DES FORCES LORRINOISES » (25 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97214'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: PAMPHILE
+  first_name: Justin
+  source_id: municipales-2020-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2020-resultats-1er-tour/
+  note: 'Tête de la liste « ENSEMBLE CONTINUONS A CONSTRUIRE LE LORRAIN » (25 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97215'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97215'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: CAKIN
+  first_name: Sainte-Rose
+  source_id: municipales-2014-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-1er-tour/
+  note: 'Tête de la liste « RASSEMBLEMENT, PROGRES, CONTINUITE » (12 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97215'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: CAKIN
+  first_name: Sainte-Rose
+  source_id: municipales-2020-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2020-resultats-1er-tour/
+  note: 'Tête de la liste « TRANSITION » (12 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97216'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97216'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: PERASTE
+  first_name: Joseph
+  source_id: municipales-2014-t2
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-2eme-tour/
+  note: 'Tête de la liste « ENSEMBLE POUR UN MARIGOT FORT ET SOLIDAIRE » (21 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97216'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: PERASTE
+  first_name: Toussaint Joseph
+  source_id: municipales-2020-t2
+  source_url: https://www.data.gouv.fr/datasets/municipales-2020-resultats-2nd-tour/
+  note: 'Tête de la liste « ENSEMBLE POUR UN MARIGOT FORT ET SOLIDAIRE » (18 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97217'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97217'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: DESIRE
+  first_name: Rodolphe
+  source_id: municipales-2014-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-1er-tour/
+  note: 'Tête de la liste « LE MARIN EN AVANT » (23 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97217'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: MIRANDE
+  first_name: José
+  source_id: municipales-2020-t2
+  source_url: https://www.data.gouv.fr/datasets/municipales-2020-resultats-2nd-tour/
+  note: 'Tête de la liste « DYNAMIQUE MARINOISE » (22 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97218'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97218'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: DULYS-PETIT
+  first_name: Jenny
+  source_id: municipales-2014-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-1er-tour/
+  note: 'Tête de la liste « MON WOUJ TOUJOU DOUBOUT'' » (23 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97218'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: DULYS-PETIT
+  first_name: Jenny
+  source_id: municipales-2020-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2020-resultats-1er-tour/
+  note: 'Tête de la liste « MON WOUJ TOUJOU DOUBOUT ! » (25 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97219'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97219'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: NADEAU
+  first_name: Marcellin
+  source_id: municipales-2014-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-1er-tour/
+  note: 'Tête de la liste « Respé pou Préchè 2 » (19 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97219'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: NADEAU
+  first_name: Marcellin
+  source_id: municipales-2020-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2020-resultats-1er-tour/
+  note: 'Tête de la liste « RESPE POU PRECHE 3 » (15 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97220'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97220'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: THEODOSE
+  first_name: Raymond Léonard
+  source_id: municipales-2014-t2
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-2eme-tour/
+  note: 'Tête de la liste « LA DYNAMIQUE PILOTINE » (26 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97220'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: BEAUNOL
+  first_name: Jean François
+  source_id: municipales-2020-t2
+  source_url: https://www.data.gouv.fr/datasets/municipales-2020-resultats-2nd-tour/
+  note: 'Tête de la liste « AGIR POUR RIVIERE-PILOTE » (23 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97221'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97221'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: LESUEUR
+  first_name: André
+  source_id: municipales-2014-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-1er-tour/
+  note: 'Tête de la liste « Rassemblement Saléen » (27 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97221'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: LESUEUR
+  first_name: André
+  source_id: municipales-2020-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2020-resultats-1er-tour/
+  note: 'Tête de la liste « RASSEMBLEMENT SALEEN » (29 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97222'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97222'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: MONTHIEUX
+  first_name: Alfred
+  source_id: municipales-2014-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-1er-tour/
+  note: 'Tête de la liste « UNISSONS NOUS POUR FAIRE PROGRESSER LE ROBERT » (28 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97222'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: MONTHIEUX
+  first_name: Alfred
+  source_id: municipales-2020-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2020-resultats-1er-tour/
+  note: 'Tête de la liste « UNISSONS NOUS POUR FAIRE PROGRESSER LE ROBERT » (29 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97223'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97223'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: TIRAULT
+  first_name: Fred
+  source_id: municipales-2014-t2
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-2eme-tour/
+  note: 'Tête de la liste « LE SAINT-ESPRIT AVANT TOUT » (24 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97223'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: TIRAULT
+  first_name: Fred Michel
+  source_id: municipales-2020-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2020-resultats-1er-tour/
+  note: 'Tête de la liste « LE SAINT-ESPRIT AVANT TOUT » (25 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97224'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97224'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: JEANNE-ROSE
+  first_name: Athanase
+  source_id: municipales-2014-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-1er-tour/
+  note: 'Tête de la liste « CONVERGENCE ACTION PERFORMANCE POUR SAINT-JOSEPH » (29 sièges) — à vérifier : maire élu par le
+    conseil'
+- commune: '97224'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: MONPLAISIR
+  first_name: Yan
+  source_id: municipales-2020-t2
+  source_url: https://www.data.gouv.fr/datasets/municipales-2020-resultats-2nd-tour/
+  note: 'Tête de la liste « ENSEMBLE REUSSIR SAINT JOSEPH » (27 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97225'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97225'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: MARTINE
+  first_name: Raphaël
+  source_id: municipales-2014-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-1er-tour/
+  note: 'Tête de la liste « AGISSONS POUR SAINT-PIERRE » (21 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97225'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: RAPHA
+  first_name: Christian
+  source_id: municipales-2020-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2020-resultats-1er-tour/
+  note: 'Tête de la liste « FAIRE GAGNER SAINT-PIERRE » (21 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97226'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97226'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: GEMIEUX
+  first_name: Jean-Michel
+  source_id: municipales-2014-t2
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-2eme-tour/
+  note: 'Tête de la liste « SAINTE-ANNE A COEUR » (21 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97226'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: GEMIEUX
+  first_name: Jean-Michel
+  source_id: municipales-2020-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2020-resultats-1er-tour/
+  note: 'Tête de la liste « SAINTE-ANNE A COEUR » (23 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97227'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97227'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: MONROSE
+  first_name: Nicaise Gérard
+  source_id: municipales-2014-t2
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-2eme-tour/
+  note: 'Tête de la liste « L''ALTERNATIVE LUCEENNE » (25 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97227'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: MONROSE
+  first_name: Nicaise
+  source_id: municipales-2020-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2020-resultats-1er-tour/
+  note: 'Tête de la liste « L''ALTERNATIVE LUCEENNE MI BEL CHIMEN » (27 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97228'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97228'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: AZEROT
+  first_name: Bruno Nestor
+  source_id: municipales-2014-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-1er-tour/
+  note: 'Tête de la liste « Nou sav sa nou lé » (30 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97228'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: AZEROT
+  first_name: Bruno Nestor
+  source_id: municipales-2020-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2020-resultats-1er-tour/
+  note: 'Tête de la liste « NOU TOUJOU SAV SA NOU PA LE » (29 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97229'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97229'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: CLEMENTE
+  first_name: Luc Louison
+  source_id: municipales-2014-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-1er-tour/
+  note: 'Tête de la liste « L''UNION AVEC VIVRE A SCHOELCHER » (29 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97229'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: CLEMENTE
+  first_name: Luc Louison
+  source_id: municipales-2020-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2020-resultats-1er-tour/
+  note: 'Tête de la liste « L''UNION AVEC VIVRE A SCHOELCHER » (26 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97230'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97230'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: BUVAL
+  first_name: Frédéric
+  source_id: municipales-2014-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-1er-tour/
+  note: 'Tête de la liste « UNION SOCIALISTE ET DEMOCRATIQUE DE LA TRINITE » (27 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97230'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: BUVAL
+  first_name: Frédéric
+  source_id: municipales-2020-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2020-resultats-1er-tour/
+  note: 'Tête de la liste « DYNAMIQUE TRINITEENNE » (27 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97231'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97231'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: RENE-CORAIL
+  first_name: Arnaud
+  source_id: municipales-2014-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-1er-tour/
+  note: 'Tête de la liste « TROIS-ILETS, NOUVELLE DYNAMIQUE » (23 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97231'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: RENE-CORAIL
+  first_name: Arnaud
+  source_id: municipales-2020-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2020-resultats-1er-tour/
+  note: 'Tête de la liste « TROIS-ILETS NOUVELLE DYNAMIQUE » (25 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97232'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97232'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: OCCOLIER
+  first_name: Raymond
+  source_id: municipales-2014-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-1er-tour/
+  note: 'Tête de la liste « UNION DEMOCRATIQUE VAUCLINOISE » (25 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97232'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: CLEON
+  first_name: Georges
+  source_id: municipales-2020-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2020-resultats-1er-tour/
+  note: 'Tête de la liste « UNION DEMOCRATIQUE VAUCLINOISE » (23 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97233'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97233'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: SALIBER
+  first_name: Lucien
+  source_id: municipales-2014-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-1er-tour/
+  note: 'Tête de la liste « UNION VERDIMORNAISE » (16 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97233'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: SALIBER
+  first_name: Lucien
+  source_id: municipales-2020-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2020-resultats-1er-tour/
+  note: 'Tête de la liste « UNION VERDIMORNAISE » (17 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97234'
+  term: 2008-2014
+  start: '2008-03-09'
+  end: '2014-03-23'
+  verified: false
+  last_name: null
+  first_name: null
+  source_id: vwapepla-historique-maires
+  source_url: null
+  note: À compléter
+- commune: '97234'
+  term: 2014-2020
+  start: '2014-03-23'
+  end: '2020-03-15'
+  verified: false
+  last_name: ISMAIN
+  first_name: Félix
+  source_id: municipales-2014-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2014-resultats-1er-tour/
+  note: 'Tête de la liste « UN NOUVEAU SOUFFLE » (12 sièges) — à vérifier : maire élu par le conseil'
+- commune: '97234'
+  term: 2020-2026
+  start: '2020-03-15'
+  end: '2026-03-15'
+  verified: false
+  last_name: ISMAIN
+  first_name: Félix
+  source_id: municipales-2020-t1
+  source_url: https://www.data.gouv.fr/datasets/elections-municipales-2020-resultats-1er-tour/
+  note: 'Tête de la liste « LE NOUVEAU SOUFFLE » (15 sièges) — à vérifier : maire élu par le conseil'

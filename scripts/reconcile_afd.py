@@ -1,4 +1,6 @@
-"""Reconciliation gate: Martinique totals we publish (data/build/actuals.json) vs AFD Observatoire des communes 2024 (FY2023).
+"""Reconciliation gate: Martinique totals we publish (data/build/actuals.json) vs AFD Observatoire des communes.
+
+1) Edition 2024 (FY2023). 2) Edition 2021 (period 2014-2019): debt per year and total equipment spending.
 
 Run after scripts/pipeline/build.py:  python -I scripts/reconcile_afd.py   -> exit 1 if any indicator is off by > 2%.
 Benchmark: AFD, web_observatoire_martinique_2024.pdf — p.6-7 headline figures, Annexe 3 (EUR/hab x population 365 734).
@@ -52,5 +54,25 @@ for label, ours, afd, tol in checks:
     ok = abs(ours - afd) <= tol
     failed += not ok
     print(f"{label:42s} {afd:8.2f} {ours:8.2f} {'':7s}      {'OK' if ok else 'FAIL'}")
+
+# --- AFD Observatoire 2021 (2014-2019): graphique 46 (debt, M EUR) and p.43 (equipment 2014-2019 = 352 M EUR) ---
+by_year = collections.defaultdict(float)
+for r in rows:
+    if r["amount"] is not None and r["metric_key"] in ("encours_dette", "depenses_equipement"):
+        by_year[(r["year"], r["metric_key"])] += r["amount"] / 1e6
+KNOWN = {2019: "écart non expliqué (révision OFGL ?), à documenter"}  # shown, not gated
+print("\nAFD Observatoire 2021 (2014-2019)")
+for y, afd in {2014: 438, 2015: 435, 2016: 416, 2017: 402, 2018: 398, 2019: 382}.items():
+    ours = by_year[(y, "encours_dette")]
+    d = (ours - afd) / afd
+    ok = abs(d) <= TOLERANCE
+    failed += not ok and y not in KNOWN
+    status = "OK" if ok else ("WARN " + KNOWN[y] if y in KNOWN else "FAIL")
+    print(f"{'Encours de dette ' + str(y):42s} {afd:8.1f} {ours:8.1f} {d:+6.1%}      {status}")
+eq = sum(by_year[(y, "depenses_equipement")] for y in range(2014, 2020))
+d = (eq - 352) / 352
+failed += abs(d) > TOLERANCE
+print(f"{'Dépenses d équipement 2014-2019 (total)':42s} {352:8.1f} {eq:8.1f} {d:+6.1%}      "
+      f"{'OK' if abs(d) <= TOLERANCE else 'FAIL'}")
 print(f"\n{'ALL OK' if not failed else f'{failed} FAILED'}")
 sys.exit(1 if failed else 0)

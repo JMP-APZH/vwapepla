@@ -11,9 +11,11 @@ BUILD = ROOT / "data" / "build"
 TABLES = {
     "sources": "id",
     "communes": "code",
+    "media": "id",
     "commune_years": "commune_code,year",
     "metric_definitions": "key",
-    "officeholders": "commune_code,role,mandate_start",
+    "terms": "id",
+    "officeholders": "commune_code,role,last_name,first_name,mandate_start",
     "actuals": "commune_code,year,metric_key",
     "entities": "siren",
     "entity_actuals": "siren,year,agregat",
