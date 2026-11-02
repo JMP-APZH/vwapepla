@@ -43,6 +43,7 @@ export const t = {
   methodology: { fr: "Méthodologie", kr: null },
   sources: { fr: "Sources", kr: null },
   compare: { fr: "Comparer", kr: null },
+  compareWith: { fr: "Comparer avec d'autres communes →", kr: null },
   otherProjects: { fr: "Autres projets", kr: null },
   noRanking: { fr: "Pas de classement : les chiffres sont présentés côte à côte.", kr: null },
 } satisfies Record<string, S>;
