@@ -1,6 +1,7 @@
 import { cacheLife, cacheTag } from "next/cache";
 import { supabase } from "./supabase";
 import type { Term } from "./terms";
+import { QUESTIONS, type Question, type VoteSummary } from "./vote-questions";
 
 // Typed, cached reads. Data changes about once a year (new OFGL release / forecast entry):
 // everything is cached for days and pre-rendered; a redeploy or revalidateTag("data") refreshes it.
@@ -165,4 +166,20 @@ export async function getMedia(code: string): Promise<Media[]> {
 
 export function mediaUrl(m: Media): string {
   return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/media/${m.storage_path}`;
+}
+
+/**
+ * Visitor-vote summary for one commune's website (opinion layer). Averages are hidden by the SQL function below
+ * 20 votes. Cached a few minutes (radio traffic hits the cache, not the database); a new vote calls updateTag.
+ */
+export async function getVoteSummary(code: string): Promise<VoteSummary[]> {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag(`votes-${code}`);
+  const rows = check(await supabase.rpc("site_vote_summary", { p_commune: code }), "vote summary") as
+    { question: Question; votes: number | string; average: number | string | null }[];
+  return QUESTIONS.map((q) => {
+    const r = rows.find((x) => x.question === q);
+    return { question: q, votes: Number(r?.votes ?? 0), average: r?.average == null ? null : Number(r.average) };
+  });
 }

@@ -1,18 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import { BudgetBreakdown, type BudgetYear } from "@/components/BudgetBreakdown";
 import { CouncilList } from "@/components/CouncilList";
 import { HeadlineSet } from "@/components/HeadlineSets";
 import { MayorPhoto } from "@/components/MayorPhoto";
+import { SiteVotes } from "@/components/SiteVotes";
 import { SourceNote } from "@/components/SourceNote";
 import { TermsChart, type ChartPoint } from "@/components/TermsChart";
 import { TermsComparison } from "@/components/TermsComparison";
 import { CONTACT_EMAIL, DATA_NOTES, FIRST_YEAR, HEADLINE_SETS, PROVISIONAL_YEARS, REFERENCE_YEAR, STRATA, TERM } from "@/lib/config";
 import {
   getCommuneActuals, getCommuneBySlug, getCommunes, getCommuneYears, getCouncil, getMayor, getMedia, getMetrics, getPastMayors,
-  getSources, getTerms, getYearActuals,
+  getSources, getTerms, getVoteSummary, getYearActuals,
 } from "@/lib/data";
+import { OFFICIAL_SITES, SITES_SOURCE } from "@/lib/sites";
 import { summarizeTerms } from "@/lib/terms";
 import { BLOCKS, blockLines, blockValues } from "@/lib/breakdown";
 import { functionTitle, missingDeputyRanks } from "@/lib/council";
@@ -187,6 +190,30 @@ export default async function CommunePage({ params }: PageProps<"/commune/[slug]
         <SourceNote sources={historySources} year={`${historyYears[0]}–${historyYears.at(-1)}`} />
       </section>
 
+      {/* Town-hall website: the fact (listed site, official directory) then the opinion layer, kept apart. */}
+      <section className="space-y-3">
+        <h2 className="text-xl font-semibold tracking-tight">{t.siteTitle.fr}</h2>
+        {OFFICIAL_SITES[commune.code] ? (
+          <p className="text-sm">
+            <a href={OFFICIAL_SITES[commune.code]!} className="break-all underline" target="_blank" rel="noopener noreferrer">
+              {OFFICIAL_SITES[commune.code]!.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+            </a>
+          </p>
+        ) : (
+          <p className="text-sm text-slate-600">{t.siteNone.fr}</p>
+        )}
+        <p className="text-xs text-slate-500">
+          Source :{" "}
+          <a href={SITES_SOURCE.url} className="underline" target="_blank" rel="noopener noreferrer">{SITES_SOURCE.label}</a>,
+          consulté le {new Date(SITES_SOURCE.retrieved).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}.
+        </p>
+        {OFFICIAL_SITES[commune.code] && (
+          <Suspense fallback={<div className="h-40 rounded-xl border border-violet-200 bg-violet-50/60" />}>
+            <Votes code={commune.code} />
+          </Suspense>
+        )}
+      </section>
+
       <aside className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
         {t.caveatEpci.fr}
       </aside>
@@ -203,4 +230,8 @@ export default async function CommunePage({ params }: PageProps<"/commune/[slug]
       </section>
     </article>
   );
+}
+
+async function Votes({ code }: { code: string }) {
+  return <SiteVotes code={code} summary={await getVoteSummary(code)} />;
 }
