@@ -11,10 +11,10 @@ const fmt = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 });
 /** One indicator, € / inhabitant per year, with term bands and the shared election years shaded. */
 export function TermsChart({ title, points, bands }: { title: string; points: ChartPoint[]; bands: TermBand[] }) {
   return (
-    <figure className="rounded-lg border border-slate-200 bg-white p-3">
+    <figure className="min-w-0 overflow-hidden rounded-lg border border-slate-200 bg-white p-3">
       <figcaption className="text-sm font-medium">{title} <span className="font-normal text-slate-500">(€ / hab.)</span></figcaption>
       <div className="mt-2 h-40">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="100%" minWidth={0} initialDimension={{ width: 300, height: 160 }}>
           <LineChart data={points} margin={{ top: 16, right: 18, bottom: 0, left: 0 }}>
             <CartesianGrid vertical={false} stroke="#e2e8f0" />
             {bands.map((b) => (

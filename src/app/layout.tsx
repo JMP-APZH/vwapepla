@@ -19,13 +19,13 @@ export const viewport: Viewport = { width: "device-width", initialScale: 1, them
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="fr" className={`${geistSans.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-slate-50 text-slate-900">
+      <body className="min-h-full flex flex-col overflow-x-clip bg-slate-50 text-slate-900">
         <header className="bg-slate-900 text-white">
-          <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-3">
-            <Link href="/" className="font-semibold tracking-tight">
-              {t.siteName.fr} <span className="font-normal text-slate-400">· {t.siteName.kr}</span>
+          <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3">
+            <Link href="/" className="shrink-0 whitespace-nowrap font-semibold tracking-tight">
+              {t.siteName.fr} <span className="hidden font-normal text-slate-400 sm:inline">· {t.siteName.kr}</span>
             </Link>
-            <nav className="flex gap-4 text-sm text-slate-300">
+            <nav className="flex gap-3 whitespace-nowrap text-sm text-slate-300 sm:gap-4">
               <Link href="/methodologie" className="hover:text-white">{t.methodology.fr}</Link>
             </nav>
           </div>

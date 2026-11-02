@@ -10,7 +10,7 @@ export function TermsComparison({ summaries, pastMayors }: { summaries: TermSumm
       <table className="w-full min-w-[480px] text-sm">
         <thead>
           <tr className="text-left align-bottom">
-            <th className="py-2 pr-3 font-normal text-slate-500">Par habitant</th>
+            <th className="sticky left-0 z-10 bg-white py-2 pr-3 font-normal text-slate-500">Par habitant</th>
             {summaries.map((s) => (
               <th key={s.term.id} scope="col" className="py-2 pr-3 font-semibold">
                 Mandat {s.term.id.replace("-", "–")}
@@ -27,7 +27,7 @@ export function TermsComparison({ summaries, pastMayors }: { summaries: TermSumm
         <tbody className="divide-y divide-slate-100">
           {TERM_ROWS.map((r) => (
             <tr key={r.key}>
-              <th scope="row" className="py-1.5 pr-3 text-left font-normal text-slate-700">{r.label}</th>
+              <th scope="row" className="sticky left-0 z-10 bg-white py-1.5 pr-3 text-left font-normal text-slate-700">{r.label}</th>
               {summaries.map((s) => (
                 <td key={s.term.id} className="py-1.5 pr-3 tabular-nums">
                   {r.unit === "years" ? fmtYears(s.values[r.key]) : perHab(s.values[r.key])}

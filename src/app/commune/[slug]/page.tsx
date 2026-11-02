@@ -174,7 +174,7 @@ export default async function CommunePage({ params }: PageProps<"/commune/[slug]
         <div className="mt-3 rounded-xl border border-slate-200 bg-white p-4">
           <TermsComparison summaries={summaries} pastMayors={pastMayors} />
         </div>
-        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+        <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
           <TermsChart title="Recettes de fonctionnement" points={pointsOf("rf_total")} bands={bands} />
           <TermsChart title="Dépenses de fonctionnement" points={pointsOf("df_total")} bands={bands} />
           <TermsChart title="Investissement" points={pointsOf("di_hors_remb")} bands={bands} />
