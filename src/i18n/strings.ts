@@ -46,6 +46,30 @@ export const t = {
   compareWith: { fr: "Comparer avec d'autres communes →", kr: null },
   otherProjects: { fr: "Autres projets", kr: null },
   noRanking: { fr: "Pas de classement : les chiffres sont présentés côte à côte.", kr: null },
+  // Visitor votes (opinion layer: website quality only)
+  siteTitle: { fr: "Le site internet de la mairie", kr: null },
+  votesShortcut: { fr: "Donnez votre avis sur le site internet de la mairie", kr: null },
+  siteNone: { fr: "Aucun site internet n'est indiqué pour cette mairie dans l'annuaire officiel Service-Public.", kr: null },
+  votesTitle: { fr: "Avis des visiteurs, non représentatif", kr: null },
+  votesIntro: {
+    fr: "Donnez votre avis sur le site internet de la mairie (pas sur le maire ni sur le budget). Notes de 1 (pas du tout) à 5 (tout à fait). Avis anonyme : nous ne conservons ni votre adresse IP ni votre navigateur.",
+    kr: null,
+  },
+  votesDisclaimer: {
+    fr: "Ces avis sont donnés librement par les visiteurs du site Vwapepla. Ils ne constituent pas un sondage et ne sont pas représentatifs de la population. La moyenne n'est affichée qu'à partir de 20 avis.",
+    kr: null,
+  },
+  q_facile_a_trouver: { fr: "Les informations sont faciles à trouver", kr: null },
+  q_a_jour: { fr: "Le site est à jour", kr: null },
+  q_comprehensible: { fr: "Les informations sont claires et compréhensibles", kr: null },
+  q_demarches: { fr: "On peut faire ses démarches en ligne", kr: null },
+  votesSubmit: { fr: "Envoyer mon avis", kr: null },
+  votesNotEnough: { fr: "pas encore assez d'avis", kr: null },
+  votes_ok: { fr: "Merci, votre avis est enregistré. Les résultats sont mis à jour toutes les quelques minutes.", kr: null },
+  votes_already_voted: { fr: "Vous avez déjà donné votre avis sur ce site ces 30 derniers jours.", kr: null },
+  votes_rate_limited: { fr: "Trop d'avis envoyés aujourd'hui depuis cette connexion. Réessayez demain.", kr: null },
+  votes_invalid: { fr: "Choisissez au moins une note avant d'envoyer.", kr: null },
+  votes_error: { fr: "Votre avis n'a pas pu être enregistré. Réessayez plus tard.", kr: null },
 } satisfies Record<string, S>;
 
 export type StringKey = keyof typeof t;
