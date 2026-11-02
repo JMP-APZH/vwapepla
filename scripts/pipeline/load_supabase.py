@@ -11,6 +11,7 @@ BUILD = ROOT / "data" / "build"
 TABLES = {
     "sources": "id",
     "communes": "code",
+    "media": "id",
     "commune_years": "commune_code,year",
     "metric_definitions": "key",
     "terms": "id",

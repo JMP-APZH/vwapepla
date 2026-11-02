@@ -1,0 +1,110 @@
+# Mayor portraits (2026-2032 term) — official sources only, credited, removed on request (media.removed_at).
+# JM's decision (31 Oct 2026): reuse photos published by the town hall (or its intercommunality) with credit + takedown;
+# to be checked in the pre-launch legal review.
+# `evidence` = why we know the photo shows the current mayor (caption, alt text or file name on the official page).
+# Never match a face by eye: the official page must name the person.
+# Processed by scripts/pipeline/build_media.py (download, check, resize to 600 px, strip metadata, upload).
+# Missing (no portrait found on an official site, 2 Nov 2026): 97203 Basse-Pointe (site down), 97204 Le Carbet
+# (site unpublished), 97208 Fonds-Saint-Denis, 97211 Grand'Rivière, 97212 Gros-Morne, 97214 Le Lorrain (bot wall),
+# 97215 Macouba (Facebook only), 97216 Le Marigot, 97218 Le Morne-Rouge, 97219 Le Prêcheur (ceremony photos only),
+# 97222 Le Robert (council page out of date), 97225 Saint-Pierre (image broken on the mayor page), 97230 La Trinité,
+# 97233 Le Morne-Vert, 97234 Bellefontaine (group photos only).
+
+retrieved: 2026-11-02
+
+portraits:
+  - commune_code: "97201"
+    image_url: https://www.ville-ajoupabouillon.fr/wp-content/uploads/sites/84/2026/02/PHOTO-DU-MAIRE-689x1024.jpg
+    source_page_url: https://www.ville-ajoupabouillon.fr/articles/le-conseil-municipal/
+    credit: "Photo : mairie de L'Ajoupa-Bouillon"
+    evidence: 'Page text "Votre Maire : Thierry JOACHIM" next to the file PHOTO-DU-MAIRE.'
+  - commune_code: "97202"
+    image_url: https://ville-ansesdarlet.fr/wp-content/uploads/2024/12/maire.png
+    source_page_url: https://ville-ansesdarlet.fr/le-mot-du-maire/
+    credit: "Photo : mairie des Anses-d'Arlet"
+    evidence: '"Le mot du maire" page signed "Eugène Larcher, Maire"; file maire.png.'
+  - commune_code: "97205"
+    image_url: https://mairiecasepilote.fr/wp-content/uploads/2025/08/Maire-exterieur480x720.png
+    source_page_url: https://mairiecasepilote.fr/mairie/mot-du-maire/
+    credit: "Photo : mairie de Case-Pilote"
+    evidence: 'Alt text "Portrait de Jean-Marc BOCQUET, Maire de Case-Pilote".'
+  - commune_code: "97206"
+    image_url: https://espacesud.fr/wp-content/uploads/2022/10/Hugues-Toussay-Diamant-768x1024.jpg
+    source_page_url: https://espacesud.fr/les-elus/
+    credit: "Photo : Espace Sud (CAESM)"
+    evidence: 'File name "Hugues-Toussay-Diamant" on the CAESM councillors page (photo from 2022).'
+  - commune_code: "97207"
+    image_url: https://espacesud.fr/wp-content/uploads/2022/10/Aurelie-Nella-Ducos-768x1024.jpg
+    source_page_url: https://espacesud.fr/les-elus/
+    credit: "Photo : Espace Sud (CAESM)"
+    evidence: 'File name "Aurelie-Nella-Ducos" on the CAESM councillors page (photo from 2022).'
+  - commune_code: "97209"
+    image_url: https://fortdefrance.fr/wp-content/uploads/2026/04/1.-Didier-LAGUERRE.jpg
+    source_page_url: https://www.fortdefrance.fr/ma-mairie/elus-municipaux/
+    credit: "Photo : Ville de Fort-de-France"
+    evidence: 'File name "1.-Didier-LAGUERRE" first on the city''s councillors page (uploaded April 2026).'
+  - commune_code: "97210"
+    image_url: https://espacesud.fr/wp-content/uploads/2022/10/Lionel-Grandin-Francois-768x1024.jpg
+    source_page_url: https://espacesud.fr/les-elus/
+    credit: "Photo : Espace Sud (CAESM)"
+    evidence: 'File name "Lionel-Grandin-Francois" on the CAESM councillors page (photo from 2022).'
+  - commune_code: "97213"
+    image_url: https://www.mairie-lelamentin.fr/wp-content/uploads/2026/09/david-zobda.jpg
+    source_page_url: https://www.mairie-lelamentin.fr/ma-ville/le-conseil-municipal/les-elus/
+    credit: "Photo : Ville du Lamentin"
+    evidence: 'File name "david-zobda" on the town''s councillors page (uploaded September 2026).'
+  - commune_code: "97217"
+    image_url: https://www.villedumarin.org/image/Le_Maire/Photo_du_maire_2025.JPG
+    source_page_url: https://www.villedumarin.org/LE-MAIRE/169/
+    credit: "Photo : Ville du Marin"
+    evidence: '"Le Maire" page: "José MIRANDE a été élu en juin 2020, et réélu en mars 2026"; file Photo_du_maire_2025.'
+  - commune_code: "97220"
+    image_url: https://espacesud.fr/wp-content/uploads/2022/10/Jean-Francois-Beaunol-Riviere-Pilote-768x1024.jpg
+    source_page_url: https://espacesud.fr/les-elus/
+    credit: "Photo : Espace Sud (CAESM)"
+    evidence: 'File name "Jean-Francois-Beaunol-Riviere-Pilote" on the CAESM councillors page (photo from 2022).'
+  - commune_code: "97221"
+    image_url: https://riviere-salee.fr/wp-content/uploads/2019/01/Andre_Lesueur_maire_de_riviere-salee_201-221x300.jpg
+    source_page_url: https://riviere-salee.fr/rubriques/mairie/equipe-municipale/le-maire/
+    credit: "Photo : Ville de Rivière-Salée"
+    evidence: 'Alt text "André Lesueur - Maire de Rivière-Salée - Martinique" (photo from 2019).'
+  - commune_code: "97223"
+    image_url: https://espacesud.fr/wp-content/uploads/2022/10/Fred-Michel-Tirault-Saint-Esprit-768x1024.jpg
+    source_page_url: https://espacesud.fr/les-elus/
+    credit: "Photo : Espace Sud (CAESM)"
+    evidence: 'File name "Fred-Michel-Tirault-Saint-Esprit" on the CAESM councillors page (photo from 2022).'
+  - commune_code: "97224"
+    image_url: https://saintjoseph972.com/wp-content/uploads/2026/04/Yan-MONPLAISIR-3-796x1024.jpg
+    source_page_url: https://saintjoseph972.com/vie-municipale/conseil-municipal/le-maire/
+    credit: "Photo : Ville de Saint-Joseph"
+    evidence: 'File name "Yan-MONPLAISIR" on the town''s "Le maire" page (uploaded April 2026).'
+  - commune_code: "97226"
+    image_url: https://espacesud.fr/wp-content/uploads/2022/10/Jean-Michel-Gemieux-Sainte-Anne-768x1024.jpg
+    source_page_url: https://espacesud.fr/les-elus/
+    credit: "Photo : Espace Sud (CAESM)"
+    evidence: 'File name "Jean-Michel-Gemieux-Sainte-Anne" on the CAESM councillors page (photo from 2022).'
+  - commune_code: "97227"
+    image_url: https://espacesud.fr/wp-content/uploads/2022/10/Nicaise-Monrose-Sainte-Luce-768x1024.jpg
+    source_page_url: https://espacesud.fr/les-elus/
+    credit: "Photo : Espace Sud (CAESM)"
+    evidence: 'File name "Nicaise-Monrose-Sainte-Luce" on the CAESM councillors page (photo from 2022).'
+  - commune_code: "97228"
+    image_url: https://ville-saintemarie.com/wp-content/uploads/2020/06/Bruno-Nestor-AZEROT-Maire-333x500.jpg
+    source_page_url: https://ville-saintemarie.com/votre-mairie/le-maire/
+    credit: "Photo : Ville de Sainte-Marie"
+    evidence: 'Alt text "Bruno-Nestor AZEROT Maire" on the town''s "Le maire" page (photo from 2020).'
+  - commune_code: "97229"
+    image_url: https://www.mairie-schoelcher.fr/wp-content/uploads/2026/04/08-49-49.jpg
+    source_page_url: https://www.mairie-schoelcher.fr/ma-mairie/le-maire-et-le-conseil-municipal/
+    credit: "Photo : Ville de Schœlcher"
+    evidence: 'Caption "Daniel CHOMET Maire" under the photo (uploaded April 2026).'
+  - commune_code: "97231"
+    image_url: https://espacesud.fr/wp-content/uploads/2022/10/Nathalie-Grat-Trois-Ilets-768x1024.jpg
+    source_page_url: https://espacesud.fr/les-elus/
+    credit: "Photo : Espace Sud (CAESM)"
+    evidence: 'File name "Nathalie-Grat-Trois-Ilets" on the CAESM councillors page (photo from 2022).'
+  - commune_code: "97232"
+    image_url: https://espacesud.fr/wp-content/uploads/2022/10/jimmy-Farreaux-Vauclin-768x1024.jpg
+    source_page_url: https://espacesud.fr/les-elus/
+    credit: "Photo : Espace Sud (CAESM)"
+    evidence: 'File name "jimmy-Farreaux-Vauclin" on the CAESM councillors page (photo from 2022).'
