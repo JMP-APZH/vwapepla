@@ -264,10 +264,10 @@ criteria:
     legal_ref: null
     applies_if: null
   - key: risques_majeurs
-    family: legal
+    family: civic                # JM, 2 nov. 2026 : bonne pratique (le document est obligatoire, sa mise en ligne ne l'est pas)
     theme: suivi_usagers
-    label_fr: Information sur les risques majeurs (DICRIM)
-    description_fr: Document d'information communal sur les risques majeurs (séisme, cyclone, tsunami, inondation, volcan) avec les consignes. Le DICRIM est obligatoire ; on vérifie ici qu'il est en ligne.
+    label_fr: Information sur les risques majeurs (DICRIM) en ligne
+    description_fr: Document d'information communal sur les risques majeurs (séisme, cyclone, tsunami, inondation, volcan) avec les consignes, consultable sur le site. Le DICRIM lui-même est obligatoire ; sa mise en ligne est une bonne pratique, pas une obligation.
     legal_ref: Code de l'environnement, art. L125-2 II et R125-11 (DICRIM établi par le maire, information « par tout moyen approprié » ; la mise en ligne n'est pas exigée)
     ref_status: verified          # Légifrance, version en vigueur au 2 nov. 2026
     applies_if: null
