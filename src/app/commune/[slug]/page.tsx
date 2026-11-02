@@ -184,7 +184,7 @@ export default async function CommunePage({ params }: PageProps<"/commune/[slug]
         <h2 className="text-xl font-semibold tracking-tight">Trois mandats comparés</h2>
         <p className="mt-1 text-sm text-slate-600">
           Moyennes par habitant sur les années pleines de chaque mandat ; l&apos;année d&apos;élection, partagée entre
-          l&apos;équipe sortante et la nouvelle, est exclue des moyennes et grisée sur les graphiques.
+          l&apos;équipe sortante et la nouvelle, est exclue des moyennes et surlignée en orange sur les graphiques.
         </p>
         <div className="mt-3 rounded-xl border border-slate-200 bg-white p-4">
           <TermsComparison summaries={summaries} pastMayors={pastMayors} />
@@ -195,6 +195,10 @@ export default async function CommunePage({ params }: PageProps<"/commune/[slug]
           <TermsChart title="Investissement" points={pointsOf("di_hors_remb")} bands={bands} />
           <TermsChart title="Dette" points={pointsOf("encours_dette")} bands={bands} />
         </div>
+        <p className="mt-2 flex items-center gap-2 text-xs text-slate-600">
+          <span aria-hidden className="inline-block h-3 w-4 rounded-sm border border-dashed border-amber-700 bg-amber-200/60" />
+          Année d&apos;élection municipale : budget partagé entre l&apos;équipe sortante et la nouvelle équipe.
+        </p>
         <SourceNote sources={historySources} year={`${historyYears[0]}–${historyYears.at(-1)}`} />
       </section>
 
