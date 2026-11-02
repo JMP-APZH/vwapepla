@@ -9,7 +9,7 @@ export function MayorPhoto({ name, photo, communeName }: { name: string; photo?:
     <figure className="shrink-0">
       {photo ? (
         <Image src={mediaUrl(photo)} alt={`Portrait officiel : ${name}`} width={88} height={88}
-               className="h-22 w-22 rounded-full object-cover ring-2 ring-slate-700" />
+               className="h-22 w-22 rounded-full object-cover object-[50%_15%] ring-2 ring-slate-700" />
       ) : (
         <div aria-hidden className="flex h-22 w-22 items-center justify-center rounded-full bg-slate-700 text-2xl font-semibold text-slate-200">
           {initials}
