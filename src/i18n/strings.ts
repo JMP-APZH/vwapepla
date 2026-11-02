@@ -48,6 +48,7 @@ export const t = {
   noRanking: { fr: "Pas de classement : les chiffres sont présentés côte à côte.", kr: null },
   // Visitor votes (opinion layer: website quality only)
   siteTitle: { fr: "Le site internet de la mairie", kr: null },
+  votesShortcut: { fr: "Donnez votre avis sur le site internet de la mairie", kr: null },
   siteNone: { fr: "Aucun site internet n'est indiqué pour cette mairie dans l'annuaire officiel Service-Public.", kr: null },
   votesTitle: { fr: "Avis des visiteurs, non représentatif", kr: null },
   votesIntro: {
