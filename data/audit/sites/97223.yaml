@@ -1,0 +1,252 @@
+# Audit du site de la mairie — PREMIÈRE PASSE AUTOMATIQUE, à relire par JM.
+# status: yes / partial / no / na · method: automated (règles par mots-clés) ou manual (relu à la main).
+# « no » automatique = non trouvé par la recherche, pas une preuve d'absence. Rien n'est publié avant reviewed_by.
+commune_code: '97223'
+commune: Saint-Esprit
+site_url: https://www.villedusaintesprit.fr/
+audited_on: '2026-11-02'
+auditor: Claude (première passe automatique)
+reviewed_by: null
+pages_read: 80
+items:
+  site_officiel:
+    status: 'yes'
+    evidence_url: https://www.villedusaintesprit.fr/
+    archive_url: null
+    note: Site indiqué par l'annuaire Service-Public et accessible.
+    method: automated
+  budget_en_ligne:
+    status: partial
+    evidence_url: https://www.villedusaintesprit.fr/wp-content/uploads/2026/10/99_BU-Delib-86-26-Adoption-de-la-decision-modi.pdf
+    archive_url: null
+    note: 'Indice partiel (lien) : « Délibération n°86-2026 Adoption de la décision modificative n°1 du budget communal 2026 » ; à vérifier.'
+    method: automated
+  actes_publies:
+    status: 'yes'
+    evidence_url: https://www.villedusaintesprit.fr/arretes-municipaux/
+    archive_url: null
+    note: 'Trouvé (lien) : « Arrêtés Municipaux ».'
+    method: automated
+  liste_deliberations:
+    status: 'yes'
+    evidence_url: https://www.villedusaintesprit.fr/wp-content/uploads/2026/08/LISTE-DES-DELIBERATIONS-CM-DU-090726.pdf
+    archive_url: null
+    note: 'Trouvé (lien) : « Liste des délibérations du Conseil Municipal du 9 juillet 2026 ».'
+    method: automated
+  proces_verbaux:
+    status: partial
+    evidence_url: https://www.villedusaintesprit.fr/wp-content/uploads/2022/03/Xerox-Scan139.pdf
+    archive_url: null
+    note: 'Indice partiel (lien) : « Compte rendu du Conseil Municipal du 24 février 2022 » ; à vérifier.'
+    method: automated
+  open_data:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Obligation si 3 500 habitants et 50 agents ou plus : effectif non vérifié. Rien trouvé par la recherche automatique (80 pages lues).'
+    method: automated
+  subventions_publiees:
+    status: partial
+    evidence_url: https://www.villedusaintesprit.fr/wp-content/uploads/2026/05/99_DE-Delib-46-26-Attribution-de-subvebtions-a.pdf
+    archive_url: null
+    note: 'Indice partiel (lien) : « Délibération n°46-2026 Attribution de subventions aux associations &#8211; exercice 2026 » ; à vérifier.'
+    method: automated
+  accessibilite:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  mentions_legales:
+    status: 'yes'
+    evidence_url: https://www.villedusaintesprit.fr/mentions-legales
+    archive_url: null
+    note: 'Trouvé (lien) : « Mentions légales ».'
+    method: automated
+  donnees_personnelles:
+    status: 'yes'
+    evidence_url: https://www.villedusaintesprit.fr/politique-de-confidentialite/
+    archive_url: null
+    note: 'Trouvé (lien) : « Politique de Confidentialité ».'
+    method: automated
+  https:
+    status: 'yes'
+    evidence_url: https://www.villedusaintesprit.fr/
+    archive_url: null
+    note: Connexion chiffrée (https) avec certificat valide.
+    method: automated
+  mobile:
+    status: 'yes'
+    evidence_url: https://www.villedusaintesprit.fr/
+    archive_url: null
+    note: Page d'accueil adaptée aux écrans de téléphone (balise viewport) ; à confirmer à l'œil.
+    method: automated
+  demarches:
+    status: 'yes'
+    evidence_url: https://www.espace-citoyens.net/saint-esprit/
+    archive_url: null
+    note: 'Trouvé (lien) : « Cliquez ici pour vos démarches en ligne ».'
+    method: automated
+  contact:
+    status: 'yes'
+    evidence_url: https://www.villedusaintesprit.fr/
+    archive_url: null
+    note: 'Trouvé (texte de la page) : « mairie du saint-esprit rue schoelcher 97270 le saint-esprit 0596 56 61 02 secretariat@mairie-saint-esprit.fr
+      horaires d''ouverture : lundi et ».'
+    method: automated
+  a_jour:
+    status: 'yes'
+    evidence_url: https://www.villedusaintesprit.fr/
+    archive_url: null
+    note: 'Date la plus récente lue sur le site (accueil ou premières pages) : 08/10/2026 (il y a 25 jours).'
+    method: automated
+  elus_presentes:
+    status: 'yes'
+    evidence_url: https://www.villedusaintesprit.fr/elus-municipaux/
+    archive_url: null
+    note: 'Trouvé (lien) : « Les Élus Municipaux ».'
+    method: automated
+  calendrier_conseils:
+    status: partial
+    evidence_url: https://www.villedusaintesprit.fr/conseil-municipal/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « . fred michel tirault, informe la population de la tenue du prochain conseil municipal : jeudi
+      9 decembre 2021 a 17 h, salle des deliberatio » ; à vérifier.'
+    method: automated
+  rob_publie:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  budget_explique:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  marches_publics:
+    status: 'yes'
+    evidence_url: https://www.villedusaintesprit.fr/marches-publics/
+    archive_url: null
+    note: 'Trouvé (lien) : « Marchés publics ».'
+    method: automated
+  indemnites_elus:
+    status: 'yes'
+    evidence_url: https://www.villedusaintesprit.fr/wp-content/uploads/2026/05/99_DE-Delib39-26-Indemnites-Adjoints-et-Consei.pdf
+    archive_url: null
+    note: 'Trouvé (lien) : « Délibération n°39-2026 Indemnites de fonction attribuées au Maire, aux adjoints et aux conseillers municipaux délégu
+      Adjoints et Conseillers ».'
+    method: automated
+  projets_chiffres:
+    status: partial
+    evidence_url: https://www.villedusaintesprit.fr/le-budget-municipal/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « e la dette et les depenses dequipement de la collectivite ( travaux en cours, operations pour
+      le compte de tiers, &#8230; ) en recettes  » ; à vérifier.'
+    method: automated
+  rapports_controle:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  question_budget:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  presentation_commune:
+    status: partial
+    evidence_url: https://www.villedusaintesprit.fr/histoire-du-saint-esprit/
+    archive_url: null
+    note: 'Indice partiel (lien) : « Histoire du Saint-Esprit » ; à vérifier.'
+    method: automated
+  bilan_activite:
+    status: partial
+    evidence_url: https://www.villedusaintesprit.fr/les-appels-a-projets-de-la-fondation-orange/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « o;une convention de mecenat, d&rsquo;un suivi et d&rsquo;un bilan. consulter le calendrier des
+      appels a projets: https://www. » ; à vérifier.'
+    method: automated
+  magazine_municipal:
+    status: partial
+    evidence_url: https://www.villedusaintesprit.fr/category/actualites/page/9/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « ace a la mairie). a cette occasion, vous pourrez acheter le magazine amazones [&hellip;] octobre
+      rose lire la suite  travaux de  » ; à vérifier.'
+    method: automated
+  annuaire_services:
+    status: 'yes'
+    evidence_url: https://www.villedusaintesprit.fr/les-services-municipaux/
+    archive_url: null
+    note: 'Trouvé (lien) : « Les Services Municipaux ».'
+    method: automated
+  langue_kreyol:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  alertes_info:
+    status: partial
+    evidence_url: https://www.villedusaintesprit.fr/inscription-aux-alertes-sms/
+    archive_url: null
+    note: 'Indice partiel (lien (adresse seulement)) : « https://www.villedusaintesprit.fr/inscription-aux-alertes-sms/ » ; à vérifier.'
+    method: automated
+  abonnement_alertes:
+    status: partial
+    evidence_url: https://www.villedusaintesprit.fr/inscription-aux-alertes-sms/
+    archive_url: null
+    note: 'Indice partiel (lien (adresse seulement)) : « https://www.villedusaintesprit.fr/inscription-aux-alertes-sms/ » ; à vérifier.'
+    method: automated
+  suivi_demandes:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  signalement:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  risques_majeurs:
+    status: 'yes'
+    evidence_url: https://www.villedusaintesprit.fr/wp-content/uploads/2021/01/DICRIM-numerique.pdf
+    archive_url: null
+    note: 'Trouvé (lien) : « Téléchargez le DICRIM de la ville du Saint-Esprit ».'
+    method: automated
+  conseil_retransmis:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  consultations:
+    status: 'yes'
+    evidence_url: https://www.villedusaintesprit.fr/concertation-publique-sur-les-zaer/
+    archive_url: null
+    note: 'Trouvé (lien) : « Concertation Publique sur les ZAER ».'
+    method: automated
+  budget_participatif:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  instances_participatives:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  droit_petition:
+    status: partial
+    evidence_url: https://www.villedusaintesprit.fr/associations/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « nctuellement (pour des reunions, des spectacles,&nbsp;des repetitions...) ou annuellement (pour
+      des activites, cours, stages...) » ; à vérifier.'
+    method: automated

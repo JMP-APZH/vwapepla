@@ -1,0 +1,248 @@
+# Audit du site de la mairie — PREMIÈRE PASSE AUTOMATIQUE, à relire par JM.
+# status: yes / partial / no / na · method: automated (règles par mots-clés) ou manual (relu à la main).
+# « no » automatique = non trouvé par la recherche, pas une preuve d'absence. Rien n'est publié avant reviewed_by.
+commune_code: '97226'
+commune: Sainte-Anne
+site_url: http://www.sainte-anne972.fr
+audited_on: '2026-11-02'
+auditor: Claude (première passe automatique)
+reviewed_by: null
+pages_read: 19
+items:
+  site_officiel:
+    status: 'yes'
+    evidence_url: http://www.sainte-anne972.fr
+    archive_url: null
+    note: Site indiqué par l'annuaire Service-Public et accessible.
+    method: automated
+  budget_en_ligne:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated
+  actes_publies:
+    status: partial
+    evidence_url: http://www.sainte-anne972.fr/mobile/fr/actualite/286073/tour-yoles-edition-2026-%7C-sainte-anne-est-ville-etape-%7C-arretes-prefectoraux-2026
+    archive_url: null
+    note: 'Indice partiel (lien) : « TOUR DES YOLES &Eacute;DITION 2026 | SAINTE-ANNE EST UNE VILLE &Eacute;TAPE | ARR&Ecirc;T&Eacute;S PR&Eacute;FECTORAUX
+      2026     Arrêté N°R02 » ; à vérifier.'
+    method: automated
+  liste_deliberations:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated
+  proces_verbaux:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated
+  open_data:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Obligation si 3 500 habitants et 50 agents ou plus : effectif non vérifié. Rien trouvé par la recherche automatique (19 pages lues).'
+    method: automated
+  subventions_publiees:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated
+  accessibilite:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated
+  mentions_legales:
+    status: 'yes'
+    evidence_url: http://www.sainte-anne972.fr/mobile/fr/mentions-legales
+    archive_url: null
+    note: 'Trouvé (lien) : « Mentions légales ».'
+    method: automated
+  donnees_personnelles:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated
+  https:
+    status: 'no'
+    evidence_url: http://www.sainte-anne972.fr
+    archive_url: null
+    note: Le site s'ouvre en http (non chiffré).
+    method: automated
+  mobile:
+    status: 'no'
+    evidence_url: http://www.sainte-anne972.fr
+    archive_url: null
+    note: 'Pas de balise viewport : affichage probablement non adapté aux téléphones.'
+    method: automated
+  demarches:
+    status: 'yes'
+    evidence_url: https://www.service-public.fr/
+    archive_url: null
+    note: 'Trouvé (lien) : « Démarches en ligne ».'
+    method: automated
+  contact:
+    status: 'yes'
+    evidence_url: http://www.sainte-anne972.fr/mobile/fr/numeros-utiles
+    archive_url: null
+    note: 'Trouvé (texte de la page) : « airie adresse: place abbe morland - 97 227 sainte-anne tel: 05 96 76 73 06 fax: 05 96 76 76 95 email:
+      cliquez ici pour nous contacter horair ».'
+    method: automated
+  a_jour:
+    status: 'yes'
+    evidence_url: http://www.sainte-anne972.fr
+    archive_url: null
+    note: 'Date la plus récente lue sur le site (accueil ou premières pages) : 15/10/2026 (il y a 18 jours).'
+    method: automated
+  elus_presentes:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated
+  calendrier_conseils:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated
+  rob_publie:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated
+  budget_explique:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated
+  marches_publics:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated
+  indemnites_elus:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated
+  projets_chiffres:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated
+  rapports_controle:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated
+  question_budget:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated
+  presentation_commune:
+    status: partial
+    evidence_url: http://www.sainte-anne972.fr/mobile/fr/actualite/286081/la-fet-sentan-%7C-dimanche-26-juillet-2026-%7C-10h00-depart-etape-sainte-anne-vauclin-%7C-19h00-animations-podium
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « &eacute;motion, de f&ecirc;te et de fiert&eacute; autour du patrimoine martiniquais. &nbsp; bonne
+      f&ecirc;te &agrave; tous !!! &nb » ; à vérifier.'
+    method: automated
+  bilan_activite:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated
+  magazine_municipal:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated
+  annuaire_services:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated
+  langue_kreyol:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated
+  alertes_info:
+    status: 'yes'
+    evidence_url: http://www.sainte-anne972.fr/mobile/fr/numeros-utiles
+    archive_url: null
+    note: 'Trouvé (lien) : « Infos pratiques ».'
+    method: automated
+  abonnement_alertes:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated
+  suivi_demandes:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated
+  signalement:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated
+  risques_majeurs:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated
+  conseil_retransmis:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated
+  consultations:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated
+  budget_participatif:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated
+  instances_participatives:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated
+  droit_petition:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (19 pages lues) ; à vérifier.
+    method: automated

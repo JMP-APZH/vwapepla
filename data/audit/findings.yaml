@@ -84,3 +84,7 @@ findings:
      finding: "Aucun portrait officiel de la maire trouvé en ligne.", reviewed_by: null}
   - {commune_code: "97234", topic: council, observed_on: 2026-11-02, method: automated, url: "https://www.ville-bellefontaine.fr/municipalite/le-conseil-municipal/",
      finding: "Liste du conseil publiée (noms et fonctions) avec photos de groupe ; pas de portrait individuel du maire ni des élus.", reviewed_by: null}
+  - {commune_code: "97232", topic: website, observed_on: 2026-11-02, method: automated, url: "https://ville-vauclin.fr/",
+     finding: "L'adresse du site indiquée par l'annuaire Service-Public ne répond pas : le nom de domaine n'existe pas (erreur DNS).", reviewed_by: null}
+  - {commune_code: "97231", topic: website, observed_on: 2026-11-02, method: automated, url: "https://villedestroisilets.com/",
+     finding: "La page d'accueil ne contient presque aucun lien lisible sans exécuter de script (3 liens) : contenu difficile d'accès pour les outils et lecteurs d'écran ; audit à faire à la main.", reviewed_by: null}

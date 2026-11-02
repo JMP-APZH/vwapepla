@@ -1,0 +1,252 @@
+# Audit du site de la mairie — PREMIÈRE PASSE AUTOMATIQUE, à relire par JM.
+# status: yes / partial / no / na · method: automated (règles par mots-clés) ou manual (relu à la main).
+# « no » automatique = non trouvé par la recherche, pas une preuve d'absence. Rien n'est publié avant reviewed_by.
+commune_code: '97222'
+commune: Le Robert
+site_url: https://www.ville-robert.fr/
+audited_on: '2026-11-02'
+auditor: Claude (première passe automatique)
+reviewed_by: null
+pages_read: 80
+items:
+  site_officiel:
+    status: 'yes'
+    evidence_url: https://www.ville-robert.fr/
+    archive_url: null
+    note: Site indiqué par l'annuaire Service-Public et accessible.
+    method: automated
+  budget_en_ligne:
+    status: partial
+    evidence_url: https://www.ville-robert.fr/votre-mairie/le-conseil-municipal/les-deliberations-du-conseil-municipal
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « ns et organismes telechargez votes des taux d''imposotop, du budget primitif 2022 telechargez
+      vote du budget primitif de l''exercice 2022 » ; à vérifier.'
+    method: automated
+  actes_publies:
+    status: partial
+    evidence_url: https://www.ville-robert.fr/votre-mairie/demarches-en-ligne/attestation-des-heritiers
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « 8-262 du 8 mars 1978 portant fixation du tarif des notaires arrete du 07 mai 2015 pris en application
+      de larticle l312-1-4 du  » ; à vérifier.'
+    method: automated
+  liste_deliberations:
+    status: partial
+    evidence_url: https://www.ville-robert.fr/votre-mairie/le-conseil-municipal/les-deliberations-du-conseil-municipal
+    archive_url: null
+    note: 'Indice partiel (lien (adresse seulement)) : « Les décisions du conseil municipal » ; à vérifier.'
+    method: automated
+  proces_verbaux:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  open_data:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Obligation si 3 500 habitants et 50 agents ou plus : effectif non vérifié. Rien trouvé par la recherche automatique (80 pages lues).'
+    method: automated
+  subventions_publiees:
+    status: partial
+    evidence_url: https://www.ville-robert.fr/votre-mairie/le-conseil-municipal/les-deliberations-du-conseil-municipal
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « ree section c n2715 situee a pontalery telechargez vote des subventions aux associations et organismes
+      telechargez votes des taux d''imposoto » ; à vérifier.'
+    method: automated
+  accessibilite:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  mentions_legales:
+    status: 'yes'
+    evidence_url: https://www.ville-robert.fr/mentions-legales
+    archive_url: null
+    note: 'Trouvé (lien) : « Mentions légales ».'
+    method: automated
+  donnees_personnelles:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  https:
+    status: 'yes'
+    evidence_url: https://www.ville-robert.fr/
+    archive_url: null
+    note: Connexion chiffrée (https) avec certificat valide.
+    method: automated
+  mobile:
+    status: 'yes'
+    evidence_url: https://www.ville-robert.fr/
+    archive_url: null
+    note: Page d'accueil adaptée aux écrans de téléphone (balise viewport) ; à confirmer à l'œil.
+    method: automated
+  demarches:
+    status: 'yes'
+    evidence_url: https://www.ville-robert.fr/votre-mairie/demarches-en-ligne
+    archive_url: null
+    note: 'Trouvé (lien) : « Faîtes vos démarches en ligne ».'
+    method: automated
+  contact:
+    status: 'yes'
+    evidence_url: https://www.ville-robert.fr/votre-mairie/services-municipaux/annuaire-des-services-municipaux
+    archive_url: null
+    note: 'Trouvé (texte de la page) : « ciales (c.c.a.s) av. edouard pideri lot st christophe tel : 0596 65 01 09 - fax : 0596.65.12.22 email
+      : ccas@ville-robert.fr horaires : lund ».'
+    method: automated
+  a_jour:
+    status: 'yes'
+    evidence_url: https://www.ville-robert.fr/
+    archive_url: null
+    note: 'Date la plus récente lue sur le site (accueil ou premières pages) : 22/10/2026 (il y a 11 jours).'
+    method: automated
+  elus_presentes:
+    status: 'yes'
+    evidence_url: https://www.ville-robert.fr/actualite/conseil-municipal-24
+    archive_url: null
+    note: 'Trouvé (lien) : « CONSEIL MUNICIPAL ».'
+    method: automated
+  calendrier_conseils:
+    status: partial
+    evidence_url: https://www.ville-robert.fr/actualite/ordre-du-jour-du-conseil-municipal-du-mardi-11-avril-2023
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « --> ordre du jour du conseil municipal du mardi 11 avril 2023 | ville du robert aller au » ;
+      à vérifier.'
+    method: automated
+  rob_publie:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  budget_explique:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  marches_publics:
+    status: 'yes'
+    evidence_url: https://www.marches-securises.fr/perso/Le-Robert_972/
+    archive_url: null
+    note: 'Trouvé (lien) : « Marchés publics ».'
+    method: automated
+  indemnites_elus:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  projets_chiffres:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  rapports_controle:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  question_budget:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  presentation_commune:
+    status: 'yes'
+    evidence_url: https://www.ville-robert.fr/votre-mairie/presentation-du-robert/histoire
+    archive_url: null
+    note: 'Trouvé (lien) : « Histoire ».'
+    method: automated
+  bilan_activite:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  magazine_municipal:
+    status: 'yes'
+    evidence_url: https://www.calameo.com/read/001587800d9e6e48afc6a
+    archive_url: null
+    note: 'Trouvé (lien) : « LIRE LE MAGAZINE ».'
+    method: automated
+  annuaire_services:
+    status: 'yes'
+    evidence_url: https://www.ville-robert.fr/votre-mairie/services-municipaux/annuaire-des-services-municipaux
+    archive_url: null
+    note: 'Trouvé (lien) : « Annuaire des services municipaux ».'
+    method: automated
+  langue_kreyol:
+    status: partial
+    evidence_url: https://www.ville-robert.fr/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « 17 decembre 2025 noel zwel - mercredi 17 decembre 2025 nwel kreyol - dimanche 14 decembre 2025
+      concert hommage a christian ade » ; à vérifier.'
+    method: automated
+  alertes_info:
+    status: 'yes'
+    evidence_url: https://www.ville-robert.fr/vivre-au-robert/infos-pratiques/numeros-durgence
+    archive_url: null
+    note: 'Trouvé (lien) : « Infos pratiques ».'
+    method: automated
+  abonnement_alertes:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  suivi_demandes:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  signalement:
+    status: 'yes'
+    evidence_url: https://www.ville-robert.fr/votre-mairie/demarches-en-ligne/signalement-vehicule-hors-dusage-sur-la-voie-publique
+    archive_url: null
+    note: 'Trouvé (lien) : « Signalement Véhicule Hors d&#039;Usage sur la voie publique ».'
+    method: automated
+  risques_majeurs:
+    status: 'yes'
+    evidence_url: https://www.ville-robert.fr/sites/default/files/dicrim_villedurobert2016_2021.pdf
+    archive_url: null
+    note: 'Trouvé (lien) : « Téléchargez le DICRIM de la ville du Robert ».'
+    method: automated
+  conseil_retransmis:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  consultations:
+    status: 'yes'
+    evidence_url: https://www.ville-robert.fr/votre-mairie/demarches-en-ligne/concertation-citoyenne
+    archive_url: null
+    note: 'Trouvé (lien) : « Concertation citoyenne ».'
+    method: automated
+  budget_participatif:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  instances_participatives:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  droit_petition:
+    status: partial
+    evidence_url: https://www.ville-robert.fr/vivre-au-robert/associations/les-associations
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « es ponctuellement (pour des reunions, des spectacles, des repetitions...) ou annuellement (pour
+      des activites, cours, stages...) » ; à vérifier.'
+    method: automated

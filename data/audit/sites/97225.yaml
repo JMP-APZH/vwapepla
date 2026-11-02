@@ -1,0 +1,259 @@
+# Audit du site de la mairie — PREMIÈRE PASSE AUTOMATIQUE, à relire par JM.
+# status: yes / partial / no / na · method: automated (règles par mots-clés) ou manual (relu à la main).
+# « no » automatique = non trouvé par la recherche, pas une preuve d'absence. Rien n'est publié avant reviewed_by.
+commune_code: '97225'
+commune: Saint-Pierre
+site_url: https://www.saintpierre-mq.fr
+audited_on: '2026-11-02'
+auditor: Claude (première passe automatique)
+reviewed_by: null
+pages_read: 80
+items:
+  site_officiel:
+    status: 'yes'
+    evidence_url: https://saintpierre-mq.fr/
+    archive_url: null
+    note: Site indiqué par l'annuaire Service-Public et accessible.
+    method: automated
+  budget_en_ligne:
+    status: partial
+    evidence_url: https://saintpierre-mq.fr/municipalite/le-conseil-municipal-2/seances-du-conseil/conseil-municipal-du-14-avril-2016/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : «  jeudi 14 avril 2016. ne pouvant voter le compte de gestion/compte administratif et le budget
+      primitif au cours de la meme seance de conseil » ; à vérifier.'
+    method: automated
+  actes_publies:
+    status: partial
+    evidence_url: https://saintpierre-mq.fr/municipalite/communiques-arretes/
+    archive_url: null
+    note: 'Indice partiel (lien (adresse seulement)) : « Communiqués » ; à vérifier.'
+    method: automated
+  liste_deliberations:
+    status: partial
+    evidence_url: https://saintpierre-mq.fr/en/municipal-council-of-14-april-2016/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « unicipal council on thursday, april 14, 2016 at 7 pm in the deliberation room of the city hall
+      of saint-pierre. the agenda to be deb » ; à vérifier.'
+    method: automated
+  proces_verbaux:
+    status: partial
+    evidence_url: https://saintpierre-mq.fr/municipalite/le-conseil-municipal-2/seances-du-conseil/conseil-municipal-du-5-novembre-2020-vote-du-clspd/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « re du jour. outre les points reglementaires (approbation du pv du conseil precedent&#8230;) les
+      elus ont approuve a l&rsquo;unanimite » ; à vérifier.'
+    method: automated
+  open_data:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Obligation si 3 500 habitants et 50 agents ou plus : effectif non vérifié. Rien trouvé par la recherche automatique (80 pages lues).'
+    method: automated
+  subventions_publiees:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  accessibilite:
+    status: partial
+    evidence_url: https://saintpierre-mq.fr/saint-pierre-ma-ville/les-services-municipaux/education/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « e du detour, la richesse de la diversite/la socialisation, laccessibilite pour tous, lepanouissement,
+      la lutte contre les precarites. » ; à vérifier.'
+    method: automated
+  mentions_legales:
+    status: 'yes'
+    evidence_url: https://saintpierre-mq.fr/mentions-legales-2/
+    archive_url: null
+    note: 'Trouvé (lien) : « Mentions légales ».'
+    method: automated
+  donnees_personnelles:
+    status: 'yes'
+    evidence_url: https://saintpierre-mq.fr/cnil-protection-des-donnees-personnelles/
+    archive_url: null
+    note: 'Trouvé (lien) : « CNIL – Protection des données personnelles ».'
+    method: automated
+  https:
+    status: 'yes'
+    evidence_url: https://saintpierre-mq.fr/
+    archive_url: null
+    note: Connexion chiffrée (https) avec certificat valide.
+    method: automated
+  mobile:
+    status: 'yes'
+    evidence_url: https://saintpierre-mq.fr/
+    archive_url: null
+    note: Page d'accueil adaptée aux écrans de téléphone (balise viewport) ; à confirmer à l'œil.
+    method: automated
+  demarches:
+    status: 'yes'
+    evidence_url: https://saintpierre-mq.fr/saint-pierre-ma-ville/mes-demarches/
+    archive_url: null
+    note: 'Trouvé (lien) : « Mes démarches en Ligne ».'
+    method: automated
+  contact:
+    status: 'yes'
+    evidence_url: https://saintpierre-mq.fr/contact/
+    archive_url: null
+    note: 'Trouvé (texte de la page) : « o villes et pays dart et dhistoire &#8211; accueil mairie : 05 96 78 10 32 &#8211; courriel : contact@saintpierre-mq.fr
+      &#8211; horaires d&r ».'
+    method: automated
+  a_jour:
+    status: 'yes'
+    evidence_url: https://saintpierre-mq.fr/
+    archive_url: null
+    note: 'Date la plus récente lue sur le site (accueil ou premières pages) : 04/10/2026 (il y a 29 jours).'
+    method: automated
+  elus_presentes:
+    status: partial
+    evidence_url: https://saintpierre-mq.fr/saint-pierre-ma-ville/les-services-municipaux/social/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « squelles il met en uvre la politique sociale determinee par les elus locaux ; l&rsquo;animation
+      des activites sociales. &nbsp; l » ; à vérifier.'
+    method: automated
+  calendrier_conseils:
+    status: partial
+    evidence_url: https://saintpierre-mq.fr/municipalite/le-conseil-municipal-2/seances-du-conseil/conseil-municipal-du-14-avril-2016/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « maire et le conseil municipal vous invitent a assister a la seance du conseil municipal du jeudi
+      14 avril 2016 a 19h en salle de delibera » ; à vérifier.'
+    method: automated
+  rob_publie:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  budget_explique:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  marches_publics:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  indemnites_elus:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  projets_chiffres:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  rapports_controle:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  question_budget:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  presentation_commune:
+    status: 'yes'
+    evidence_url: https://saintpierre-mq.fr/saint-pierre-ma-ville/
+    archive_url: null
+    note: 'Trouvé (lien) : « Ma ville ».'
+    method: automated
+  bilan_activite:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  magazine_municipal:
+    status: partial
+    evidence_url: https://saintpierre-mq.fr/multimedia/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « ramme accueil > multimedia que recherchez-vous ? multimedia magazines, guides, bulletins, videos,
+      photographies... retrouvez sai » ; à vérifier.'
+    method: automated
+  annuaire_services:
+    status: 'yes'
+    evidence_url: https://saintpierre-mq.fr/les-annuaires-de-la-ville/
+    archive_url: null
+    note: 'Trouvé (lien) : « Annuaires ».'
+    method: automated
+  langue_kreyol:
+    status: partial
+    evidence_url: https://saintpierre-mq.fr/saint-pierre-ma-ville/les-services-municipaux/culture/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « ouhaitent se familiariser avec l&rsquo;art de la ceramique. creole arts cafe au 103 rue victor
+      hugo : juliette kind aime non s » ; à vérifier.'
+    method: automated
+  alertes_info:
+    status: partial
+    evidence_url: https://saintpierre-mq.fr/toutes-les-actualites/
+    archive_url: null
+    note: 'Indice partiel (lien) : « Actualités » ; à vérifier.'
+    method: automated
+  abonnement_alertes:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  suivi_demandes:
+    status: partial
+    evidence_url: https://saintpierre-mq.fr/cnil-protection-des-donnees-personnelles/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « e session lors de la connexion d&rsquo;un utilisateur a son compte citoyen ; &#8211; traceurs
+      d&rsquo;analyse de mesure d&rsquo;audien » ; à vérifier.'
+    method: automated
+  signalement:
+    status: partial
+    evidence_url: https://saintpierre-mq.fr/2022/03/28/signaler-les-tresors-sous-marins/
+    archive_url: null
+    note: 'Indice partiel (lien) : « Signaler les trésors sous-marins       $(".nb_char").each(function(i){ len=$(this).text().length; if(len>280)
+      { $(this).text($(this).text(). » ; à vérifier.'
+    method: automated
+  risques_majeurs:
+    status: partial
+    evidence_url: https://saintpierre-mq.fr/toutes-les-actualites/risques-majeurs/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « es majeurs ! comment bien agir pour avoir les bons reflexes document d''information communal
+      sur les risques majeurs partagez partagez 0 part » ; à vérifier.'
+    method: automated
+  conseil_retransmis:
+    status: partial
+    evidence_url: https://www.facebook.com/share.php?u=https%3A%2F%2Fsaintpierre-mq.fr%2Fmunicipalite%2Fle-conseil-municipal-2%2F
+    archive_url: null
+    note: 'Indice partiel (lien (adresse seulement)) : « Partagez » ; à vérifier.'
+    method: automated
+  consultations:
+    status: partial
+    evidence_url: https://saintpierre-mq.fr/municipalite/le-conseil-municipal-2/seances-du-conseil/conseil-municipal-du-5-novembre-2020-vote-du-clspd/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « de securite et de prevention de la delinquance, instance de concertation entre les differentes
+      institutions pour prevenir les questi » ; à vérifier.'
+    method: automated
+  budget_participatif:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  instances_participatives:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  droit_petition:
+    status: partial
+    evidence_url: https://saintpierre-mq.fr/saint-pierre-ma-ville/les-services-municipaux/education/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « ntion generale portee a l&rsquo;enfant doit primer sur la repetition de l&rsquo;activite purement
+      scolaire. la journee type en a » ; à vérifier.'
+    method: automated

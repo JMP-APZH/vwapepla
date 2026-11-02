@@ -1,0 +1,251 @@
+# Audit du site de la mairie — PREMIÈRE PASSE AUTOMATIQUE, à relire par JM.
+# status: yes / partial / no / na · method: automated (règles par mots-clés) ou manual (relu à la main).
+# « no » automatique = non trouvé par la recherche, pas une preuve d'absence. Rien n'est publié avant reviewed_by.
+commune_code: '97221'
+commune: Rivière-Salée
+site_url: https://riviere-salee.fr/
+audited_on: '2026-11-02'
+auditor: Claude (première passe automatique)
+reviewed_by: null
+pages_read: 80
+items:
+  site_officiel:
+    status: 'yes'
+    evidence_url: https://riviere-salee.fr/
+    archive_url: null
+    note: Site indiqué par l'annuaire Service-Public et accessible.
+    method: automated
+  budget_en_ligne:
+    status: partial
+    evidence_url: https://riviere-salee.fr/mairie/le-budget-primitif-2018/
+    archive_url: null
+    note: 'Indice partiel (lien) : « Le budget primitif de Rivière-Salée (2018) » ; à vérifier.'
+    method: automated
+  actes_publies:
+    status: partial
+    evidence_url: https://riviere-salee.fr/services/police-municipale/le-service-de-police-municipale/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « e general des collectivites territoriales : non respect des arretes municipaux etablis en termes
+      de securite, de tranquillite et de salubr » ; à vérifier.'
+    method: automated
+  liste_deliberations:
+    status: partial
+    evidence_url: https://riviere-salee.fr/services/archives/que-va-t-on-trouver-aux-archives-municipales/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « , des permis de construire et des documents durbanisme, des deliberations du conseil municipal,
+      des journaux municipaux edites par la » ; à vérifier.'
+    method: automated
+  proces_verbaux:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  open_data:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Obligation si 3 500 habitants et 50 agents ou plus : effectif non vérifié. Rien trouvé par la recherche automatique (80 pages lues).'
+    method: automated
+  subventions_publiees:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  accessibilite:
+    status: partial
+    evidence_url: https://riviere-salee.fr/rubriques/mairie/equipe-municipale/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « joint delegation : affaires sociales solidarite handicap et accessibilite seniors sante politique
+      du logement et insertion. mise en p » ; à vérifier.'
+    method: automated
+  mentions_legales:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  donnees_personnelles:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  https:
+    status: 'yes'
+    evidence_url: https://riviere-salee.fr/
+    archive_url: null
+    note: Connexion chiffrée (https) avec certificat valide.
+    method: automated
+  mobile:
+    status: 'yes'
+    evidence_url: https://riviere-salee.fr/
+    archive_url: null
+    note: Page d'accueil adaptée aux écrans de téléphone (balise viewport) ; à confirmer à l'œil.
+    method: automated
+  demarches:
+    status: 'yes'
+    evidence_url: https://riviere-salee.fr/la-ville/le-busplus-vous-accompagne-dans-vos-demarches-en-ligne-gratuitement/
+    archive_url: null
+    note: 'Trouvé (lien) : « Le « BusPlus » vous accompagne dans vos démarches en ligne, gratuitement. ».'
+    method: automated
+  contact:
+    status: partial
+    evidence_url: https://riviere-salee.fr/questions-reponses/comment-contacter-le-service-economique-et-fiscal/
+    archive_url: null
+    note: 'Indice partiel (lien) : « Comment contacter le service économique et fiscal ? » ; à vérifier.'
+    method: automated
+  a_jour:
+    status: partial
+    evidence_url: https://riviere-salee.fr/
+    archive_url: null
+    note: 'Date la plus récente lue sur le site (accueil ou premières pages) : 16/04/2026 (il y a 200 jours).'
+    method: automated
+  elus_presentes:
+    status: 'yes'
+    evidence_url: https://riviere-salee.fr/rubriques/mairie/equipe-municipale/
+    archive_url: null
+    note: 'Trouvé (lien) : « Equipe Municipale ».'
+    method: automated
+  calendrier_conseils:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  rob_publie:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  budget_explique:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  marches_publics:
+    status: 'yes'
+    evidence_url: https://riviere-salee.fr/questions-reponses/quels-sont-les-marches-publics-de-la-ville/
+    archive_url: null
+    note: 'Trouvé (lien) : « Quels sont les marchés publics de la ville ? ».'
+    method: automated
+  indemnites_elus:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  projets_chiffres:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  rapports_controle:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  question_budget:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  presentation_commune:
+    status: 'yes'
+    evidence_url: https://riviere-salee.fr/rubriques/mairie/histoire-de-la-ville/
+    archive_url: null
+    note: 'Trouvé (lien) : « Histoire de la ville ».'
+    method: automated
+  bilan_activite:
+    status: partial
+    evidence_url: https://riviere-salee.fr/rubriques/mairie/le-budget-de-la-ville/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : «  plus  &laquo; precedent suivant &raquo; les projets et les realisations cafeiere : livraison
+      des travaux. aujourd&rsquo;hui vendred » ; à vérifier.'
+    method: automated
+  magazine_municipal:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  annuaire_services:
+    status: 'yes'
+    evidence_url: https://riviere-salee.fr/la-ville/vie-pratique/annuaire-de-toutes-les-associations-de-riviere-salee/
+    archive_url: null
+    note: 'Trouvé (lien) : « Annuaire de toutes les associations de Rivière-Salée ».'
+    method: automated
+  langue_kreyol:
+    status: 'yes'
+    evidence_url: https://riviere-salee.fr/la-ville/inscriptions-dikte-kreyol-du-samedi-18-octobre-2025/
+    archive_url: null
+    note: 'Trouvé (lien) : « Inscriptions : Dikté kréyol du samedi 18 octobre 2025. ».'
+    method: automated
+  alertes_info:
+    status: 'yes'
+    evidence_url: https://riviere-salee.fr/environnement/risques-majeurs/cyclone-que-faire-en-vigilance-orange-preparez-vous/
+    archive_url: null
+    note: 'Trouvé (lien) : « Cyclone : que faire en vigilance orange ? Préparez-vous ! ».'
+    method: automated
+  abonnement_alertes:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  suivi_demandes:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  signalement:
+    status: partial
+    evidence_url: https://riviere-salee.fr/questions-reponses/un-membre-de-ma-famille-a-disparu-depuis-plusieurs-jours-ou-dois-je-madresser-pour-le-signaler/
+    archive_url: null
+    note: 'Indice partiel (lien) : « Un membre de ma famille a disparu depuis plusieurs jours, où dois-je m’adresser pour le signaler ? » ; à
+      vérifier.'
+    method: automated
+  risques_majeurs:
+    status: partial
+    evidence_url: https://riviere-salee.fr/rubriques/services/urbanisme/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « isques technologiques de lelaboration et de lapplication du dicrim et du plan communal de sauvegarde
+      quand faut-il faire un di » ; à vérifier.'
+    method: automated
+  conseil_retransmis:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  consultations:
+    status: partial
+    evidence_url: https://riviere-salee.fr/concertation-pour-la-premiere-modification-du-plan-local-durbanisme/
+    archive_url: null
+    note: 'Indice partiel (lien (adresse seulement)) : « PLU » ; à vérifier.'
+    method: automated
+  budget_participatif:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  instances_participatives:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  droit_petition:
+    status: 'yes'
+    evidence_url: https://riviere-salee.fr/la-ville/jouez-aux-echecs-avec-le-roi-saleen-initiation-et-competition/
+    archive_url: null
+    note: 'Trouvé (lien) : « Jouez aux échecs avec Le roi saléen (initiation et compétition) ».'
+    method: automated

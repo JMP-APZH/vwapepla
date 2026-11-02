@@ -1,0 +1,245 @@
+# Audit du site de la mairie — PREMIÈRE PASSE AUTOMATIQUE, à relire par JM.
+# status: yes / partial / no / na · method: automated (règles par mots-clés) ou manual (relu à la main).
+# « no » automatique = non trouvé par la recherche, pas une preuve d'absence. Rien n'est publié avant reviewed_by.
+commune_code: '97232'
+commune: Le Vauclin
+site_url: https://ville-vauclin.fr/
+audited_on: '2026-11-02'
+auditor: Claude (première passe automatique)
+reviewed_by: null
+pages_read: 0
+items:
+  site_officiel:
+    status: partial
+    evidence_url: https://ville-vauclin.fr/
+    archive_url: null
+    note: 'Site indiqué par l''annuaire, mais site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>) le 2026-11-02.'
+    method: automated
+  budget_en_ligne:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  actes_publies:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  liste_deliberations:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  proces_verbaux:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  open_data:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  subventions_publiees:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  accessibilite:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  mentions_legales:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  donnees_personnelles:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  https:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  mobile:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  demarches:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  contact:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  a_jour:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  elus_presentes:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  calendrier_conseils:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  rob_publie:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  budget_explique:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  marches_publics:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  indemnites_elus:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  projets_chiffres:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  rapports_controle:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  question_budget:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  presentation_commune:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  bilan_activite:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  magazine_municipal:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  annuaire_services:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  langue_kreyol:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  alertes_info:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  abonnement_alertes:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  suivi_demandes:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  signalement:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  risques_majeurs:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  conseil_retransmis:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  consultations:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  budget_participatif:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  instances_participatives:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated
+  droit_petition:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [Errno 11001] getaddrinfo failed>).'
+    method: automated

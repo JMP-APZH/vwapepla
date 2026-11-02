@@ -1,0 +1,254 @@
+# Audit du site de la mairie — PREMIÈRE PASSE AUTOMATIQUE, à relire par JM.
+# status: yes / partial / no / na · method: automated (règles par mots-clés) ou manual (relu à la main).
+# « no » automatique = non trouvé par la recherche, pas une preuve d'absence. Rien n'est publié avant reviewed_by.
+commune_code: '97201'
+commune: L'Ajoupa-Bouillon
+site_url: http://ville-ajoupabouillon.fr/
+audited_on: '2026-11-02'
+auditor: Claude (première passe automatique)
+reviewed_by: null
+pages_read: 72
+items:
+  site_officiel:
+    status: 'yes'
+    evidence_url: https://www.ville-ajoupabouillon.fr/
+    archive_url: null
+    note: Site indiqué par l'annuaire Service-Public et accessible.
+    method: automated
+  budget_en_ligne:
+    status: partial
+    evidence_url: https://www.ville-ajoupabouillon.fr/articles/le-conseil-municipal/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : «  sujets d&rsquo;interet local ; vote le budget, approuve le compte administratif (budget execute)
+      ; est competent pour creer des services pu » ; à vérifier.'
+    method: automated
+  actes_publies:
+    status: partial
+    evidence_url: https://www.legifrance.gouv.fr/loda/id/JORFTEXT000037627369/
+    archive_url: null
+    note: 'Indice partiel (lien) : « Arrêté du 16 novembre 2018 relatif aux justificatifs d&#039;identité et de domicile pour s&#039;inscrire
+      et pour voter en mairie » ; à vérifier.'
+    method: automated
+  liste_deliberations:
+    status: partial
+    evidence_url: https://www.ville-ajoupabouillon.fr/articles/le-conseil-municipal/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « squo;assemblee deliberante elue chargee de  regler, par ses deliberations, les affaires de la
+      commune . quel est le role du conseil m » ; à vérifier.'
+    method: automated
+  proces_verbaux:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (72 pages lues) ; à vérifier.
+    method: automated
+  open_data:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Commune de moins de 3 500 habitants (1751 hab.) : non concernée.'
+    method: automated
+  subventions_publiees:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (72 pages lues) ; à vérifier.
+    method: automated
+  accessibilite:
+    status: partial
+    evidence_url: https://www.ville-ajoupabouillon.fr/accessibilite/
+    archive_url: null
+    note: 'Indice partiel (lien) : « Accessibilité » ; à vérifier.'
+    method: automated
+  mentions_legales:
+    status: 'yes'
+    evidence_url: https://www.ville-ajoupabouillon.fr/mentions-legales/
+    archive_url: null
+    note: 'Trouvé (lien) : « Mentions légales ».'
+    method: automated
+  donnees_personnelles:
+    status: 'yes'
+    evidence_url: https://policies.google.com/privacy
+    archive_url: null
+    note: 'Trouvé (lien) : « Politique de confidentialité ».'
+    method: automated
+  https:
+    status: 'yes'
+    evidence_url: https://www.ville-ajoupabouillon.fr/
+    archive_url: null
+    note: Connexion chiffrée (https) avec certificat valide.
+    method: automated
+  mobile:
+    status: 'yes'
+    evidence_url: https://www.ville-ajoupabouillon.fr/
+    archive_url: null
+    note: Page d'accueil adaptée aux écrans de téléphone (balise viewport) ; à confirmer à l'œil.
+    method: automated
+  demarches:
+    status: 'yes'
+    evidence_url: https://www.service-public.gouv.fr/particuliers/vosdroits/F1367
+    archive_url: null
+    note: 'Trouvé (lien) : « service-public.fr ».'
+    method: automated
+  contact:
+    status: 'yes'
+    evidence_url: https://www.ville-ajoupabouillon.fr/articles/la-mediatheque-troisieme-lieu-pour-tisser-du-lien-social/
+    archive_url: null
+    note: 'Trouvé (texte de la page) : « erond courriel : ajoupabouillon@nordmediatek972.fr | tel. : 0596 53 35 88 horaires d&rsquo;ouverture
+      au public du lundi au vendredi de 07h30 ».'
+    method: automated
+  a_jour:
+    status: 'yes'
+    evidence_url: https://www.ville-ajoupabouillon.fr/
+    archive_url: null
+    note: 'Date la plus récente lue sur le site (accueil ou premières pages) : 05/10/2026 (il y a 28 jours).'
+    method: automated
+  elus_presentes:
+    status: partial
+    evidence_url: https://www.ville-ajoupabouillon.fr/articles/le-conseil-municipal/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « exerce ce pouvoir sous le controle du prefet. le mandat des elus municipaux est de 6 ans. les
+      adjoints (tes) au maire : olivier belleau » ; à vérifier.'
+    method: automated
+  calendrier_conseils:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (72 pages lues) ; à vérifier.
+    method: automated
+  rob_publie:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Commune de moins de 3 500 habitants (1751 hab.) : non concernée.'
+    method: automated
+  budget_explique:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (72 pages lues) ; à vérifier.
+    method: automated
+  marches_publics:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (72 pages lues) ; à vérifier.
+    method: automated
+  indemnites_elus:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (72 pages lues) ; à vérifier.
+    method: automated
+  projets_chiffres:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (72 pages lues) ; à vérifier.
+    method: automated
+  rapports_controle:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (72 pages lues) ; à vérifier.
+    method: automated
+  question_budget:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (72 pages lues) ; à vérifier.
+    method: automated
+  presentation_commune:
+    status: 'yes'
+    evidence_url: https://www.ville-ajoupabouillon.fr/articles/histoire-de-votre-commune
+    archive_url: null
+    note: 'Trouvé (lien) : « Histoire ».'
+    method: automated
+  bilan_activite:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (72 pages lues) ; à vérifier.
+    method: automated
+  magazine_municipal:
+    status: 'yes'
+    evidence_url: https://www.ville-ajoupabouillon.fr/wp-content/uploads/sites/84/koba-documents/mag-municipal-pdf-031022_bd95b690.pdf
+    archive_url: null
+    note: 'Trouvé (lien) : « BULLETIN MUNICIPAL 2022 ».'
+    method: automated
+  annuaire_services:
+    status: 'yes'
+    evidence_url: https://www.ville-ajoupabouillon.fr/annuaire/
+    archive_url: null
+    note: 'Trouvé (lien) : « ANNUAIRE ».'
+    method: automated
+  langue_kreyol:
+    status: 'yes'
+    evidence_url: https://www.ville-ajoupabouillon.fr/actualites/latilie-kreyol-matje-li-pale-jwe/
+    archive_url: null
+    note: 'Trouvé (lien) : « LATILIE KREYÒL – MATJÉ, LI, PALÉ, JWÉ ».'
+    method: automated
+  alertes_info:
+    status: partial
+    evidence_url: https://www.ville-ajoupabouillon.fr/actualites/
+    archive_url: null
+    note: 'Indice partiel (lien) : « Voir toutes les actualités » ; à vérifier.'
+    method: automated
+  abonnement_alertes:
+    status: partial
+    evidence_url: https://www.ville-ajoupabouillon.fr/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « e recevoir des informations par sms je souhaite recevoir la newsletter par email s&#039;inscrire
+      ce site est protege par recaptcha » ; à vérifier.'
+    method: automated
+  suivi_demandes:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (72 pages lues) ; à vérifier.
+    method: automated
+  signalement:
+    status: partial
+    evidence_url: https://www.ville-ajoupabouillon.fr/contact/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « ets plages probleme rencontre sur le site salles communales signaler un probleme de voirie urbanisme
+      ajouter un fichier telechargez votre do » ; à vérifier.'
+    method: automated
+  risques_majeurs:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (72 pages lues) ; à vérifier.
+    method: automated
+  conseil_retransmis:
+    status: partial
+    evidence_url: https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.ville-ajoupabouillon.fr%2Farticles%2Fle-conseil-municipal%2F
+    archive_url: null
+    note: 'Indice partiel (lien (adresse seulement)) : « https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.ville-ajoupabouillon.fr%2Farticles%2Fle-conseil-municipal%2F
+      » ; à vérifier.'
+    method: automated
+  consultations:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (72 pages lues) ; à vérifier.
+    method: automated
+  budget_participatif:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (72 pages lues) ; à vérifier.
+    method: automated
+  instances_participatives:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (72 pages lues) ; à vérifier.
+    method: automated
+  droit_petition:
+    status: partial
+    evidence_url: https://www.ville-ajoupabouillon.fr/articles/la-vie-associative/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « mail.fr activites : pratique de la petanque en loisir et competition. belote. dominos. rencontres
+      inter-associatives et thematiq » ; à vérifier.'
+    method: automated

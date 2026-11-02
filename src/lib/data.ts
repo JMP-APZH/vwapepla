@@ -183,3 +183,39 @@ export async function getVoteSummary(code: string): Promise<VoteSummary[]> {
     return { question: q, votes: Number(r?.votes ?? 0), average: r?.average == null ? null : Number(r.average) };
   });
 }
+
+export type AuditCriterion = {
+  key: string; family: "legal" | "quality" | "civic"; theme: string; label_fr: string; description_fr: string | null;
+  legal_ref: string | null; display_order: number;
+};
+export type AuditItem = {
+  criterion_key: string; status: "yes" | "partial" | "no" | "na"; evidence_url: string | null; archive_url: string | null;
+  note: string | null; method: "automated" | "manual";
+};
+export type SiteAudit = { id: string; audited_on: string; site_url: string | null; reviewed_by: string; items: AuditItem[] };
+
+export async function getAuditCriteria(): Promise<AuditCriterion[]> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("data");
+  return check(await supabase.from("audit_criteria").select("*").order("display_order"), "audit criteria") as AuditCriterion[];
+}
+
+/** Latest REVIEWED website audit of a commune (only reviewed audits are ever loaded), or null. */
+export async function getSiteAudit(code: string): Promise<SiteAudit | null> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("data");
+  const audits = check(
+    await supabase.from("site_audits").select("id,audited_on,site_url,reviewed_by").eq("commune_code", code)
+      .not("reviewed_by", "is", null).order("audited_on", { ascending: false }).limit(1),
+    "site audits",
+  ) as Omit<SiteAudit, "items">[];
+  if (!audits[0]) return null;
+  const items = check(
+    await supabase.from("site_audit_items").select("criterion_key,status,evidence_url,archive_url,note,method")
+      .eq("audit_id", audits[0].id),
+    "site audit items",
+  ) as AuditItem[];
+  return { ...audits[0], items };
+}

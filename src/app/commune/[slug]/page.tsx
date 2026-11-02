@@ -6,6 +6,7 @@ import { BudgetBreakdown, type BudgetYear } from "@/components/BudgetBreakdown";
 import { CouncilList } from "@/components/CouncilList";
 import { HeadlineSet } from "@/components/HeadlineSets";
 import { MayorPhoto } from "@/components/MayorPhoto";
+import { SiteChecklist } from "@/components/SiteChecklist";
 import { SiteVotes } from "@/components/SiteVotes";
 import { SourceNote } from "@/components/SourceNote";
 import { TermsChart, type ChartPoint } from "@/components/TermsChart";
@@ -13,7 +14,7 @@ import { TermsComparison } from "@/components/TermsComparison";
 import { CONTACT_EMAIL, DATA_NOTES, FIRST_YEAR, HEADLINE_SETS, PROVISIONAL_YEARS, REFERENCE_YEAR, STRATA, TERM } from "@/lib/config";
 import {
   getCommuneActuals, getCommuneBySlug, getCommunes, getCommuneYears, getCouncil, getMayor, getMedia, getMetrics, getPastMayors,
-  getSources, getTerms, getVoteSummary, getYearActuals,
+  getAuditCriteria, getSiteAudit, getSources, getTerms, getVoteSummary, getYearActuals,
 } from "@/lib/data";
 import { OFFICIAL_SITES, SITES_SOURCE } from "@/lib/sites";
 import { summarizeTerms } from "@/lib/terms";
@@ -44,6 +45,7 @@ export default async function CommunePage({ params }: PageProps<"/commune/[slug]
     getMedia(commune.code), getTerms(), getPastMayors(commune.code), getCommuneActuals(commune.code), getMetrics(),
     getCommuneYears(),
   ]);
+  const [siteAudit, auditCriteria] = await Promise.all([getSiteAudit(commune.code), getAuditCriteria()]);
   const portrait = media.find((m) => m.kind === "mayor_portrait");
   const councilPhoto = media.find((m) => m.kind === "council_photo");
   const summaries = summarizeTerms(terms, history);
@@ -215,6 +217,7 @@ export default async function CommunePage({ params }: PageProps<"/commune/[slug]
           <a href={SITES_SOURCE.url} className="underline" target="_blank" rel="noopener noreferrer">{SITES_SOURCE.label}</a>,
           consulté le {new Date(SITES_SOURCE.retrieved).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}.
         </p>
+        <SiteChecklist audit={siteAudit} criteria={auditCriteria} />
         {OFFICIAL_SITES[commune.code] && (
           <Suspense fallback={<div className="h-40 rounded-xl border border-violet-200 bg-violet-50/60" />}>
             <Votes code={commune.code} />
