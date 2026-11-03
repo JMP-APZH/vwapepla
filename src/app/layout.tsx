@@ -25,8 +25,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <Link href="/" className="shrink-0 whitespace-nowrap font-semibold tracking-tight">
               {common.siteName.fr} <span className="hidden font-normal text-slate-400 sm:inline">· {common.siteName.kr}</span>
             </Link>
-            {/* Phone: second row, scrolls sideways if needed. One link per domain, then the shared pages. */}
-            <nav className="-mx-4 mt-2 flex gap-4 overflow-x-auto whitespace-nowrap px-4 pb-1 text-sm text-slate-300 sm:mx-0 sm:mt-0 sm:px-0 sm:pb-0">
+            {/* Phone: links wrap under the name (all visible, no sideways scroll). One per domain, then shared pages. */}
+            <nav className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-300 sm:mt-0 sm:flex-nowrap sm:whitespace-nowrap">
               <Link href="/communes" className="hover:text-white">{common.navCommunes.fr}</Link>
               <Link href="/parlementaires" className="hover:text-white">{common.navParlement.fr}</Link>
               <Link href="/ctm" className="hover:text-white">{common.navCtm.fr}</Link>
