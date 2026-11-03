@@ -1,27 +1,42 @@
 import type { Officeholder } from "@/lib/communes/data";
 import { perHab, years as fmtYears } from "@/lib/core/format";
 import { TERM_ROWS, type TermSummary } from "@/lib/communes/terms";
+import { mayorsOfTerm } from "@/lib/communes/council";
 
 /** Side-by-side table of terms (also the accessible table view of the trend charts). */
 export function TermsComparison({ summaries, pastMayors }: { summaries: TermSummary[]; pastMayors: Officeholder[] }) {
-  const mayorsOf = (termId: string) => pastMayors.filter((m) => m.term_id === termId);
   return (
     <div className="overflow-x-auto">
       <table className="w-full min-w-[480px] text-sm">
         <thead>
           <tr className="text-left align-bottom">
             <th className="sticky left-0 z-10 bg-white py-2 pr-3 font-normal text-slate-500">Par habitant</th>
-            {summaries.map((s) => (
-              <th key={s.term.id} scope="col" className="py-2 pr-3 font-semibold">
-                Mandat {s.term.id.replace("-", "–")}
-                <span className="block text-xs font-normal text-slate-500">
-                  {mayorsOf(s.term.id).map((m) => `${m.first_name} ${m.last_name}`).join(", ") || "maire : en cours de vérification"}
-                </span>
-                <span className="block text-xs font-normal text-slate-500">
-                  {s.partial ? `données partielles (${s.years.join(", ")})` : `années ${s.years[0]}–${s.years.at(-1)}`}
-                </span>
-              </th>
-            ))}
+            {summaries.map((s) => {
+              const mayors = mayorsOfTerm(pastMayors, s.term.id);
+              return (
+                <th key={s.term.id} scope="col" className="py-2 pr-3 font-semibold">
+                  Mandat {s.term.id.replace("-", "–")}
+                  {mayors.length === 0 && <span className="block text-xs font-normal text-slate-500">maire : non trouvé</span>}
+                  {mayors.map((m) => (
+                    <span key={`${m.name}-${m.from}`} className="block text-xs font-normal text-slate-600">
+                      {m.name}
+                      {mayors.length > 1 && <span className="text-slate-500"> ({m.from}–{m.to ?? ""})</span>}
+                      {m.evidence === "secondaire" && (
+                        <>
+                          {" "}
+                          {m.sourceUrl
+                            ? <a href={m.sourceUrl} className="text-amber-800 underline" target="_blank" rel="noopener noreferrer">à confirmer</a>
+                            : <span className="text-amber-800">à confirmer</span>}
+                        </>
+                      )}
+                    </span>
+                  ))}
+                  <span className="block text-xs font-normal text-slate-500">
+                    {s.partial ? `données partielles (${s.years.join(", ")})` : `années ${s.years[0]}–${s.years.at(-1)}`}
+                  </span>
+                </th>
+              );
+            })}
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100">

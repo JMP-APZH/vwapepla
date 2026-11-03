@@ -116,14 +116,17 @@ export async function getCouncil(code: string): Promise<Officeholder[]> {
     || a.last_name.localeCompare(b.last_name, "fr") || a.first_name.localeCompare(b.first_name, "fr"));
 }
 
-/** Mayors of past terms — only rows checked by the team (verified). */
+/**
+ * Mayors of past terms (history.yaml, built by scripts/communes/pipeline/build_mayor_history.py): official sources
+ * first; rows from Wikipedia (source "vwapepla-historique-maires") are shown with "à confirmer" (see mayorEvidence).
+ */
 export async function getPastMayors(code: string): Promise<Officeholder[]> {
   "use cache";
   cacheLife("days");
   cacheTag("data");
   return check(
     await supabase.from("com_v_officeholders").select("*").eq("commune_code", code).eq("role", "maire")
-      .eq("verified", true).not("mandate_end", "is", null).order("mandate_start"),
+      .not("mandate_end", "is", null).in("term_id", ["2008-2014", "2014-2020", "2020-2026"]).order("mandate_start"),
     "past mayors",
   ) as Officeholder[];
 }
