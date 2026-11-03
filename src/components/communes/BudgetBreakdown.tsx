@@ -5,7 +5,8 @@ import type { LineValue, Reference } from "@/lib/communes/breakdown";
 import type { Source } from "@/lib/core/data";
 import { meur, pct, perHab, years as yrs } from "@/lib/core/format";
 import { SourceNote } from "@/components/card/SourceNote";
-import { common } from "@/i18n";
+import { HERO_METRICS } from "@/lib/communes/config";
+import { common, communes } from "@/i18n";
 
 export type BlockYear = { id: string; title: string; values: LineValue[]; reference: Reference; sources: Source[] };
 export type BudgetYear = { year: number; provisional: boolean; blocks: BlockYear[] };
@@ -14,7 +15,7 @@ function refLabel(r: Reference) {
   return r.kind === "stratum" ? `communes de même taille (${r.size})` : `ensemble de la Martinique (${r.size} communes)`;
 }
 
-function Line({ v, scale, bars }: { v: LineValue; scale: number; bars: boolean }) {
+function Line({ v, scale, bars, heroYear }: { v: LineValue; scale: number; bars: boolean; heroYear: boolean }) {
   const isEur = v.unit === "eur";
   const main = isEur ? perHab(v.perHab) : v.unit === "years" ? yrs(v.amount) : pct(v.amount);
   const width = bars && isEur && v.perHab != null && v.perHab > 0 && scale > 0 ? Math.min(1, v.perHab / scale) : 0;
@@ -34,21 +35,18 @@ function Line({ v, scale, bars }: { v: LineValue; scale: number; bars: boolean }
       <p className="mt-0.5 text-[11px] leading-snug text-slate-500 tabular-nums">
         {isEur && <>{meur(v.amount)}</>}
         {isEur && v.share != null && <> · {pct(v.share)} {v.subset ? "de la ligne au-dessus" : "du total"}</>}
-        {isEur && " · "}médiane : {isEur ? perHab(v.median) : v.unit === "years" ? yrs(v.median) : pct(v.median)}
+        {isEur && " · "}
+        {heroYear && HERO_METRICS.has(v.key)
+          ? <a href="#chiffres-cles" className="font-medium text-slate-700 underline">{communes.keyFigureMark.fr}</a>
+          : <>médiane : {isEur ? perHab(v.median) : v.unit === "years" ? yrs(v.median) : pct(v.median)}</>}
       </p>
-      {v.key === "capacite_desendettement" && (
-        <p className="text-[11px] leading-snug text-slate-500">
-          {v.amount == null
-            ? "Non calculable : l'épargne brute est négative ou nulle cette année-là."
-            : "Années d'épargne brute nécessaires pour rembourser toute la dette."}
-        </p>
-      )}
     </li>
   );
 }
 
 /** Income, spending, investment and debt blocks for one commune, with a year switcher (all years pre-rendered). */
-export function BudgetBreakdown({ data, defaultYear }: { data: BudgetYear[]; defaultYear: number }) {
+/** `heroYear`: the year of the hero trio; that year, its figures carry a "chiffre clé" mark instead of a second median. */
+export function BudgetBreakdown({ data, defaultYear, heroYear }: { data: BudgetYear[]; defaultYear: number; heroYear: number }) {
   const [year, setYear] = useState(defaultYear);
   const current = data.find((d) => d.year === year) ?? data.at(-1)!;
   return (
@@ -81,7 +79,7 @@ export function BudgetBreakdown({ data, defaultYear }: { data: BudgetYear[]; def
               <h3 className="font-semibold">{b.title} <span className="font-normal text-slate-500">· {current.year}</span></h3>
               <p className="text-[11px] text-slate-500">Médiane calculée sur : {refLabel(b.reference)}</p>
               <ul className="mt-1 space-y-2 text-sm">
-                {b.values.map((v) => <Line key={v.key} v={v} scale={scale} bars={bars} />)}
+                {b.values.map((v) => <Line key={v.key} v={v} scale={scale} bars={bars} heroYear={current.year === heroYear} />)}
               </ul>
               <SourceNote sources={b.sources} year={current.year} />
             </section>

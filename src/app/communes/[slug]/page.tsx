@@ -3,14 +3,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BudgetBreakdown, type BudgetYear } from "@/components/communes/BudgetBreakdown";
 import { CouncilList } from "@/components/communes/CouncilList";
-import { HeadlineSet } from "@/components/communes/HeadlineSets";
+import { Hero } from "@/components/communes/Hero";
 import { Caveat, CardHeader, CardShell, FactBlock, MissingInfo, OpinionBlock, RightOfReply } from "@/components/card/Card";
 import { Portrait } from "@/components/card/Portrait";
 import { SiteChecklist } from "@/components/communes/SiteChecklist";
 import { SiteVotes } from "@/components/communes/SiteVotes";
 import { TermsChart, type ChartPoint } from "@/components/communes/TermsChart";
 import { TermsComparison } from "@/components/communes/TermsComparison";
-import { DATA_NOTES, FIRST_YEAR, HEADLINE_SETS, PROVISIONAL_YEARS, REFERENCE_YEAR, STRATA, TERM } from "@/lib/communes/config";
+import { DATA_NOTES, FIRST_YEAR, HERO, PROVISIONAL_YEARS, REFERENCE_YEAR, TERM } from "@/lib/communes/config";
 import {
   getCommuneActuals, getCommuneBySlug, getCommunes, getCommuneYears, getCouncil, getMayor, getMetrics, getPastMayors,
   getAuditCriteria, getSiteAudit, getTerms, getVoteSummary, getYearActuals,
@@ -20,7 +20,7 @@ import { OFFICIAL_SITES, SITES_SOURCE } from "@/lib/communes/sites";
 import { summarizeTerms } from "@/lib/communes/terms";
 import { BLOCKS, blockLines, blockValues } from "@/lib/communes/breakdown";
 import { functionTitle, mayorsOfTerm, missingDeputyRanks } from "@/lib/communes/council";
-import { computeHeadline, headlineKeys } from "@/lib/communes/headline";
+import { computeHero, heroKeys, heroValue } from "@/lib/communes/headline";
 import { int } from "@/lib/core/format";
 import { deCommune } from "@/lib/communes/grammar";
 import { common, communes } from "@/i18n";
@@ -39,7 +39,7 @@ export default async function CommunePage({ params }: PageProps<"/communes/[slug
   if (!commune) notFound();
 
   const year = REFERENCE_YEAR;
-  const keys = [...new Set(HEADLINE_SETS.flatMap((s) => headlineKeys(s.figures)))];
+  const keys = heroKeys(HERO);
   const [years, rows, mayor, sources, council, media, terms, pastMayors, history, metrics, allYears] = await Promise.all([
     getCommuneYears(year), getYearActuals(year, keys), getMayor(commune.code), getSources(), getCouncil(commune.code),
     getMedia(`commune-${commune.code}`), getTerms(), getPastMayors(commune.code), getCommuneActuals(commune.code), getMetrics(),
@@ -50,13 +50,17 @@ export default async function CommunePage({ params }: PageProps<"/communes/[slug
   const councilPhoto = media.find((m) => m.kind === "council_photo");
   const summaries = summarizeTerms(terms, history);
   const historyYears = [...new Set(history.map((a) => a.year))].sort((a, b) => a - b);
+  // Charts of "Trois mandats": the hero trio + debt, year by year (same definitions as the hero).
+  const historyByYear = new Map(historyYears.map((y) => [y, new Map(history.filter((h) => h.year === y).map((h) => [h.metric_key, h]))]));
   const pointsOf = (key: string): ChartPoint[] => historyYears.map((y) => {
-    const a = history.find((h) => h.year === y && h.metric_key === key);
-    return { year: y, value: a?.eur_per_hab ?? null, provisional: a?.provisional ?? false };
+    const m = historyByYear.get(y)!;
+    const f = HERO.find((x) => x.key === key);
+    const value = f ? heroValue(f, m) : m.get(key)?.eur_per_hab ?? null;
+    return { year: y, value, provisional: [...m.values()].some((a) => a.provisional) };
   });
   const bands = terms.filter((t) => t.election_year >= historyYears[0] && t.election_year <= historyYears.at(-1)!)
     .map((t) => ({ id: t.id, from: t.first_full_year, to: t.last_full_year, electionYear: t.election_year }));
-  const charted = new Set(["rf_total", "df_total", "di_hors_remb", "epargne_brute", "encours_dette", "capacite_desendettement"]);
+  const charted = new Set([...heroKeys(HERO), "encours_dette"]);
   // Sources of the block: the accounts charted, and where each past mayor's name comes from (RNE, results, Wikipedia).
   const historySources = [...new Set([
     ...history.filter((a) => charted.has(a.metric_key)).map((a) => a.source_id),
@@ -64,8 +68,8 @@ export default async function CommunePage({ params }: PageProps<"/communes/[slug
   ])].map((id) => sources.get(id)).filter((s) => s != null);
   const me = years.find((y) => y.commune_code === commune.code);
   const stratumOf = new Map(years.map((y) => [y.commune_code, y.stratum]));
-  const sets = HEADLINE_SETS.map((s) => ({ ...s, values: computeHeadline(s.figures, commune.code, rows, stratumOf) }));
-  const usedSources = [...new Set(sets.flatMap((s) => s.values.flatMap((v) => v.sourceIds)))]
+  const hero = computeHero(HERO, commune.code, rows, stratumOf);
+  const usedSources = [...new Set(hero.flatMap((v) => v.sourceIds))]
     .map((id) => sources.get(id)).filter((s) => s != null);
   const mayorSource = mayor ? sources.get(mayor.source_id) : undefined;
 
@@ -150,23 +154,20 @@ export default async function CommunePage({ params }: PageProps<"/communes/[slug
 
       <MissingInfo items={missing} />
 
-      {/* Bidjé-a an 3 chif — three candidate sets stacked, to choose one */}
-      <FactBlock
-        title={<>{communes.headlineTitle.fr} <span className="font-normal text-slate-500">· {communes.headlineTitle.kr}</span></>}
-        sources={usedSources} year={year}
-      >
-        <p className="mt-1 text-sm text-slate-600">
-          Exercice {year}
-          {PROVISIONAL_YEARS.includes(year) && ` (${common.provisional.fr})`}, en euros par habitant.{" "}
-          {me?.stratum && STRATA[me.stratum] && `Strate : communes de ${STRATA[me.stratum]}`}
-        </p>
-        <p className="mt-1 text-xs text-slate-500">{communes.headlineDraft.fr}</p>
-        <div className="mt-4 space-y-3">
-          {sets.map((s) => <HeadlineSet key={s.id} title={s.title} values={s.values} />)}
-        </div>
-      </FactBlock>
+      {/* Bidjé-a an 3 chif: the hero trio, canonical place of these three KPIs (docs/branches/B1-KPI.md) */}
+      <div id="chiffres-cles" className="scroll-mt-4">
+        <FactBlock
+          title={<>{communes.headlineTitle.fr} <span className="font-normal text-slate-500">· {communes.headlineTitle.kr}</span></>}
+          sources={usedSources} year={year}
+        >
+          <p className="mt-1 text-sm text-slate-600">
+            {`${communes.heroIntro.fr} Exercice ${year}${PROVISIONAL_YEARS.includes(year) ? ` (${common.provisional.fr})` : ""}.`}
+          </p>
+          <Hero values={hero} stratum={me?.stratum ?? null} />
+        </FactBlock>
+      </div>
 
-      <BudgetBreakdown data={budget} defaultYear={budgetYears.includes(year) ? year : budgetYears.at(-1)!} />
+      <BudgetBreakdown data={budget} defaultYear={budgetYears.includes(year) ? year : budgetYears.at(-1)!} heroYear={year} />
       <p className="-mt-3 text-sm">
         <Link href={`/communes/comparer?c=${commune.code}`} className="underline">{communes.compareWith.fr}</Link>
       </p>
@@ -176,16 +177,18 @@ export default async function CommunePage({ params }: PageProps<"/communes/[slug
       {/* Trois mandats: full budget years in office only; election years shaded (shared between two teams) */}
       <FactBlock title="Trois mandats comparés" sources={historySources} year={`${historyYears[0]}–${historyYears.at(-1)}`}>
         <p className="mt-1 text-sm text-slate-600">
-          Moyennes par habitant sur les années pleines de chaque mandat ; l&apos;année d&apos;élection, partagée entre
-          l&apos;équipe sortante et la nouvelle, est exclue des moyennes et surlignée en orange sur les graphiques.
+          Les trois chiffres clés et la dette, mandat par mandat, sur les années pleines de chaque mandat (taux : total de
+          l&apos;épargne brute sur total des recettes de ces années ; dette et capacité : fin de la dernière année pleine).
+          L&apos;année d&apos;élection, partagée entre l&apos;équipe sortante et la nouvelle, est exclue et surlignée en
+          orange sur les graphiques.
         </p>
         <div className="mt-3 rounded-xl border border-slate-200 bg-white p-4">
           <TermsComparison summaries={summaries} pastMayors={pastMayors} />
         </div>
         <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <TermsChart title="Recettes de fonctionnement" points={pointsOf("rf_total")} bands={bands} />
-          <TermsChart title="Dépenses de fonctionnement" points={pointsOf("df_total")} bands={bands} />
-          <TermsChart title="Investissement" points={pointsOf("di_hors_remb")} bands={bands} />
+          <TermsChart title="Taux d'épargne brute" points={pointsOf("taux_epargne_brute")} bands={bands} unit="pct" />
+          <TermsChart title="Capacité de désendettement" points={pointsOf("capacite_desendettement")} bands={bands} unit="years" />
+          <TermsChart title="Dépenses d'équipement" points={pointsOf("depenses_equipement")} bands={bands} />
           <TermsChart title="Dette" points={pointsOf("encours_dette")} bands={bands} />
         </div>
         <p className="mt-2 flex items-center gap-2 text-xs text-slate-600">

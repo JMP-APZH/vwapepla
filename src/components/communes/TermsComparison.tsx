@@ -1,5 +1,6 @@
 import type { Officeholder } from "@/lib/communes/data";
-import { perHab, years as fmtYears } from "@/lib/core/format";
+import { perHab } from "@/lib/core/format";
+import { debtYears, pctDec } from "@/lib/communes/format";
 import { TERM_ROWS, type TermSummary } from "@/lib/communes/terms";
 import { mayorsOfTerm } from "@/lib/communes/council";
 
@@ -10,7 +11,7 @@ export function TermsComparison({ summaries, pastMayors }: { summaries: TermSumm
       <table className="w-full min-w-[480px] text-sm">
         <thead>
           <tr className="text-left align-bottom">
-            <th className="sticky left-0 z-10 bg-white py-2 pr-3 font-normal text-slate-500">Par habitant</th>
+            <th className="sticky left-0 z-10 bg-white py-2 pr-3 font-normal text-slate-500">Indicateur</th>
             {summaries.map((s) => {
               const mayors = mayorsOfTerm(pastMayors, s.term.id);
               return (
@@ -45,7 +46,7 @@ export function TermsComparison({ summaries, pastMayors }: { summaries: TermSumm
               <th scope="row" className="sticky left-0 z-10 bg-white py-1.5 pr-3 text-left font-normal text-slate-700">{r.label}</th>
               {summaries.map((s) => (
                 <td key={s.term.id} className="py-1.5 pr-3 tabular-nums">
-                  {r.unit === "years" ? fmtYears(s.values[r.key]) : perHab(s.values[r.key])}
+                  {r.unit === "years" ? debtYears(s.values[r.key]) : r.unit === "pct" ? pctDec(s.values[r.key]) : perHab(s.values[r.key])}
                 </td>
               ))}
             </tr>
