@@ -1,9 +1,10 @@
 import { cacheLife, cacheTag } from "next/cache";
-import { supabase } from "./supabase";
+import { check } from "@/lib/core/data";
+import { supabase } from "@/lib/core/supabase";
 import type { Term } from "./terms";
 import { QUESTIONS, type Question, type VoteSummary } from "./vote-questions";
 
-// Typed, cached reads. Data changes about once a year (new OFGL release / forecast entry):
+// Commune domain (B1): typed, cached reads of the com_* tables. Data changes about once a year (new OFGL release / forecast entry):
 // everything is cached for days and pre-rendered; a redeploy or revalidateTag("data") refreshes it.
 
 export type Commune = { code: string; slug: string; name: string; siren: string };
@@ -20,30 +21,17 @@ export type Actual = {
   commune_code: string; year: number; metric_key: string; amount: number | null; eur_per_hab: number | null;
   provisional: boolean; source_id: string;
 };
-export type Source = {
-  id: string; title: string | null; url: string; dataset_page: string | null; licence: string; credit: string;
-  retrieved: string;
-};
 export type Officeholder = {
   commune_code: string; role: "maire" | "adjoint" | "conseiller"; rank: number | null; last_name: string;
   first_name: string; sex: "F" | "M" | null; mandate_start: string; mandate_end: string | null; function_start: string | null;
   term_id: string | null; verified: boolean; source_id: string; source_url: string | null;
 };
-export type Media = {
-  id: string; commune_code: string; kind: "mayor_portrait" | "council_photo"; storage_path: string;
-  source_page_url: string; credit: string; retrieved: string;
-};
-
-function check<T>(res: { data: T | null; error: { message: string } | null }, what: string): T {
-  if (res.error || res.data == null) throw new Error(`Supabase ${what}: ${res.error?.message ?? "no data"}`);
-  return res.data;
-}
 
 export async function getCommunes(): Promise<Commune[]> {
   "use cache";
   cacheLife("days");
   cacheTag("data");
-  return check(await supabase.from("communes").select("code,slug,name,siren").order("name"), "communes");
+  return check(await supabase.from("com_communes").select("code,slug,name,siren").order("name"), "communes");
 }
 
 export async function getCommuneBySlug(slug: string): Promise<Commune | null> {
@@ -54,7 +42,7 @@ export async function getCommuneYears(year?: number): Promise<CommuneYear[]> {
   "use cache";
   cacheLife("days");
   cacheTag("data");
-  let q = supabase.from("commune_years").select("*");
+  let q = supabase.from("com_commune_years").select("*");
   if (year) q = q.eq("year", year);
   return check(await q.order("commune_code").order("year").limit(5000), "commune_years");
 }
@@ -63,7 +51,7 @@ export async function getMetrics(): Promise<Map<string, Metric>> {
   "use cache";
   cacheLife("days");
   cacheTag("data");
-  const rows = check(await supabase.from("metric_definitions").select("*").order("display_order"), "metrics");
+  const rows = check(await supabase.from("com_metric_definitions").select("*").order("display_order"), "metrics");
   return new Map((rows as Metric[]).map((m) => [m.key, m]));
 }
 
@@ -73,7 +61,7 @@ export async function getCommuneActuals(code: string): Promise<Actual[]> {
   cacheLife("days");
   cacheTag("data");
   return check(
-    await supabase.from("actuals")
+    await supabase.from("com_actuals")
       .select("commune_code,year,metric_key,amount,eur_per_hab,provisional,source_id")
       .eq("commune_code", code).order("year").limit(5000),
     "actuals",
@@ -90,7 +78,7 @@ export async function getYearActuals(year: number, keys: string[]): Promise<Actu
   const out: Actual[] = [];
   for (let from = 0; ; from += PAGE) {
     const rows = check(
-      await supabase.from("actuals")
+      await supabase.from("com_actuals")
         .select("commune_code,year,metric_key,amount,eur_per_hab,provisional,source_id")
         .eq("year", year).in("metric_key", keys).order("commune_code").order("metric_key")
         .range(from, from + PAGE - 1),
@@ -101,21 +89,12 @@ export async function getYearActuals(year: number, keys: string[]): Promise<Actu
   }
 }
 
-export async function getSources(): Promise<Map<string, Source>> {
-  "use cache";
-  cacheLife("days");
-  cacheTag("data");
-  const rows = check(
-    await supabase.from("sources").select("id,title,url,dataset_page,licence,credit,retrieved"), "sources");
-  return new Map((rows as Source[]).map((s) => [s.id, s]));
-}
-
 export async function getMayor(code: string): Promise<Officeholder | null> {
   "use cache";
   cacheLife("days");
   cacheTag("data");
   const rows = check(
-    await supabase.from("officeholders").select("*").eq("commune_code", code).eq("role", "maire")
+    await supabase.from("com_v_officeholders").select("*").eq("commune_code", code).eq("role", "maire")
       .is("mandate_end", null).order("mandate_start", { ascending: false }).limit(1),
     "officeholders",
   );
@@ -128,7 +107,7 @@ export async function getCouncil(code: string): Promise<Officeholder[]> {
   cacheLife("days");
   cacheTag("data");
   const rows = check(
-    await supabase.from("officeholders").select("*").eq("commune_code", code).is("mandate_end", null)
+    await supabase.from("com_v_officeholders").select("*").eq("commune_code", code).is("mandate_end", null)
       .eq("term_id", "2026-2032"),
     "council",
   ) as Officeholder[];
@@ -143,7 +122,7 @@ export async function getPastMayors(code: string): Promise<Officeholder[]> {
   cacheLife("days");
   cacheTag("data");
   return check(
-    await supabase.from("officeholders").select("*").eq("commune_code", code).eq("role", "maire")
+    await supabase.from("com_v_officeholders").select("*").eq("commune_code", code).eq("role", "maire")
       .eq("verified", true).not("mandate_end", "is", null).order("mandate_start"),
     "past mayors",
   ) as Officeholder[];
@@ -153,19 +132,7 @@ export async function getTerms(): Promise<Term[]> {
   "use cache";
   cacheLife("days");
   cacheTag("data");
-  return check(await supabase.from("terms").select("*").order("election_year"), "terms") as Term[];
-}
-
-/** Photos still published (removed_at is filtered by RLS). */
-export async function getMedia(code: string): Promise<Media[]> {
-  "use cache";
-  cacheLife("days");
-  cacheTag("data");
-  return check(await supabase.from("media").select("*").eq("commune_code", code), "media") as Media[];
-}
-
-export function mediaUrl(m: Media): string {
-  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/media/${m.storage_path}`;
+  return check(await supabase.from("terms").select("*").eq("body_kind", "conseil_municipal").order("election_year"), "terms") as Term[];
 }
 
 /**
@@ -176,7 +143,7 @@ export async function getVoteSummary(code: string): Promise<VoteSummary[]> {
   "use cache";
   cacheLife("minutes");
   cacheTag(`votes-${code}`);
-  const rows = check(await supabase.rpc("site_vote_summary", { p_commune: code }), "vote summary") as
+  const rows = check(await supabase.rpc("com_site_vote_summary", { p_commune: code }), "vote summary") as
     { question: Question; votes: number | string; average: number | string | null }[];
   return QUESTIONS.map((q) => {
     const r = rows.find((x) => x.question === q);
@@ -198,7 +165,7 @@ export async function getAuditCriteria(): Promise<AuditCriterion[]> {
   "use cache";
   cacheLife("days");
   cacheTag("data");
-  return check(await supabase.from("audit_criteria").select("*").order("display_order"), "audit criteria") as AuditCriterion[];
+  return check(await supabase.from("com_audit_criteria").select("*").order("display_order"), "audit criteria") as AuditCriterion[];
 }
 
 /** Latest REVIEWED website audit of a commune (only reviewed audits are ever loaded), or null. */
@@ -207,13 +174,13 @@ export async function getSiteAudit(code: string): Promise<SiteAudit | null> {
   cacheLife("days");
   cacheTag("data");
   const audits = check(
-    await supabase.from("site_audits").select("id,audited_on,site_url,reviewed_by").eq("commune_code", code)
+    await supabase.from("com_site_audits").select("id,audited_on,site_url,reviewed_by").eq("commune_code", code)
       .not("reviewed_by", "is", null).order("audited_on", { ascending: false }).limit(1),
     "site audits",
   ) as Omit<SiteAudit, "items">[];
   if (!audits[0]) return null;
   const items = check(
-    await supabase.from("site_audit_items").select("criterion_key,status,evidence_url,archive_url,note,method")
+    await supabase.from("com_site_audit_items").select("criterion_key,status,evidence_url,archive_url,note,method")
       .eq("audit_id", audits[0].id),
     "site audit items",
   ) as AuditItem[];

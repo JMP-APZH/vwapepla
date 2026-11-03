@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { Actual } from "./data";
 import type { HeadlineFigure } from "./config";
 import { computeHeadline, headlineKeys } from "./headline";
-import { median, perHab, years } from "./format";
+import { median, perHab, years } from "@/lib/core/format";
 
 const row = (c: string, k: string, amount: number | null, perHabValue: number | null = null): Actual => ({
   commune_code: c, year: 2024, metric_key: k, amount, eur_per_hab: perHabValue, provisional: false, source_id: "src",

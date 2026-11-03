@@ -1,11 +1,9 @@
-// Editorial settings. Changing them needs no data change.
+// Commune domain (B1) editorial settings. Shared settings: src/lib/core/config.ts. Changing them needs no data change.
 
 export const REFERENCE_YEAR = 2024; // latest complete year (final DGFiP balances)
 export const PROVISIONAL_YEARS = [2025]; // published, but subject to revision
 export const FIRST_YEAR = 2018;
 export const TERM = { start: 2026, end: 2032 };
-
-export const CONTACT_EMAIL = "vwapepla.org@gmail.com"; // "Droit de réponse" path (MVP2: mailto)
 
 // Known gaps or doubts in the official data, shown on the commune card ("Informations manquantes ou à vérifier").
 // Gaps that can be detected (deputy ranks, missing years, unverified past mayors) are computed, not listed here.

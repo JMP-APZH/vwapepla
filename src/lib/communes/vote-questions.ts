@@ -1,4 +1,4 @@
-// Shared by server and browser (no Node APIs here). Labels live in src/i18n/strings.ts.
+// Shared by server and browser (no Node APIs here). Labels live in messages/fr/communes.json (q_*, votes_*).
 
 export const QUESTIONS = ["facile_a_trouver", "a_jour", "comprehensible", "demarches"] as const;
 export type Question = (typeof QUESTIONS)[number];

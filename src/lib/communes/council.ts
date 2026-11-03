@@ -1,4 +1,4 @@
-import type { Officeholder } from "@/lib/data";
+import type { Officeholder } from "@/lib/communes/data";
 
 /** Function title, gendered from the RNE "Code sexe": "1re adjointe", "3e adjoint". Neutral form if sex is unknown. */
 export function functionTitle(o: Pick<Officeholder, "role" | "rank" | "sex">): string | null {

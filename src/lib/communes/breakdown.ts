@@ -1,6 +1,6 @@
 import type { Actual, Metric } from "./data";
 import { MIN_STRATUM_SIZE } from "./config";
-import { median } from "./format";
+import { median } from "@/lib/core/format";
 
 // Budget blocks of the card, built from metric_definitions (the validated mapping, stored as data).
 // A line is shown when `on_card`; its displayed parent is its nearest shown ancestor.

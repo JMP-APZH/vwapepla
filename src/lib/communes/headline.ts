@@ -1,7 +1,7 @@
 import type { Actual } from "./data";
 import type { HeadlineFigure } from "./config";
 import { MIN_STRATUM_SIZE } from "./config";
-import { median } from "./format";
+import { median } from "@/lib/core/format";
 
 export type HeadlineValue = {
   figure: HeadlineFigure;
