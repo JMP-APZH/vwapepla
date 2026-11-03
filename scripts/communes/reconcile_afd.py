@@ -2,13 +2,13 @@
 
 1) Edition 2024 (FY2023). 2) Edition 2021 (period 2014-2019): debt per year and total equipment spending.
 
-Run after scripts/pipeline/build.py:  python -I scripts/reconcile_afd.py   -> exit 1 if any indicator is off by > 2%.
+Run after scripts/communes/pipeline/build.py:  python -I scripts/communes/reconcile_afd.py   -> exit 1 if any indicator is off by > 2%.
 Benchmark: AFD, web_observatoire_martinique_2024.pdf — p.6-7 headline figures, Annexe 3 (EUR/hab x population 365 734).
 """
 import collections, json, pathlib, sys
 
 sys.stdout.reconfigure(encoding="utf-8")
-ROOT = pathlib.Path(__file__).resolve().parent.parent
+ROOT = pathlib.Path(__file__).resolve().parents[2]
 YEAR, TOLERANCE, AFD_POP = 2023, 0.02, 365734
 
 # (label, metric key, AFD value in M EUR, or None, AFD EUR/hab from Annexe 3, or None)
@@ -26,7 +26,7 @@ AFD = [
     ("Subventions reçues", "subventions_recues", None, 70),
 ]
 
-rows = json.loads((ROOT / "data" / "build" / "actuals.json").read_text(encoding="utf-8"))
+rows = json.loads((ROOT / "data" / "build" / "communes" / "com_actuals.json").read_text(encoding="utf-8"))
 tot, prev, communes = collections.defaultdict(float), collections.defaultdict(float), collections.defaultdict(set)
 for r in rows:
     if r["amount"] is None:

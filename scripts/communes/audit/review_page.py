@@ -1,19 +1,19 @@
-"""Build the phone review page for the website-audit drafts -> data/build/audit-review.html (gitignored).
+"""Build the phone review page for the website-audit drafts -> data/build/communes/audit-review.html (gitignored).
 
 The page lists, commune by commune, what the automatic pass found, with a link to the evidence and a ready-made
 "site:" search for the items it did not find. JM records a decision per item (kept in his browser only) and copies
-them as plain text; scripts/audit/apply_review.py writes them back into data/audit/sites/<insee>.yaml.
+them as plain text; scripts/communes/audit/apply_review.py writes them back into data/communes/audit/sites/<insee>.yaml.
 The page holds DRAFTS: it is published as a private artifact for JM, never inside the public app.
-Run: python -I scripts/audit/review_page.py
+Run: python -I scripts/communes/audit/review_page.py
 """
 import json, pathlib, sys, urllib.parse
 
 import yaml
 
 sys.stdout.reconfigure(encoding="utf-8")
-ROOT = pathlib.Path(__file__).resolve().parents[2]
-SITES = ROOT / "data" / "audit" / "sites"
-OUT = ROOT / "data" / "build" / "audit-review.html"
+ROOT = pathlib.Path(__file__).resolve().parents[3]
+SITES = ROOT / "data" / "communes" / "audit" / "sites"
+OUT = ROOT / "data" / "build" / "communes" / "audit-review.html"
 
 # Words to type in a "site:" search when the automatic pass found nothing (kept short: search engines AND them).
 SEARCH = {
@@ -34,7 +34,7 @@ SEARCH = {
 
 
 def main():
-    criteria = yaml.safe_load((ROOT / "data" / "audit" / "criteria.yaml").read_text(encoding="utf-8"))["criteria"]
+    criteria = yaml.safe_load((ROOT / "data" / "communes" / "audit" / "criteria.yaml").read_text(encoding="utf-8"))["criteria"]
     crit = [{k: c.get(k) for k in ("key", "family", "theme", "label_fr", "description_fr", "legal_ref")} for c in criteria]
     communes = []
     for f in sorted(SITES.glob("*.yaml")):

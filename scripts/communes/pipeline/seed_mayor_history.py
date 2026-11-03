@@ -1,20 +1,20 @@
-"""Seed data/officeholders/history.yaml with the likely mayor of each term: head of the list that won the most seats.
+"""Seed data/communes/officeholders/history.yaml with the likely mayor of each term: head of the list that won the most seats.
 
 Source: Ministry of the Interior results (communes of 1,000+ inhabitants; Martinique = département 'ZB').
 The head of the winning list is *usually* the mayor, but the council elects the mayor and mid-term changes happen:
 every seeded row is `verified: false` until JM checks it (the card only shows verified rows).
 Never overwrites a row already in the file. Communes < 1,000 inhabitants and 2008-2014 are left to fill in by hand.
 
-Run: python -I scripts/pipeline/seed_mayor_history.py
+Run: python -I scripts/communes/pipeline/seed_mayor_history.py
 """
 import collections, csv, json, pathlib, sys
 
 import yaml
 
 sys.stdout.reconfigure(encoding="utf-8")
-ROOT = pathlib.Path(__file__).resolve().parents[2]
-MANIFEST = json.loads((ROOT / "data" / "raw" / "manifest.json").read_text(encoding="utf-8"))
-OUT = ROOT / "data" / "officeholders" / "history.yaml"
+ROOT = pathlib.Path(__file__).resolve().parents[3]
+MANIFEST = json.loads((ROOT / "data" / "raw" / "communes" / "manifest.json").read_text(encoding="utf-8"))
+OUT = ROOT / "data" / "communes" / "officeholders" / "history.yaml"
 TERMS = {"2014-2020": ("2014-03-23", "2020-03-15", 2014), "2020-2026": ("2020-03-15", "2026-03-15", 2020)}
 
 
@@ -46,7 +46,7 @@ def lists(ds):
 def main():
     existing = yaml.safe_load(OUT.read_text(encoding="utf-8")) if OUT.exists() else []
     have = {(h["commune"], h["term"]) for h in existing or []}
-    communes = sorted({r["code"] for r in json.loads((ROOT / "data" / "build" / "communes.json").read_text("utf-8"))})
+    communes = sorted({r["code"] for r in json.loads((ROOT / "data" / "build" / "communes" / "com_communes.json").read_text("utf-8"))})
     new = []
     for term, (start, end, year) in TERMS.items():
         t1, t2 = lists(f"municipales-{year}-t1"), lists(f"municipales-{year}-t2")

@@ -1,23 +1,23 @@
-"""Automated FIRST PASS of the town-hall website audit -> data/audit/sites/<insee>.yaml (drafts for JM's review).
+"""Automated FIRST PASS of the town-hall website audit -> data/communes/audit/sites/<insee>.yaml (drafts for JM's review).
 
-Input: data/raw/audit/<insee>.json (crawl_sites.py), data/audit/criteria.yaml, src/lib/sites.ts, populations.
+Input: data/raw/communes/audit/<insee>.json (crawl_sites.py), data/communes/audit/criteria.yaml, src/lib/communes/sites.ts, populations.
 Each criterion gets a status (yes / partial / no / na), an evidence URL and a note that says how it was found.
 Heuristic keyword rules: "no" only means "not found by the automatic search" and is said so in the note.
 Never overwrites an item whose `method` is `manual`, nor a file already reviewed (reviewed_by set).
-Run: python -I scripts/audit/auto_audit.py
+Run: python -I scripts/communes/audit/auto_audit.py
 """
 import datetime, json, pathlib, re, sys, unicodedata, urllib.parse
 
 import yaml
 
 sys.stdout.reconfigure(encoding="utf-8")
-ROOT = pathlib.Path(__file__).resolve().parents[2]
-RAW, OUT = ROOT / "data" / "raw" / "audit", ROOT / "data" / "audit" / "sites"
-CRITERIA = yaml.safe_load((ROOT / "data" / "audit" / "criteria.yaml").read_text(encoding="utf-8"))["criteria"]
-SITES = dict(re.findall(r'"(972\d\d)": (null|"[^"]+")', (ROOT / "src" / "lib" / "sites.ts").read_text(encoding="utf-8")))
+ROOT = pathlib.Path(__file__).resolve().parents[3]
+RAW, OUT = ROOT / "data" / "raw" / "communes" / "audit", ROOT / "data" / "communes" / "audit" / "sites"
+CRITERIA = yaml.safe_load((ROOT / "data" / "communes" / "audit" / "criteria.yaml").read_text(encoding="utf-8"))["criteria"]
+SITES = dict(re.findall(r'"(972\d\d)": (null|"[^"]+")', (ROOT / "src" / "lib" / "communes" / "sites.ts").read_text(encoding="utf-8")))
 SITES = {k: (None if v == "null" else v.strip('"')) for k, v in SITES.items()}
-NAMES = {c["code"]: c["name"] for c in json.loads((ROOT / "data" / "build" / "communes.json").read_text(encoding="utf-8"))}
-POP = {r["commune_code"]: r["population"] for r in json.loads((ROOT / "data" / "build" / "commune_years.json").read_text(encoding="utf-8"))
+NAMES = {c["code"]: c["name"] for c in json.loads((ROOT / "data" / "build" / "communes" / "com_communes.json").read_text(encoding="utf-8"))}
+POP = {r["commune_code"]: r["population"] for r in json.loads((ROOT / "data" / "build" / "communes" / "com_commune_years.json").read_text(encoding="utf-8"))
        if r["year"] == 2024}
 TODAY = datetime.date.today()
 MONTHS = "janvier fevrier mars avril mai juin juillet aout septembre octobre novembre decembre".split()

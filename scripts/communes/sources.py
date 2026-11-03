@@ -1,18 +1,14 @@
-"""Download every open-data source used by Vwapepla for Martinique into data/raw/ (gitignored).
+"""Open-data sources of the communes domain (B1), downloaded by scripts/core/download_sources.py --domain communes.
 
-Re-runnable and idempotent: files are named <dataset>_972_<retrieval date>.csv; an existing file for the
-same day is skipped unless --force. Writes data/raw/manifest.json with URL, licence, retrieval date,
-row count and sha256 for each file, so every figure can be traced back to its source.
-
-Usage: python -I scripts/download_sources.py [--force] [--only <dataset_id> ...]
+JOBS: one dict per dataset (see scripts/core/fetching.py for the fields). Files land in data/raw/communes/<folder>/ and
+are listed in data/raw/communes/manifest.json.
 """
-import csv, datetime, hashlib, io, json, pathlib, sys, tempfile, time, urllib.parse, urllib.request, zipfile
+import csv, io, json, pathlib, tempfile, urllib.parse, urllib.request, zipfile
 
-ROOT = pathlib.Path(__file__).resolve().parent.parent
-RAW = ROOT / "data" / "raw"
+from fetching import LICENCE, fetch, file_job, portal_job  # scripts/core (put on sys.path by download_sources.py)
+
 OFGL = "https://data.ofgl.fr/api/explore/v2.1/catalog/datasets"
 DGFIP = "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets"
-LICENCE = "Licence Ouverte 2.0"
 
 # (folder, dataset_id, portal base, export params, credit, purpose)
 SOURCES = [
@@ -136,67 +132,14 @@ def fetch_archives(dest):
     print(f"     {written} Martinique rows kept")
 
 
-def fetch(url, dest, tries=3):
-    for i in range(tries):
-        try:
-            tmp = dest.with_suffix(".part")
-            with urllib.request.urlopen(url, timeout=900) as r, open(tmp, "wb") as f:
-                while chunk := r.read(1 << 20):
-                    f.write(chunk)
-            tmp.replace(dest)
-            return
-        except Exception as e:  # network hiccups: retry with backoff
-            if i == tries - 1:
-                raise
-            print(f"   retry {i + 1} after error: {e}")
-            time.sleep(5 * (i + 1))
 
 
-def portal_title(base, ds):
-    """Official dataset title from the portal catalogue (French, as published)."""
-    with urllib.request.urlopen(f"{base}/{ds}", timeout=60) as r:
-        return json.load(r)["metas"]["default"]["title"]
-
-
-def main():
-    force = "--force" in sys.argv
-    only = sys.argv[sys.argv.index("--only") + 1:] if "--only" in sys.argv else None
-    today = datetime.date.today().isoformat()
-    manifest_path = RAW / "manifest.json"
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8")) if manifest_path.exists() else {}
-    jobs = [(folder, ds, f"{base}/{ds}/exports/csv?" + urllib.parse.urlencode({**params, "delimiter": ";"}),
-             lambda base=base, ds=ds: portal_title(base, ds),
-             f"{base.replace('/api/explore/v2.1/catalog/datasets', '')}/explore/dataset/{ds}/", credit, purpose, "_972")
-            for folder, ds, base, params, credit, purpose in SOURCES]
-    jobs += [(folder, ds, url, lambda title=title: title, page, credit, purpose, "")
-             for folder, ds, url, title, page, credit, purpose in FILES]
-    jobs.append(("ofgl", "ofgl-base-communes-consolidee-archives", ARCHIVE_URL.format(year="{2012..2017}"),
-                 lambda: "Comptes consolidés des communes 2012-2017 (archives)",
-                 "https://data.ofgl.fr/explore/dataset/ofgl-base-communes-consolidee/", "OFGL, d'après DGFiP",
-                 "Consolidated commune accounts 2012-2017 (yearly national archives), filtered on 972.", "_972"))
-    for folder, ds, url, title, page, credit, purpose, scope in jobs:
-        if only and ds not in only:
-            continue
-        (RAW / folder).mkdir(parents=True, exist_ok=True)
-        dest = RAW / folder / f"{ds}{scope}_{today}.csv"
-        if dest.exists() and not force:
-            print(f"skip {dest.name} (exists)")
-        else:
-            print(f"get  {ds} ...", flush=True)
-            fetch_archives(dest) if ds.endswith("-archives") else fetch(url, dest)
-        data = dest.read_bytes()
-        enc = "latin-1" if folder == "elections" else "utf-8-sig"
-        with open(dest, encoding=enc, newline="") as f:  # count records, not lines (fields may hold newlines)
-            rows = sum(1 for _ in csv.reader(f, delimiter=";")) - 1
-        manifest[ds] = {
-            "file": str(dest.relative_to(ROOT)).replace("\\", "/"), "url": url, "title": title(),
-            "dataset_page": page,
-            "retrieved": today, "rows": rows, "sha256": hashlib.sha256(data).hexdigest(),
-            "licence": LICENCE, "credit": f"Source : {credit}", "purpose": purpose,
-        }
-        print(f"     {rows} rows")
-        manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
-
-
-if __name__ == "__main__":
-    main()
+JOBS = [portal_job(folder, ds, base, params, credit, purpose) for folder, ds, base, params, credit, purpose in SOURCES]
+JOBS += [file_job(folder, ds, url, title, page, credit, purpose, encoding="latin-1" if folder == "elections" else "utf-8-sig")
+         for folder, ds, url, title, page, credit, purpose in FILES]
+JOBS.append({**portal_job("ofgl", "ofgl-base-communes-consolidee-archives", OFGL, {}, "OFGL, d'après DGFiP",
+                          "Consolidated commune accounts 2012-2017 (yearly national archives), filtered on 972."),
+             "url": ARCHIVE_URL.format(year="{2012..2017}"),
+             "title": lambda: "Comptes consolidés des communes 2012-2017 (archives)",
+             "page": "https://data.ofgl.fr/explore/dataset/ofgl-base-communes-consolidee/",
+             "fetcher": fetch_archives})

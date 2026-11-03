@@ -1,16 +1,16 @@
-"""Website audit: data/audit/criteria.yaml + data/audit/sites/<insee>.yaml -> data/build/{audit_criteria,site_audits,site_audit_items}.json
+"""Website audit: data/communes/audit/criteria.yaml + data/communes/audit/sites/<insee>.yaml -> data/build/communes/{com_audit_criteria,com_site_audits,com_site_audit_items}.json
 
 Validates every file (known criteria, all criteria present, valid status, evidence for yes/partial).
 Only REVIEWED audits (reviewed_by set) are exported: the tables are publicly readable, drafts must never be.
-Run: python -I scripts/pipeline/build_audit.py   then   python -I scripts/pipeline/load_supabase.py audit_criteria site_audits site_audit_items
+Run: python -I scripts/communes/pipeline/build_audit.py   then   python -I scripts/core/load_supabase.py --domain communes com_audit_criteria com_site_audits com_site_audit_items
 """
 import json, pathlib, sys
 
 import yaml
 
 sys.stdout.reconfigure(encoding="utf-8")
-ROOT = pathlib.Path(__file__).resolve().parents[2]
-AUDIT, BUILD = ROOT / "data" / "audit", ROOT / "data" / "build"
+ROOT = pathlib.Path(__file__).resolve().parents[3]
+AUDIT, BUILD = ROOT / "data" / "communes" / "audit", ROOT / "data" / "build" / "communes"
 STATUSES = {"yes", "partial", "no", "na"}
 FAMILIES = {"legal", "quality", "civic"}
 THEMES = {"site", "argent_public", "information", "suivi_usagers", "participation"}
@@ -53,7 +53,7 @@ def main():
                   for k, v in a["items"].items()]
     if errors:
         sys.exit("\n".join(errors))
-    for name, rows in (("audit_criteria", criteria), ("site_audits", audits), ("site_audit_items", items)):
+    for name, rows in (("com_audit_criteria", criteria), ("com_site_audits", audits), ("com_site_audit_items", items)):
         (BUILD / f"{name}.json").write_text(json.dumps(rows, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"{len(criteria)} criteria · {len(audits)} reviewed audits exported ({len(items)} items) · {drafts} drafts kept out")
 

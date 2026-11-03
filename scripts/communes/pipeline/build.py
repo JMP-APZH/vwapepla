@@ -1,16 +1,18 @@
-"""Build normalised tables from data/raw/ into data/build/*.json (one JSON array per Supabase table).
+"""Build normalised tables from data/raw/communes/ into data/build/communes/<table>.json (one JSON array per
+Supabase table: core people tables + com_* tables).
 
-Deterministic and idempotent: same raw files -> same output. Run: python -I scripts/pipeline/build.py
+Deterministic and idempotent: same raw files -> same output. Run: python -I scripts/communes/pipeline/build.py
 Checks (exit 1 on failure): 34 communes every year, accounting hierarchy (children sum to parent), CCAS<->commune mapping.
 """
 import collections, csv, glob, json, pathlib, re, sys, unicodedata
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))  # our own code dir (python -I drops it)
 from metrics import BY_AGGREGATE, METRICS, OCTROI_ACCOUNTS, UNITS  # noqa: E402
+from people import core_people  # noqa: E402
 
 sys.stdout.reconfigure(encoding="utf-8")
-ROOT = pathlib.Path(__file__).resolve().parents[2]
-RAW, OUT = ROOT / "data" / "raw", ROOT / "data" / "build"
+ROOT = pathlib.Path(__file__).resolve().parents[3]
+RAW, OUT = ROOT / "data" / "raw" / "communes", ROOT / "data" / "build" / "communes"
 PROVISIONAL_YEARS = {2025}  # until DGFiP final balances (~end of December of the following year)
 FIRST_YEAR = 2012  # 2012-2017 from the OFGL yearly archives, 2018+ from the live dataset
 MANIFEST = json.loads((RAW / "manifest.json").read_text(encoding="utf-8"))
@@ -40,14 +42,15 @@ def per_hab(amount, pop):
 # --- sources -------------------------------------------------------------------------------------------------------
 sources = [{"id": ds, "title": m["title"], "url": m["url"], "dataset_page": m["dataset_page"],
             "licence": m["licence"], "credit": m["credit"], "retrieved": m["retrieved"], "sha256": m["sha256"],
-            "rows": m["rows"], "purpose": m["purpose"]} for ds, m in sorted(MANIFEST.items())]
+            "rows": m["rows"], "purpose": m["purpose"], "domain": "communes"} for ds, m in sorted(MANIFEST.items())]
 # Hand-maintained files in the repo are sources too (each row also carries its own source_url).
 sources.append({"id": "vwapepla-historique-maires", "title": "Historique des maires par mandat (Vwapepla)",
-                "url": "https://github.com/JMP-APZH/vwapepla/blob/main/data/officeholders/history.yaml",
-                "dataset_page": "https://github.com/JMP-APZH/vwapepla/blob/main/data/officeholders/history.yaml",
+                "url": "https://github.com/JMP-APZH/vwapepla/blob/main/data/communes/officeholders/history.yaml",
+                "dataset_page": "https://github.com/JMP-APZH/vwapepla/blob/main/data/communes/officeholders/history.yaml",
                 "licence": "Licence Ouverte 2.0", "credit": "Source : Vwapepla, d'après les sources citées pour chaque mandat",
                 "retrieved": MANIFEST["rne-maires"]["retrieved"], "sha256": None, "rows": None,
-                "purpose": "Past mayors by term, seeded from official election results and checked by hand."})
+                "purpose": "Past mayors by term, seeded from official election results and checked by hand.",
+                "domain": "communes"})
 
 # --- communes & commune_years ---------------------------------------------------------------------------------------
 CONS, ARCH = "ofgl-base-communes-consolidee", "ofgl-base-communes-consolidee-archives"
@@ -195,7 +198,7 @@ for c in communes:
         print(f"warning: RNE deputy ranks not contiguous in {c}: {ranks} (vacancy?)")
 
 # Past mayors: hand-checked history file (seeded from election results by seed_mayor_history.py, reviewed by JM).
-history_file = ROOT / "data" / "officeholders" / "history.yaml"
+history_file = ROOT / "data" / "communes" / "officeholders" / "history.yaml"
 if history_file.exists():
     import yaml  # noqa: E402
     term_ids = {t["id"] for t in TERMS}
@@ -248,14 +251,17 @@ if unmapped:
 
 # --- write -----------------------------------------------------------------------------------------------------------
 OUT.mkdir(parents=True, exist_ok=True)
-tables = {"sources": sources, "communes": sorted(communes.values(), key=lambda r: r["code"]),
-          "commune_years": sorted(years.values(), key=lambda r: (r["commune_code"], r["year"])),
-          "metric_definitions": metric_definitions, "terms": TERMS,
-          "officeholders": sorted(officeholders, key=lambda r: (r["commune_code"], r["mandate_start"], r["role"],
-                                                                r["rank"] or 99, r["last_name"])),
-          "actuals": sorted(actuals.values(), key=lambda r: (r["commune_code"], r["year"], r["metric_key"])),
-          "entities": sorted(entities.values(), key=lambda r: r["siren"]),
-          "entity_actuals": sorted(entity_actuals.values(), key=lambda r: (r["siren"], r["year"], r["agregat"]))}
+commune_rows = sorted(communes.values(), key=lambda r: r["code"])
+people = core_people(commune_rows, officeholders)  # institutions, bodies, seats, persons, mandates
+errors += people.pop("errors")
+tables = {"sources": sources, **{k: v for k, v in people.items() if k != "mandates"},
+          "terms": [dict(t, body_kind="conseil_municipal") for t in TERMS], "mandates": people["mandates"],
+          "com_communes": [dict(c, institution_id=f"commune-{c['code']}") for c in commune_rows],
+          "com_commune_years": sorted(years.values(), key=lambda r: (r["commune_code"], r["year"])),
+          "com_metric_definitions": metric_definitions,
+          "com_actuals": sorted(actuals.values(), key=lambda r: (r["commune_code"], r["year"], r["metric_key"])),
+          "com_entities": sorted(entities.values(), key=lambda r: r["siren"]),
+          "com_entity_actuals": sorted(entity_actuals.values(), key=lambda r: (r["siren"], r["year"], r["agregat"]))}
 for name, rows in tables.items():
     (OUT / f"{name}.json").write_text(json.dumps(rows, ensure_ascii=False, indent=0), encoding="utf-8")
     print(f"{name:20s} {len(rows):6d} rows")

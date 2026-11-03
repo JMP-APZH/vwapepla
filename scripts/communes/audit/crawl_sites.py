@@ -1,16 +1,16 @@
-"""Crawl each town-hall website (first pass of the website audit) into data/raw/audit/<insee>.json (gitignored).
+"""Crawl each town-hall website (first pass of the website audit) into data/raw/communes/audit/<insee>.json (gitignored).
 
 Polite and reproducible: identifies itself, honours robots.txt, TLS verified, one request at a time per site with a
 pause, same host only, at most MAX_PAGES HTML pages (links that look relevant to the criteria are visited first).
 Documents (PDF, DOCX...) are not downloaded: their URL and link text are recorded as evidence candidates.
-Site list: src/lib/sites.ts (Service-Public directory). Run: python -I scripts/audit/crawl_sites.py [insee ...]
+Site list: src/lib/communes/sites.ts (Service-Public directory). Run: python -I scripts/communes/audit/crawl_sites.py [insee ...]
 """
 import concurrent.futures as cf, datetime, heapq, json, pathlib, re, ssl, sys, time, unicodedata
 import urllib.error, urllib.parse, urllib.request, urllib.robotparser
 
 sys.stdout.reconfigure(encoding="utf-8")
-ROOT = pathlib.Path(__file__).resolve().parents[2]
-OUT = ROOT / "data" / "raw" / "audit"
+ROOT = pathlib.Path(__file__).resolve().parents[3]
+OUT = ROOT / "data" / "raw" / "communes" / "audit"
 UA = "VwapeplaAudit/0.1 (+https://vwapepla.org; vwapepla.org@gmail.com)"
 MAX_PAGES, PAUSE, TIMEOUT = 80, 0.7, 25
 DOC = re.compile(r"\.(pdf|docx?|xlsx?|odt|ods|zip)(\?|$)", re.I)
@@ -26,7 +26,7 @@ def norm(s):
 
 
 def sites():
-    src = (ROOT / "src" / "lib" / "sites.ts").read_text(encoding="utf-8")
+    src = (ROOT / "src" / "lib" / "communes" / "sites.ts").read_text(encoding="utf-8")
     return {k: v for k, v in re.findall(r'"(972\d\d)": "([^"]+)"', src)}
 
 

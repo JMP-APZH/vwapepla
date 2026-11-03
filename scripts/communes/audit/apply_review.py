@@ -1,16 +1,16 @@
-"""Apply JM's review choices (text copied from the review page) to data/audit/sites/<insee>.yaml.
+"""Apply JM's review choices (text copied from the review page) to data/communes/audit/sites/<insee>.yaml.
 
 Input lines:  <insee> <criterion> <yes|partial|no|na> <url|-> [// comment]   or   <insee> relu
 Each choice sets status, method: manual and, if given, evidence_url and note. "relu" sets reviewed_by: JM.
-Run: python -I scripts/audit/apply_review.py review.txt   (or pipe the text on stdin)
+Run: python -I scripts/communes/audit/apply_review.py review.txt   (or pipe the text on stdin)
 """
 import datetime, pathlib, re, sys
 
 import yaml
 
 sys.stdout.reconfigure(encoding="utf-8")
-ROOT = pathlib.Path(__file__).resolve().parents[2]
-SITES = ROOT / "data" / "audit" / "sites"
+ROOT = pathlib.Path(__file__).resolve().parents[3]
+SITES = ROOT / "data" / "communes" / "audit" / "sites"
 LINE = re.compile(r"^(972\d\d) (\w+) (yes|partial|no|na) (\S+)(?: // (.*))?$")
 HEADER = ("# Audit du site de la mairie — PREMIÈRE PASSE AUTOMATIQUE, relue par JM (points method: manual).\n"
           "# status: yes / partial / no / na · method: automated (règles par mots-clés) ou manual (relu à la main).\n"

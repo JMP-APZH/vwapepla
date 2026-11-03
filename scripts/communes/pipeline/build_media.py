@@ -1,12 +1,12 @@
-"""Mayor portraits: data/media/portraits.yaml -> resized JPEGs in Supabase Storage + data/build/media.json.
+"""Mayor portraits: data/communes/media/portraits.yaml -> resized JPEGs in Supabase Storage + data/build/communes/media.json.
 
 For each entry: download the official image (TLS verified), check it is an image, resize to 600 px on the long side,
 re-encode as JPEG (drops EXIF/GPS metadata), name it by content hash so a changed photo gets a new URL.
 Idempotent: same source image -> same file name; existing removals (media.removed_at) are kept by the upsert.
 
-Run:  python -I scripts/pipeline/build_media.py            # build data/build/media.json only
-      python -I scripts/pipeline/build_media.py --upload   # + upload files to the 'media' bucket (.env.local)
-then: python -I scripts/pipeline/load_supabase.py media
+Run:  python -I scripts/communes/pipeline/build_media.py            # build data/build/communes/media.json only
+      python -I scripts/communes/pipeline/build_media.py --upload   # + upload files to the 'media' bucket (.env.local)
+then: python -I scripts/core/load_supabase.py --domain communes media
 """
 import hashlib, io, json, pathlib, sys, urllib.error, urllib.request
 
@@ -14,14 +14,14 @@ import yaml
 from PIL import Image
 
 sys.stdout.reconfigure(encoding="utf-8")
-ROOT = pathlib.Path(__file__).resolve().parents[2]
-SRC = ROOT / "data" / "media" / "portraits.yaml"
-CACHE = ROOT / "data" / "raw" / "media"  # gitignored
-OUT = ROOT / "data" / "build" / "media.json"
+ROOT = pathlib.Path(__file__).resolve().parents[3]
+SRC = ROOT / "data" / "communes" / "media" / "portraits.yaml"
+CACHE = ROOT / "data" / "raw" / "communes" / "media"  # gitignored
+OUT = ROOT / "data" / "build" / "communes" / "media.json"
 UA = {"User-Agent": "Mozilla/5.0 (vwapepla.org civic transparency; contact vwapepla.org@gmail.com)"}
 MAX = 600
 
-sys.path.insert(0, str(pathlib.Path(__file__).parent))
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[2] / "core"))  # python -I drops script dirs
 from load_supabase import env  # noqa: E402
 
 
@@ -57,6 +57,10 @@ def main():
     if do_upload:
         e = env()
         base, key = e["SUPABASE_URL"].rstrip("/"), e["SUPABASE_SECRET_KEY"]
+    # The portrait belongs to the current mayor (core persons, built by build.py).
+    mandates = json.loads((OUT.parent / "mandates.json").read_text(encoding="utf-8"))
+    mayor = {m["seat_id"].split(":")[0].removeprefix("commune-").removesuffix("-cm"): m["person_id"]
+             for m in mandates if m["seat_id"].endswith(":maire") and m["end_date"] is None}
     rows, seen = [], set()
     for p in doc["portraits"]:
         code = p["commune_code"]
@@ -72,7 +76,8 @@ def main():
         if do_upload:
             upload(base, key, path, jpeg)
         rows.append({
-            "id": f"{code}-mayor_portrait", "commune_code": code, "kind": "mayor_portrait", "storage_path": path,
+            "id": f"{code}-mayor_portrait", "commune_code": code, "institution_id": f"commune-{code}",
+            "person_id": mayor[code], "kind": "mayor_portrait", "storage_path": path,
             "source_page_url": p["source_page_url"], "credit": p["credit"], "retrieved": str(doc["retrieved"]),
             "note": p["evidence"],
         })
