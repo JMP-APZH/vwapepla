@@ -392,3 +392,35 @@ Bouvier (2022–2025) · Desplanques (2025–), each with its decree link.
 - Assemblée nationale copy of the DPT Outre-mer 2026 (PDF, Martinique table pp. 236–239).
 - data.gouv.fr API for the SSMSI and DGCL datasets (resources, licence, update dates).
 - Leads only (not sources): RCI, Outremers360, Acteurs publics, Wikipedia, prix-carburant.eu, info.fr.
+
+---
+
+## 8. JM's answers (3 Nov 2026) and history depth per source
+
+### 8.1 Decisions recorded
+| Question | JM's answer | Status |
+|---|---|---|
+| Q7 crime block | Show it | **Decided**; shown with SSMSI caveats, next to social context (unemployment, poverty: INSEE, to add) and State spending by policy area (DPT) |
+| Q8 Kréyòl | Yes, where it adds value | **Decided**; drafts in `messages/gcf/prefet.json` only after JM validates each label |
+| Q10 sprint 2 | Postings, grants, DPT first | **Decided** |
+| Q3 sous-préfets | Yes, with photos | **Pending**: sous-préfets, secrétaire général and directeur de cabinet included as seats; photos follow the mayors' rule (credit + takedown, legal review). **No classification of anyone's ethnicity or skin colour** (see reply of 3 Nov 2026); alternative: published, sourced facts (official biography, birthplace when published by the State, self-declared origin) |
+| Q1 legal review | No legal limits wanted | **Pending**: card built within the law (GDPR, loi 1881); legal review kept before launch |
+| Q5 votes | Votes on defined criteria vs the population's interest | **Pending**: proposal = facts per policy area (vie chère, chlordécone, drug trafficking, unemployment/poverty) + a separate opinion block where visitors rank *State priorities*, not the person. Needs an amendment to CLAUDE.md principles 2 and 4 (shared PR, JM) |
+| Q4 PISTE | Why? | Explained: scripted, reproducible retrieval of the ~40+ decrees once sous-préfets are included |
+
+### 8.2 History depth per source (Martinique)
+| Source | Earliest year | Quality breaks / gaps | Checked? |
+|---|---|---|---|
+| JORF appointment decrees (Légifrance) | electronic JORF from 1990 (bulk dumps from 1987); préfet decrees found back to 2007 | none for decrees; taking-office dates come from press releases (only online from ~2011) | decrees 2007–2025 found; 1990–2007 not checked |
+| Recueil des actes administratifs | 2011 (« RAAP janvier 2011 ») | naming changes (RAAP → RAA → R02-YYYY-NNN, ~2017); scanned vs text PDFs to check; special issues | partly (search results) |
+| Rapport d'activité des services de l'État | 2010 | **2015–2019 missing online** | index page read |
+| DGCL grants (DETR/DSIL…) | 2018 | 2020–2021 recovery-plan schemes (DSIL exceptionnelle, DSIL/DSID RT); names not normalised | downloaded |
+| SSMSI recorded crime | 2016 | each edition revises past years and the commune geography; 38 % of commune rows not released; indicators added in 2024 (homicides, fraud at département level) | downloaded |
+| DPT Outre-mer, territorial annex | to check (DPT exists since the late 2000s) | 2026 edition simplified (5 axes, Titre 2 / hors Titre 2 only); PLF figures ≠ voted | 2026 edition read |
+| CCT | 2019 | two generations (2019–2022 + avenant 2023; 2024–2027) | pages read |
+| BQP | 2013 (law of 20 Nov 2012) | product list widened (2025: 180 products); car repair from 2026 | press releases found |
+| Fuel max prices | monthly; method of the arrêté interministériel of 5 Feb 2014 | method break 2014 | press releases 2022–2024 found |
+
+**Cut-off proposal (to validate):** **full card from data year 2018** (first year with grants, crime, RAA and DPT all
+available) → full cards for postings from Robine (2017) onward, with gaps stated (RASE 2015–2019, 2017 grants);
+**identity-only** (decree, dates, previous post) for postings 2007–2017 (Mancini, Prévost, Rigoulet-Roze).
