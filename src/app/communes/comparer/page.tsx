@@ -1,24 +1,25 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
-import { ComparePicker } from "@/components/ComparePicker";
-import { SourceNote } from "@/components/SourceNote";
-import { BLOCKS, blockLines } from "@/lib/breakdown";
-import { compareRows, parseCompare } from "@/lib/compare";
-import { FIRST_YEAR, PROVISIONAL_YEARS, REFERENCE_YEAR, STRATA } from "@/lib/config";
-import { getCommunes, getCommuneYears, getMetrics, getSources, getYearActuals } from "@/lib/data";
-import { eur, int, pct, years as yrs } from "@/lib/format";
-import { t } from "@/i18n/strings";
+import { ComparePicker } from "@/components/communes/ComparePicker";
+import { SourceNote } from "@/components/card/SourceNote";
+import { BLOCKS, blockLines } from "@/lib/communes/breakdown";
+import { compareRows, parseCompare } from "@/lib/communes/compare";
+import { FIRST_YEAR, PROVISIONAL_YEARS, REFERENCE_YEAR, STRATA } from "@/lib/communes/config";
+import { getCommunes, getCommuneYears, getMetrics, getYearActuals } from "@/lib/communes/data";
+import { getSources } from "@/lib/core/data";
+import { eur, int, pct, years as yrs } from "@/lib/core/format";
+import { common, communes } from "@/i18n";
 
 export const metadata: Metadata = { title: "Comparer des communes" };
 
-export default function ComparePage({ searchParams }: PageProps<"/comparer">) {
+export default function ComparePage({ searchParams }: PageProps<"/communes/comparer">) {
   return (
     <>
       <h1 className="text-2xl font-semibold tracking-tight">Comparer des communes</h1>
       <p className="mt-2 text-slate-600">
         Choisissez de 2 à 4 communes. Les chiffres sont en euros par habitant, présentés côte à côte dans l&apos;ordre
-        choisi, avec la médiane des 34 communes comme repère. {t.noRanking.fr}
+        choisi, avec la médiane des 34 communes comme repère. {common.noRanking.fr}
       </p>
       <Suspense fallback={<p className="mt-6 text-sm text-slate-500">Chargement…</p>}>
         <Comparison searchParams={searchParams} />
@@ -30,14 +31,14 @@ export default function ComparePage({ searchParams }: PageProps<"/comparer">) {
 const fmt = (unit: string, v: number | null | undefined, perHabValue: number | null | undefined) =>
   unit === "eur" ? eur(perHabValue) : unit === "years" ? yrs(v) : pct(v);
 
-async function Comparison({ searchParams }: Pick<PageProps<"/comparer">, "searchParams">) {
+async function Comparison({ searchParams }: Pick<PageProps<"/communes/comparer">, "searchParams">) {
   const sp = await searchParams;
-  const [communes, allYears, metrics, sources] = await Promise.all([
+  const [list, allYears, metrics, sources] = await Promise.all([
     getCommunes(), getCommuneYears(), getMetrics(), getSources(),
   ]);
   const years = [...new Set(allYears.map((y) => y.year))].filter((y) => y >= FIRST_YEAR).sort((a, b) => a - b);
-  const { codes, year } = parseCompare(sp.c, sp.annee, new Set(communes.map((c) => c.code)), years, REFERENCE_YEAR);
-  const picker = <ComparePicker communes={communes.map((c) => ({ code: c.code, name: c.name }))} codes={codes} year={year} years={years} />;
+  const { codes, year } = parseCompare(sp.c, sp.annee, new Set(list.map((c) => c.code)), years, REFERENCE_YEAR);
+  const picker = <ComparePicker communes={list.map((c) => ({ code: c.code, name: c.name }))} codes={codes} year={year} years={years} />;
   if (codes.length < 2) {
     return (
       <div className="mt-6 space-y-4">
@@ -50,7 +51,7 @@ async function Comparison({ searchParams }: Pick<PageProps<"/comparer">, "search
   const blocks = BLOCKS.map((b) => ({ ...b, lines: blockLines(metrics, b.id) }));
   const rows = await getYearActuals(year, [...new Set(blocks.flatMap((b) => b.lines.map((l) => l.key)))]);
   const picked = codes.map((code) => ({
-    commune: communes.find((c) => c.code === code)!,
+    commune: list.find((c) => c.code === code)!,
     profile: allYears.find((y) => y.commune_code === code && y.year === year),
   }));
   const usedSources = [...new Set(rows.filter((r) => codes.includes(r.commune_code)).map((r) => r.source_id))]
@@ -62,39 +63,39 @@ async function Comparison({ searchParams }: Pick<PageProps<"/comparer">, "search
   return (
     <div className="mt-6 space-y-4">
       {picker}
-      {provisional && <p className="text-xs text-amber-800">{t.provisionalNote.fr}</p>}
+      {provisional && <p className="text-xs text-amber-800">{common.provisionalNote.fr}</p>}
       <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
         <table className="min-w-full text-sm">
           <caption className="sr-only">Comparaison {year}, euros par habitant</caption>
           <thead className="border-b border-slate-200 text-xs text-slate-500">
             <tr>
               <th className={`${label} w-40 min-w-36`}>
-                Exercice {year}{provisional && ` (${t.provisional.fr})`}
+                Exercice {year}{provisional && ` (${common.provisional.fr})`}
                 <span className="block">en € par habitant</span>
               </th>
               {picked.map((p) => (
                 <th key={p.commune.code} className={`${cell} min-w-28 font-semibold text-slate-900`}>
-                  <Link href={`/commune/${p.commune.slug}`} className="underline">{p.commune.name}</Link>
+                  <Link href={`/communes/${p.commune.slug}`} className="underline">{p.commune.name}</Link>
                 </th>
               ))}
-              <th className={`${cell} min-w-28 font-normal`}>{t.medianMartinique.fr}</th>
+              <th className={`${cell} min-w-28 font-normal`}>{communes.medianMartinique.fr}</th>
             </tr>
           </thead>
           <tbody>
             <tr className="border-b border-slate-100">
-              <th className={label}>{t.population.fr}</th>
+              <th className={label}>{communes.population.fr}</th>
               {picked.map((p) => <td key={p.commune.code} className={cell}>{int(p.profile?.population)} hab.</td>)}
               <td className={cell} />
             </tr>
             <tr className="border-b border-slate-100">
-              <th className={label}>{t.stratum.fr}</th>
+              <th className={label}>{communes.stratum.fr}</th>
               {picked.map((p) => (
                 <td key={p.commune.code} className={`${cell} whitespace-normal text-xs`}>{(p.profile?.stratum && STRATA[p.profile.stratum]) ?? "—"}</td>
               ))}
               <td className={cell} />
             </tr>
             <tr className="border-b border-slate-200">
-              <th className={label}>{t.intercommunality.fr}</th>
+              <th className={label}>{communes.intercommunality.fr}</th>
               {picked.map((p) => (
                 <td key={p.commune.code} className={`${cell} whitespace-normal text-xs`}>
                   {p.profile?.epci_name?.replace(/^Communauté d'agglomération (du |de l'|de la )?/i, "") ?? "—"}
@@ -129,7 +130,7 @@ async function Comparison({ searchParams }: Pick<PageProps<"/comparer">, "search
         </table>
       </div>
       <SourceNote sources={usedSources} year={year} />
-      <aside className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">{t.caveatEpci.fr}</aside>
+      <aside className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">{communes.caveatEpci.fr}</aside>
     </div>
   );
 }

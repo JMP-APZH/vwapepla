@@ -1,40 +1,40 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
-import { BudgetBreakdown, type BudgetYear } from "@/components/BudgetBreakdown";
-import { CouncilList } from "@/components/CouncilList";
-import { HeadlineSet } from "@/components/HeadlineSets";
-import { MayorPhoto } from "@/components/MayorPhoto";
-import { SiteChecklist } from "@/components/SiteChecklist";
-import { SiteVotes } from "@/components/SiteVotes";
-import { SourceNote } from "@/components/SourceNote";
-import { TermsChart, type ChartPoint } from "@/components/TermsChart";
-import { TermsComparison } from "@/components/TermsComparison";
-import { CONTACT_EMAIL, DATA_NOTES, FIRST_YEAR, HEADLINE_SETS, PROVISIONAL_YEARS, REFERENCE_YEAR, STRATA, TERM } from "@/lib/config";
+import { BudgetBreakdown, type BudgetYear } from "@/components/communes/BudgetBreakdown";
+import { CouncilList } from "@/components/communes/CouncilList";
+import { HeadlineSet } from "@/components/communes/HeadlineSets";
+import { Caveat, CardHeader, CardShell, FactBlock, MissingInfo, OpinionBlock, RightOfReply } from "@/components/card/Card";
+import { Portrait } from "@/components/card/Portrait";
+import { SiteChecklist } from "@/components/communes/SiteChecklist";
+import { SiteVotes } from "@/components/communes/SiteVotes";
+import { TermsChart, type ChartPoint } from "@/components/communes/TermsChart";
+import { TermsComparison } from "@/components/communes/TermsComparison";
+import { DATA_NOTES, FIRST_YEAR, HEADLINE_SETS, PROVISIONAL_YEARS, REFERENCE_YEAR, STRATA, TERM } from "@/lib/communes/config";
 import {
-  getCommuneActuals, getCommuneBySlug, getCommunes, getCommuneYears, getCouncil, getMayor, getMedia, getMetrics, getPastMayors,
-  getAuditCriteria, getSiteAudit, getSources, getTerms, getVoteSummary, getYearActuals,
-} from "@/lib/data";
-import { OFFICIAL_SITES, SITES_SOURCE } from "@/lib/sites";
-import { summarizeTerms } from "@/lib/terms";
-import { BLOCKS, blockLines, blockValues } from "@/lib/breakdown";
-import { functionTitle, missingDeputyRanks } from "@/lib/council";
-import { computeHeadline, headlineKeys } from "@/lib/headline";
-import { int } from "@/lib/format";
-import { deCommune } from "@/lib/grammar";
-import { t } from "@/i18n/strings";
+  getCommuneActuals, getCommuneBySlug, getCommunes, getCommuneYears, getCouncil, getMayor, getMetrics, getPastMayors,
+  getAuditCriteria, getSiteAudit, getTerms, getVoteSummary, getYearActuals,
+} from "@/lib/communes/data";
+import { getMedia, getSources } from "@/lib/core/data";
+import { OFFICIAL_SITES, SITES_SOURCE } from "@/lib/communes/sites";
+import { summarizeTerms } from "@/lib/communes/terms";
+import { BLOCKS, blockLines, blockValues } from "@/lib/communes/breakdown";
+import { functionTitle, missingDeputyRanks } from "@/lib/communes/council";
+import { computeHeadline, headlineKeys } from "@/lib/communes/headline";
+import { int } from "@/lib/core/format";
+import { deCommune } from "@/lib/communes/grammar";
+import { common, communes } from "@/i18n";
 
 export async function generateStaticParams() {
   return (await getCommunes()).map((c) => ({ slug: c.slug }));
 }
 
-export async function generateMetadata({ params }: PageProps<"/commune/[slug]">): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps<"/communes/[slug]">): Promise<Metadata> {
   const commune = await getCommuneBySlug((await params).slug);
   return { title: commune ? `Budget de la commune ${deCommune(commune.name)}` : "Commune" };
 }
 
-export default async function CommunePage({ params }: PageProps<"/commune/[slug]">) {
+export default async function CommunePage({ params }: PageProps<"/communes/[slug]">) {
   const commune = await getCommuneBySlug((await params).slug);
   if (!commune) notFound();
 
@@ -42,7 +42,7 @@ export default async function CommunePage({ params }: PageProps<"/commune/[slug]
   const keys = [...new Set(HEADLINE_SETS.flatMap((s) => headlineKeys(s.figures)))];
   const [years, rows, mayor, sources, council, media, terms, pastMayors, history, metrics, allYears] = await Promise.all([
     getCommuneYears(year), getYearActuals(year, keys), getMayor(commune.code), getSources(), getCouncil(commune.code),
-    getMedia(commune.code), getTerms(), getPastMayors(commune.code), getCommuneActuals(commune.code), getMetrics(),
+    getMedia(`commune-${commune.code}`), getTerms(), getPastMayors(commune.code), getCommuneActuals(commune.code), getMetrics(),
     getCommuneYears(),
   ]);
   const [siteAudit, auditCriteria] = await Promise.all([getSiteAudit(commune.code), getAuditCriteria()]);
@@ -103,87 +103,68 @@ export default async function CommunePage({ params }: PageProps<"/commune/[slug]
   ];
 
   return (
-    <article className="space-y-6">
-      {/* Player card header */}
-      <header className="rounded-xl bg-slate-900 p-5 text-white">
-        <div className="flex items-start gap-4">
-          <MayorPhoto name={mayor ? `${mayor.first_name} ${mayor.last_name}` : commune.name} photo={portrait}
-                      communeName={commune.name} />
-          {/* "Commune du Lamentin", "des Anses-d'Arlet", "de La Trinité": contraction via deCommune() */}
-          <h1 className="pt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
-            <span className="font-normal text-slate-400">Commune</span> {deCommune(commune.name)}
-          </h1>
-        </div>
-        <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
-          <div>
-            <dt className="text-slate-400">{t.mayor.fr}</dt>
-            <dd className="font-medium">{mayor ? `${mayor.first_name} ${mayor.last_name}` : "—"}</dd>
-          </div>
-          <div>
-            <dt className="text-slate-400">{t.term.fr}</dt>
-            <dd className="font-medium">{TERM.start}–{TERM.end}</dd>
-          </div>
-          <div>
-            <dt className="text-slate-400">{t.population.fr} ({year})</dt>
-            <dd className="font-medium">{int(me?.population)} hab.</dd>
-          </div>
-          <div>
-            <dt className="text-slate-400">{t.intercommunality.fr}</dt>
-            <dd className="font-medium">{me?.epci_name?.replace(/^Communauté d'agglomération (du |de l'|de la )?/i, "") ?? "—"}</dd>
-          </div>
-        </dl>
-        {mayorSource && (
-          <p className="mt-4 text-[11px] text-slate-400">
-            {t.mayor.fr} : {mayorSource.credit}, en fonction depuis le{" "}
-            {new Date(mayor!.function_start ?? mayor!.mandate_start).toLocaleDateString("fr-FR")}.
-          </p>
-        )}
-      </header>
-
+    <CardShell
+      header={
+        <CardHeader
+          portrait={<Portrait name={mayor ? `${mayor.first_name} ${mayor.last_name}` : commune.name} photo={portrait}
+                              removalSubject={commune.name} />}
+          /* "Commune du Lamentin", "des Anses-d'Arlet", "de La Trinité": contraction via deCommune() */
+          title={<><span className="font-normal text-slate-400">Commune</span> {deCommune(commune.name)}</>}
+          facts={[
+            { label: communes.mayor.fr, value: mayor ? `${mayor.first_name} ${mayor.last_name}` : "—" },
+            { label: communes.term.fr, value: <>{TERM.start}–{TERM.end}</> },
+            { label: <>{communes.population.fr} ({year})</>, value: <>{int(me?.population)} hab.</> },
+            {
+              label: communes.intercommunality.fr,
+              value: me?.epci_name?.replace(/^Communauté d'agglomération (du |de l'|de la )?/i, "") ?? "—",
+            },
+          ]}
+          note={mayorSource && (
+            <>
+              {communes.mayor.fr} : {mayorSource.credit}, en fonction depuis le{" "}
+              {new Date(mayor!.function_start ?? mayor!.mandate_start).toLocaleDateString("fr-FR")}.
+            </>
+          )}
+        />
+      }
+      caveats={<Caveat>{communes.caveatEpci.fr}</Caveat>}
+      rightOfReply={<RightOfReply text={communes.rightOfReplyText.fr} subject={`Droit de réponse — ${commune.name}`} />}
+    >
       {OFFICIAL_SITES[commune.code] && (
         <a href="#site-mairie"
            className="flex min-h-11 items-center justify-between gap-3 rounded-xl border border-violet-200 bg-violet-50/60 px-4 py-2 text-sm text-violet-950">
-          <span>{t.votesShortcut.fr}</span>
+          <span>{communes.votesShortcut.fr}</span>
           <span aria-hidden className="text-lg">↓</span>
         </a>
       )}
 
-      {missing.length > 0 && (
-        <aside className="rounded-xl border border-slate-300 bg-slate-50 p-4 text-sm text-slate-700">
-          <h2 className="font-semibold">Informations manquantes ou à vérifier</h2>
-          <ul className="mt-1 list-disc space-y-0.5 pl-5">
-            {missing.map((m) => <li key={m}>{m}</li>)}
-          </ul>
-        </aside>
-      )}
+      <MissingInfo items={missing} />
 
       {/* Bidjé-a an 3 chif — three candidate sets stacked, to choose one */}
-      <section>
-        <h2 className="text-xl font-semibold tracking-tight">
-          {t.headlineTitle.fr} <span className="font-normal text-slate-500">· {t.headlineTitle.kr}</span>
-        </h2>
+      <FactBlock
+        title={<>{communes.headlineTitle.fr} <span className="font-normal text-slate-500">· {communes.headlineTitle.kr}</span></>}
+        sources={usedSources} year={year}
+      >
         <p className="mt-1 text-sm text-slate-600">
           Exercice {year}
-          {PROVISIONAL_YEARS.includes(year) && ` (${t.provisional.fr})`}, en euros par habitant.{" "}
+          {PROVISIONAL_YEARS.includes(year) && ` (${common.provisional.fr})`}, en euros par habitant.{" "}
           {me?.stratum && STRATA[me.stratum] && `Strate : communes de ${STRATA[me.stratum]}`}
         </p>
-        <p className="mt-1 text-xs text-slate-500">{t.headlineDraft.fr}</p>
+        <p className="mt-1 text-xs text-slate-500">{communes.headlineDraft.fr}</p>
         <div className="mt-4 space-y-3">
           {sets.map((s) => <HeadlineSet key={s.id} title={s.title} values={s.values} />)}
         </div>
-        <SourceNote sources={usedSources} year={year} />
-      </section>
+      </FactBlock>
 
       <BudgetBreakdown data={budget} defaultYear={budgetYears.includes(year) ? year : budgetYears.at(-1)!} />
       <p className="-mt-3 text-sm">
-        <Link href={`/comparer?c=${commune.code}`} className="underline">{t.compareWith.fr}</Link>
+        <Link href={`/communes/comparer?c=${commune.code}`} className="underline">{communes.compareWith.fr}</Link>
       </p>
 
       <CouncilList council={council} photo={councilPhoto} source={sources.get("rne-conseillers-municipaux")} />
 
       {/* Trois mandats: full budget years in office only; election years shaded (shared between two teams) */}
-      <section>
-        <h2 className="text-xl font-semibold tracking-tight">Trois mandats comparés</h2>
+      <FactBlock title="Trois mandats comparés" sources={historySources} year={`${historyYears[0]}–${historyYears.at(-1)}`}>
         <p className="mt-1 text-sm text-slate-600">
           Moyennes par habitant sur les années pleines de chaque mandat ; l&apos;année d&apos;élection, partagée entre
           l&apos;équipe sortante et la nouvelle, est exclue des moyennes et surlignée en orange sur les graphiques.
@@ -201,12 +182,11 @@ export default async function CommunePage({ params }: PageProps<"/commune/[slug]
           <span aria-hidden className="inline-block h-3 w-4 rounded-sm border border-dashed border-amber-700 bg-amber-200/60" />
           Année d&apos;élection municipale : budget partagé entre l&apos;équipe sortante et la nouvelle équipe.
         </p>
-        <SourceNote sources={historySources} year={`${historyYears[0]}–${historyYears.at(-1)}`} />
-      </section>
+      </FactBlock>
 
       {/* Town-hall website: the fact (listed site, official directory) then the opinion layer, kept apart. */}
       <section id="site-mairie" className="scroll-mt-4 space-y-3">
-        <h2 className="text-xl font-semibold tracking-tight">{t.siteTitle.fr}</h2>
+        <h2 className="text-xl font-semibold tracking-tight">{communes.siteTitle.fr}</h2>
         {OFFICIAL_SITES[commune.code] ? (
           <p className="text-sm">
             <a href={OFFICIAL_SITES[commune.code]!} className="break-all underline" target="_blank" rel="noopener noreferrer">
@@ -214,7 +194,7 @@ export default async function CommunePage({ params }: PageProps<"/commune/[slug]
             </a>
           </p>
         ) : (
-          <p className="text-sm text-slate-600">{t.siteNone.fr}</p>
+          <p className="text-sm text-slate-600">{communes.siteNone.fr}</p>
         )}
         <p className="text-xs text-slate-500">
           Source :{" "}
@@ -223,27 +203,12 @@ export default async function CommunePage({ params }: PageProps<"/commune/[slug]
         </p>
         <SiteChecklist audit={siteAudit} criteria={auditCriteria} />
         {OFFICIAL_SITES[commune.code] && (
-          <Suspense fallback={<div className="h-40 rounded-xl border border-violet-200 bg-violet-50/60" />}>
+          <OpinionBlock>
             <Votes code={commune.code} />
-          </Suspense>
+          </OpinionBlock>
         )}
       </section>
-
-      <aside className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-        {t.caveatEpci.fr}
-      </aside>
-
-      <section className="rounded-xl border border-slate-200 bg-white p-4 text-sm">
-        <h2 className="font-semibold">{t.rightOfReply.fr}</h2>
-        <p className="mt-1 text-slate-600">{t.rightOfReplyText.fr}</p>
-        <a
-          className="mt-2 inline-block underline"
-          href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(`Droit de réponse — ${commune.name}`)}`}
-        >
-          {CONTACT_EMAIL}
-        </a>
-      </section>
-    </article>
+    </CardShell>
   );
 }
 

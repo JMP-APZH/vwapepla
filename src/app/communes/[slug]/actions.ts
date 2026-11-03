@@ -2,10 +2,10 @@
 
 import { updateTag } from "next/cache";
 import { headers } from "next/headers";
-import { getCommunes } from "@/lib/data";
-import { OFFICIAL_SITES } from "@/lib/sites";
-import { supabaseAdmin } from "@/lib/supabase-admin";
-import { clientIp, overallStatus, parseAnswers, voterHash, type VoteStatus } from "@/lib/votes";
+import { getCommunes } from "@/lib/communes/data";
+import { OFFICIAL_SITES } from "@/lib/communes/sites";
+import { supabaseAdmin } from "@/lib/core/supabase-admin";
+import { clientIp, overallStatus, parseAnswers, voterHash, type VoteStatus } from "@/lib/communes/votes";
 
 export type VoteState = { status: VoteStatus | null };
 
