@@ -25,7 +25,7 @@ jobs:
         run: |
           URL=$(grep '^NEXT_PUBLIC_SUPABASE_URL=' .env | cut -d= -f2-)
           KEY=$(grep '^NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=' .env | cut -d= -f2-)
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL/rest/v1/communes?select=code&limit=1" -H "apikey: $KEY")
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL/rest/v1/com_communes?select=code&limit=1" -H "apikey: $KEY")
           echo "Supabase responded with HTTP $STATUS"
           if [ "$STATUS" -ge 200 ] && [ "$STATUS" -lt 300 ]; then
             echo "Project is active."

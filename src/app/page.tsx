@@ -1,25 +1,31 @@
 import Link from "next/link";
-import { getCommunes, getCommuneYears } from "@/lib/data";
-import { REFERENCE_YEAR } from "@/lib/config";
-import { int } from "@/lib/format";
-import { t } from "@/i18n/strings";
+import { common, communes, ctm, parlement, prefet } from "@/i18n";
 
-export default async function Home() {
-  const [communes, years] = await Promise.all([getCommunes(), getCommuneYears(REFERENCE_YEAR)]);
-  const pop = new Map(years.map((y) => [y.commune_code, y.population]));
+// Home: the four domains. Only "Communes" is published; the others are reserved for teams B2-B4.
+const SECTIONS = [
+  { href: "/communes", ns: communes, ready: true },
+  { href: "/parlementaires", ns: parlement, ready: false },
+  { href: "/ctm", ns: ctm, ready: false },
+  { href: "/prefet", ns: prefet, ready: false },
+] as const;
+
+export default function Home() {
   return (
     <>
-      <h1 className="text-2xl font-semibold tracking-tight">{t.homeTitle.fr}</h1>
-      <p className="mt-2 text-slate-600">{t.homeIntro.fr}</p>
-      <ul className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-3">
-        {communes.map((c) => (
-          <li key={c.code}>
-            <Link
-              href={`/commune/${c.slug}`}
-              className="block rounded-lg border border-slate-200 bg-white px-3 py-3 hover:border-slate-400"
-            >
-              <span className="block font-medium">{c.name}</span>
-              <span className="block text-xs text-slate-500">{int(pop.get(c.code))} hab.</span>
+      <h1 className="text-2xl font-semibold tracking-tight">{common.homeTitle.fr}</h1>
+      <p className="mt-2 text-slate-600">{common.homeIntro.fr}</p>
+      <ul className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+        {SECTIONS.map((s) => (
+          <li key={s.href}>
+            <Link href={s.href}
+                  className={`block h-full rounded-xl border bg-white p-4 ${s.ready ? "border-slate-300 hover:border-slate-500" : "border-dashed border-slate-300"}`}>
+              <span className="flex items-baseline justify-between gap-3">
+                <span className="font-semibold">{s.ns.sectionTitle.fr}</span>
+                <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs ${s.ready ? "bg-emerald-700 text-white" : "bg-slate-200 text-slate-600"}`}>
+                  {s.ready ? common.available.fr : common.comingSoon.fr}
+                </span>
+              </span>
+              <span className="mt-1 block text-sm text-slate-600">{s.ns.sectionIntro.fr}</span>
             </Link>
           </li>
         ))}
