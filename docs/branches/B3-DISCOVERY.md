@@ -282,7 +282,7 @@ the script output and never hidden.
 | R1 | OFGL `Epargne brute` `montant_bp` | CRC 2026, table 17, CAF brute of the budget principal | **Exact**: 2021 €83,382,291 · 2022 €128,172,823 · 2023 €93,274,038 · 2024 €48,568,574 |
 | R2 | OFGL `Encours de dette` | CRC 2026 §3.4.1 | **Gap**: 2021 OFGL €849,427,970 vs CRC €744,427,970 (exactly −€105.0M); 2025 OFGL bp €1,006.2M vs CRC €977.1M (−2.9%). 2022–2024 not in the CRC text. To explain before display |
 | R3 | `Encours / Epargne brute` (capacité de désendettement) | CRC: 10 years (2021), 20 years (2024) | 2024: 954.8 / 48.4 = 19.7 years ✓ |
-| R4 | DGFiP 73432 octroi de mer régional | CRC: octroi de mer €197M (2021) → €224M (2024) | **Gap**: 73432 = €92.9M in 2024. The CRC total probably includes other lines (7348, FRDE…). To be traced account by account |
+| R4 | DGFiP account family **734** "Fiscalité spécifique … Outre-mer", budget principal | CRC: €197M (2021) → €224M (2024) | **Explained** (local DGFiP file): the CRC figure is the whole 734 family, not only octroi de mer. 734 = 73411 rhums + 7342 carburants + 73432 octroi de mer régional + 73433 transport + 7348 autres. 2021 €197.7M · 2024 €224.1M (2024: 73432 €92.9M, 7342 €92.0M, 7348 €35.9M, 73433 €2.0M, 73411 €1.3M) |
 | R5 | OFGL aggregates (each, each year) | Sum of DGFiP balance accounts using the OFGL formula file | Mechanical check, all years 2019–2025 |
 | R6 | OFGL 2024 recettes/dépenses réelles, per budget | Compte administratif 2024 voted by the Assemblée (délib 25-148-1), and CA 2025 (26-147-1…4) for the provisional year | PDF identified, to read |
 | R7 | OFGL `Impôts et taxes` 2024 €727.4M | CRC "recettes fiscales 727 M€ (2024)" | ✓ (same figure) |
@@ -343,7 +343,8 @@ FactBlock "Épargne, dette"          — épargne brute, encours, capacité de d
                                      (2025 provisoire)   ¹ ; CRC rapport 2026 cited as context
 FactBlock "Par compétence"          — dépenses par fonction M57 with tags → links to commune cards
    ² Source : DGFiP — Balances comptables nature-fonction 2024
-FactBlock "Octroi de mer"           — octroi de mer régional (compte 73432) by year   ²
+FactBlock "Fiscalité ultramarine"   — total compte 734 by year (matches the CRC), split: octroi de mer régional
+                                     (73432), taxe sur les carburants (7342), autres (7348, 73433, 73411)   ²
 FactBlock "Organismes satellites"   — Martinique Transport, Office de l'eau… own budgets, € (not added to CTM)
    ³ Source : OFGL — Comptes consolidés des EPL / syndicats
 FactBlock "Avant 2016"              — Région + Département shown side by side, never summed silently
@@ -386,6 +387,30 @@ Person pages (`/ctm/elus/[id]`), if you want them: the seat history only, no fig
 ---
 
 ## 6. Open questions for JM
+
+### Decisions (JM, 3 Nov 2026)
+
+- **Q1 composition:** yes. Délibérations are the source for the Conseil exécutif, RNE for the Assemblée; every
+  disagreement is listed on the card (MissingInfo).
+- **Q2 portfolios:** yes, dedicated `ctm_portfolios` table.
+- **Q4 debt:** shown now with OFGL figures and a caveat stating the gap with the CRC (2021 −€105.0M, 2025 −€29.1M),
+  with the CRC report linked. R2 stays open in the reconciliation script.
+- **Q5 octroi de mer (proposal, to confirm):** one block "Fiscalité ultramarine" = M57 account 734, which reconciles with
+  the CRC (R4), split by account, with "octroi de mer régional" always meaning 73432 only. The CTM's role in the
+  communes' octroi de mer (rates, FRDE) is a later sprint.
+- **Q3 groups:** pending, see the source list below.
+
+### Sources for political groups (checked 3 Nov 2026)
+
+| Source | What it gives | Status |
+|---|---|---|
+| Group declarations kept by the Assemblée (CGCT: groups are formed by a declaration to the president) | Official group name, members, president | Not published online. Ask the CTM (or CADA request) |
+| Délibérations index 2022–2026 | Changes to committee membership (25-106-4, 26-89-1, 26-195-1…), règlement intérieur | No délibération on forming the groups. 2021 délibérations not online |
+| Plenary minutes (procès-verbaux) | Groups as named in debate, explanations of vote | PDFs, not indexed yet |
+| CTM site "La Collectivité" | Some group photos and names | Undated, already contradictory for the bureau: context only |
+| Ministère de l'Intérieur, 2021 territorial election results (data.gouv.fr) | The list each councillor was elected on, and its nuance | Official, dated; it is the electoral list, not the group. Dataset to locate and add to JOBS |
+| Press | | Not a source for the card |
+
 
 1. **Composition source of truth.** RNE is incomplete for the Exécutif, and the CTM site shows two versions. Do you
    agree to use the délibérations (2 Jul 2021 election + replacements) as the source for the Exécutif, with RNE for the
