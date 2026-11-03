@@ -25,16 +25,18 @@ Sister projects of the same author: prix-martinique.org (cost of living, live) a
 
 ## Stack (confirmed by JM, 31 Oct 2026)
 Next.js (current stable, App Router) · TypeScript · Tailwind CSS · shadcn/ui · Recharts · Supabase (Postgres, EU) · Vercel (EU, `cdg1`).
-Commune pages pre-rendered (SSG/ISR) from Supabase. Data import: Python scripts in `scripts/` (run with `python -I`).
+Commune pages pre-rendered (SSG/ISR) from Supabase. Data import: Python scripts in `scripts/<domain>/` + `scripts/core/` (run with `python -I`).
 Analytics: PostHog EU, cookieless (`persistence: 'memory'`). Repo: public, `JMP-APZH/vwapepla`, branches `main` (prod) + `dev`.
 Plan: `docs/PLAN.md`. Next.js 16 differs from older versions: read `AGENTS.md` and the bundled docs in
-`node_modules/next/dist/docs/` before writing app code (Cache Components: `'use cache'` + `cacheLife` in `src/lib/data.ts`).
-Data pipeline: `download_sources.py` → `pipeline/build.py` → `reconcile_afd.py` (gate) → `pipeline/load_supabase.py`.
+`node_modules/next/dist/docs/` before writing app code (Cache Components: `'use cache'` + `cacheLife` in `src/lib/core/data.ts` and `src/lib/<domain>/data.ts`).
+Data pipeline (communes): `scripts/core/download_sources.py --domain communes` → `scripts/communes/pipeline/build.py` →
+`scripts/communes/reconcile_afd.py` (gate) → `scripts/core/load_supabase.py --domain communes`.
 `.env` holds public values only (committed); the Supabase secret key lives in `.env.local` only.
 
 ## Data sources (MVP2)
-All sources are fetched by `python -I scripts/download_sources.py` into `data/raw/` (gitignored) with `data/raw/manifest.json`
-(url, licence, retrieval date, sha256). Never download by hand.
+All sources are fetched by `python -I scripts/core/download_sources.py --domain <domain>` into `data/raw/<domain>/` (gitignored)
+with `data/raw/<domain>/manifest.json` (url, licence, retrieval date, sha256). Source lists: `scripts/<domain>/sources.py`.
+Never download by hand.
 - **Primary:** OFGL **"Comptes consolidés des communes"** (`ofgl-base-communes-consolidee`: main + annex budgets, cross flows
   neutralised; this is what AFD uses). Per-budget detail: `ofgl-base-communes`. Licence Ouverte 2.0 → credit "Source : OFGL, d'après DGFiP".
   Filter: `dep_code` 972 (INSEE 97201–97234). Coverage verified: 34/34 communes every year 2018–2025.
@@ -80,5 +82,33 @@ All sources are fetched by `python -I scripts/download_sources.py` into `data/ra
 - Start in plan mode for any new feature; propose the plan, wait for approval.
 - Before mapping OFGL columns, download the file, list actual column names/aggregate labels, and show JM the mapping table to validate.
 - Write a reconciliation check (script output) comparing our Martinique totals with the AFD Observatoire figures; report differences.
-- Keep French/Kréyòl strings in a single i18n file.
+- Keep French/Kréyòl strings in a single i18n directory with namespaces: `messages/{fr,gcf}/{common,communes,parlement,ctm,prefet}.json`
+  (`gcf` = Kréyòl, only agreed labels), read through `src/i18n` (`import { communes } from "@/i18n"`).
 - Commit small, descriptive commits. Do not commit secrets (.env.local).
+
+## Parallel work (4 teams, 4 worktrees — foundation of 3 Nov 2026)
+Teams work in separate git worktrees on feature branches named `b<n>/<topic>`, with PRs to `dev`. Scope stubs:
+`docs/branches/B1.md` … `B4.md`; audit of what was made generic: `docs/branches/README.md`.
+
+| Team | Domain | Route | Owns (only this team edits) | DB prefix | Dev port |
+|---|---|---|---|---|---|
+| B1 | communes (mayors, councils) | `/communes` | `src/app/communes/**`, `src/components/communes/**`, `src/lib/communes/**`, `messages/*/communes.json`, `scripts/communes/**`, `data/communes/**`, `data/raw/communes/` | `com_` | 3001 (`npm run dev:b1`) |
+| B2 | parlement (deputies, senators) | `/parlementaires` | same pattern with `parlementaires` (route) / `parlement` (lib, components, messages, scripts, data) | `parl_` | 3002 |
+| B3 | ctm (Assemblée, Conseil exécutif) | `/ctm` | same pattern with `ctm` | `ctm_` | 3003 |
+| B4 | prefet (appointed) | `/prefet` | same pattern with `prefet` | `pref_` | 3004 |
+
+- **Shared files change only through a PR to `dev`** (one PR per change, reviewed by JM; never inside a feature PR of a team):
+  core tables and core migrations, `src/components/card/**` (card shell), `src/lib/core/**`, `src/i18n/index.ts`,
+  `messages/*/common.json`, `scripts/core/**`, `src/app/layout.tsx`, `src/app/page.tsx`, `src/app/{methodologie,sources}/`,
+  `next.config.ts`, `package.json`/lockfile, `.github/**`, `CLAUDE.md`, `docs/` (except your own `docs/branches/B<n>.md`).
+- **Database:** core people model = `institutions → bodies → seats ← mandates → persons` + `sources`, `terms`, `media`
+  (no prefix, shared). Domain tables use the team prefix. Migrations: `supabase/migrations/<YYYYMMDDHHMMSS>_<core|com|parl|ctm|pref>_<topic>.sql`;
+  one Supabase project serves preview and production, so every migration must keep `main` working (add, then remove in a
+  later release). Loaders may write core tables for their own rows and their own prefixed tables only (`scripts/<domain>/tables.py`,
+  checked by `scripts/core/load_supabase.py`). Person ids are stable keys built by the domain pipeline (e.g. `com-97209:NOM:Prénom`).
+- **Cards:** every domain card is built from `src/components/card/Card.tsx` (CardShell, CardHeader, Portrait, FactBlock with
+  required sources, MissingInfo, Caveat, RightOfReply, OpinionBlock). Facts and opinions never share a block.
+- **Start of every session:** `git fetch && git rebase origin/dev` in your worktree, then `npm ci` if the lockfile changed.
+- **Worktrees:** `git worktree add ../vwapepla-b1 -b b1/<topic> origin/dev` (one folder per team; copy `.env.local` into it,
+  never commit it). Run the app with `npm run dev:b<n>` so the four dev servers do not collide.
+- CI on every PR to `dev`/`main`: lint, typecheck, unit tests, `next build`, and `python -I -m compileall scripts`.
