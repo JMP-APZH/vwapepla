@@ -29,7 +29,7 @@ export async function castSiteVote(_prev: VoteState, form: FormData): Promise<Vo
   const db = supabaseAdmin();
   const statuses: VoteStatus[] = [];
   for (const a of answers) {
-    const { data, error } = await db.rpc("cast_site_vote", {
+    const { data, error } = await db.rpc("com_cast_site_vote", {
       p_commune: code, p_question: a.question, p_score: a.score, p_voter_hash: voter,
     });
     statuses.push(error ? "error" : (data as VoteStatus));
