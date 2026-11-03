@@ -387,7 +387,7 @@
 - commune: '97210'
   term: 2020-2026
   start: '2020-06-28'
-  end: '2026-03-15'
+  end: '2026-01-24'
   last_name: TAVERNIER
   first_name: Samuel
   sex: M
@@ -395,7 +395,8 @@
   verified: true
   source_id: rne-maires-historique
   source_url: https://static.data.gouv.fr/resources/repertoire-national-des-elus-1/20201202-174954/9-rne-maires.txt
-  note: Répertoire national des élus, versions du 2/12/2020 au 27/2/2026.
+  end_source_url: https://fr.wikipedia.org/w/index.php?oldid=240933951
+  note: Répertoire national des élus, versions du 2/12/2020 au 27/2/2026. Décédé le 24 janvier 2026 (confirmé par JM, 3 Nov 2026).
 - commune: '97211'
   term: 2008-2014
   start: '2008-03-09'
@@ -579,7 +580,7 @@
 - commune: '97215'
   term: 2020-2026
   start: '2020-05-18'
-  end: '2026-03-15'
+  end: '2026-01-24'
   last_name: CAKIN
   first_name: Sainte-Rose
   sex: M
@@ -587,7 +588,9 @@
   verified: true
   source_id: rne-maires-historique
   source_url: https://static.data.gouv.fr/resources/repertoire-national-des-elus-1/20201202-174954/9-rne-maires.txt
-  note: Répertoire national des élus, versions du 2/12/2020 au 27/2/2026.
+  end_source_url: https://la1ere.franceinfo.fr/martinique/affaire-cakin-vers-la-fin-d-un-long-regne-politique-au-macouba-1661690.html
+  note: Répertoire national des élus, versions du 2/12/2020 au 27/2/2026. Fin des fonctions le 24 janvier 2026 selon Wikipédia (version 240119320), après l'arrêt de la cour d'appel de Martinique du 15 janvier
+    2026 (deux ans d'inéligibilité avec exécution provisoire, Martinique la 1ère).
 - commune: '97216'
   term: 2008-2014
   start: '2008-03-09'
