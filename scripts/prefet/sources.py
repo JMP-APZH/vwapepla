@@ -3,10 +3,10 @@
 JOBS: one dict per dataset (see scripts/core/fetching.py for the fields). Files land in data/raw/prefet/<folder>/ and
 are listed in data/raw/prefet/manifest.json.
 
-Only tabular open data (Licence Ouverte 2.0) is downloaded for now: the shared engine writes CSV files and a fixed
-licence. Document sources (JORF decrees, recueils des actes administratifs, DPT Outre-mer, CCT, BQP, Cour des comptes,
-IEDOM) are inventoried in docs/branches/B4-DISCOVERY.md and wait for the proposed engine change (non-CSV files, per-job
-licence).
+The shared engine writes CSV files under one licence (Licence Ouverte 2.0), so every job here produces a CSV: tabular
+open data filtered on Martinique, and the Martinique table extracted from each DPT Outre-mer PDF (the PDF URL is kept
+in the manifest). Other document sources (recueils des actes administratifs, CCT, BQP...) are inventoried in
+docs/branches/B4-DISCOVERY.md and wait for the proposed engine change (non-CSV files, per-job licence).
 
 National files are streamed and filtered on Martinique (département 972, région 02) so that data/raw/prefet/ only holds
 Martinique rows, written with the same columns and ';' separator as published.
@@ -135,4 +135,108 @@ JOBS = [
           f"Projects funded in {y} by State investment grants (DETR, DSIL, DSID, DPV...): beneficiary, project, cost, "
           "grant. National CSV, filtered on beneficiaire_dep 972.")
       for y, res in DGCL_YEARS.items()],
+]
+
+
+# --- State credits in Martinique: DPT Outre-mer (annex to each budget bill), table « MARTINIQUE » ---
+# budget.gouv.fr serves the DPTs behind a bot-protection page (no scripted access), so the copies deposited at the
+# Assemblée nationale are used. Editions before PLF 2025 are not published there (checked 3 Nov 2026).
+DPT_EDITIONS = {
+    2025: "https://www2.assemblee-nationale.fr/static/17/Annexes-DL/PLF2025-Oranges/04-Orange_Outre-mer.pdf",
+    2026: "https://www.assemblee-nationale.fr/dyn/contenu/visualisation/1090079/file/4-DPT2026_OutreMer.pdf",
+    2027: "https://www.assemblee-nationale.fr/dyn/contenu/visualisation/1129675/file/4-DPT%202027%20-%20Outre-Mer.pdf",
+}
+DPT_TERRITORY = "MARTINIQUE"
+DPT_COLUMNS = ["execution_ae", "execution_cp", "lfi_ae", "lfi_cp", "plf_ae", "plf_cp"]
+# A figure: digits grouped by 3 with a (narrow) space, or a dash for "no credit".
+_NUM = r"(?:-?\d{1,3}(?:[   ]\d{3})*|-)"
+
+
+def dpt_lines(pdf_path):
+    """(page number, line) for every line of the PDF, in layout mode (columns kept apart by runs of spaces)."""
+    import pypdf  # only needed by the DPT jobs
+    for i, page in enumerate(pypdf.PdfReader(str(pdf_path)).pages):
+        try:
+            text = page.extract_text(extraction_mode="layout")
+        except KeyError:  # blank page without a content stream
+            continue
+        for line in text.splitlines():
+            yield i + 1, line.rstrip()
+
+
+def dpt_rows(lines, edition, territory=DPT_TERRITORY):
+    """Rows (page, label, 6 raw figures) of one territory's table.
+
+    The table starts at the line that is exactly the territory name (it can start mid-page, right after the previous
+    territory's « Total général ») and ends at its own « Total général ». Rows are blocks of lines separated by blank
+    lines: a label can wrap over several lines, with the six figures on any one of them.
+    """
+    import re
+    nums_re = re.compile(rf"(?P<nums>{_NUM}(?:\s{{2,}}{_NUM}){{5}})\s*$")
+    lines = list(lines)
+    try:
+        k = next(j for j, (_, ln) in enumerate(lines) if ln.strip() == territory
+                 and any("MISSION / PROGRAMME" in x for _, x in lines[j:j + 15]))
+    except StopIteration:
+        raise SystemExit(f"DPT {edition}: table « {territory} » not found")
+    header = " ".join(x for _, x in lines[k:k + 15])
+    for y in (edition - 2, edition - 1, edition):
+        if str(y) not in header:
+            raise SystemExit(f"DPT {edition}: year {y} missing from the header of table « {territory} »")
+    blocks, cur = [], []
+    for page, ln in lines[k + 1:]:
+        if ln.strip():
+            cur.append((page, ln))
+            continue
+        if cur:
+            blocks.append(cur)
+            cur = []
+        if blocks and blocks[-1][-1][1].strip().lower().startswith("total g"):
+            break
+    rows = []
+    for block in blocks:
+        text = " ".join(ln for _, ln in block)
+        if "MISSION / PROGRAMME" in text or "EXÉCUTION" in text or "Annexe au projet" in text \
+                or "politique transversale" in text:
+            continue  # table header (repeated on each page) or page header/footer
+        label, nums, page = [], None, block[0][0]
+        for pg, ln in block:
+            m = nums_re.search(ln)
+            if m and nums is None:
+                nums, page = re.split(r"\s{2,}", m["nums"].strip()), pg
+                ln = ln[:m.start()]
+            if ln.strip():
+                label.append(ln.strip())
+        if nums is None:
+            raise SystemExit(f"DPT {edition} p.{page}: row without six figures: {text.strip()[:120]}")
+        rows.append([page, " ".join(label), *nums])
+        if rows[-1][1].lower().startswith("total g"):
+            return rows
+    raise SystemExit(f"DPT {edition}: no « Total général » line for « {territory} »")
+
+
+def dpt_fetcher(edition, url):
+    def fetcher(dest):
+        with tempfile.TemporaryDirectory() as tmp:
+            pdf = pathlib.Path(tmp) / "dpt.pdf"
+            fetch_complete(url, pdf)
+            rows = dpt_rows(dpt_lines(pdf), edition)
+        with open(dest.with_suffix(".part"), "w", encoding="utf-8", newline="") as out:
+            w = csv.writer(out, delimiter=";")
+            w.writerow(["edition", "page", "label", *DPT_COLUMNS])
+            for r in rows:
+                w.writerow([edition, *r])
+        dest.with_suffix(".part").replace(dest)
+        print(f"     {len(rows)} rows (table {DPT_TERRITORY})")
+    return fetcher
+
+
+JOBS += [
+    {**file_job("dpt", f"dpt-outre-mer-{e}", url,
+                f"Document de politique transversale Outre-mer — annexe au projet de loi de finances pour {e}",
+                url, "Ministère des outre-mer (DGOM), annexe au PLF — copie Assemblée nationale",
+                f"State credits in Martinique by mission and programme (AE/CP): executed {e - 2}, LFI {e - 1}, PLF {e}. "
+                "Table extracted from the PDF (pypdf layout mode); the PDF itself is not kept."),
+     "scope": "_972", "encoding": "utf-8", "fetcher": dpt_fetcher(e, url)}
+    for e, url in DPT_EDITIONS.items()
 ]
