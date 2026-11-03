@@ -4,6 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:b1": "next dev -p 3001",
+    "dev:b2": "next dev -p 3002",
+    "dev:b3": "next dev -p 3003",
+    "dev:b4": "next dev -p 3004",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
