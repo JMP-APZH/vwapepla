@@ -11,9 +11,11 @@ docs/branches/B4-DISCOVERY.md and wait for the proposed engine change (non-CSV f
 National files are streamed and filtered on Martinique (département 972, région 02) so that data/raw/prefet/ only holds
 Martinique rows, written with the same columns and ';' separator as published.
 """
-import csv, gzip, io, pathlib, tempfile, time, urllib.request
+import csv, gzip, io, pathlib, sys, tempfile, time, urllib.request
 
 from fetching import file_job  # scripts/core (put on sys.path by download_sources.py)
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))  # legifrance.py (python -I drops the script dir)
 
 # data.gouv.fr /datasets/r/<resource id> redirects to the file of that resource.
 DATAGOUV_R = "https://www.data.gouv.fr/datasets/r/"
@@ -240,3 +242,103 @@ JOBS += [
      "scope": "_972", "encoding": "utf-8", "fetcher": dpt_fetcher(e, url)}
     for e, url in DPT_EDITIONS.items()
 ]
+
+
+# --- Appointment decrees (JORF, through the Légifrance API) ----------------------------------------------------------
+# Only when the PISTE keys are in .env.local (see scripts/prefet/README.md); otherwise these jobs are skipped.
+JORF_POSTS = [  # exact phrases searched in decree titles
+    "préfet de la région Martinique", "préfet de région Martinique",
+    "secrétaire général de la préfecture de la Martinique", "secrétaire générale de la préfecture de la Martinique",
+    "directeur de cabinet du préfet de la région Martinique", "directrice de cabinet du préfet de la région Martinique",
+    "sous-préfet de Saint-Pierre", "sous-préfète de Saint-Pierre", "sous-préfet de La Trinité",
+    "sous-préfète de La Trinité", "sous-préfet du Marin", "sous-préfète du Marin",
+]
+JORF_SINCE = "2007-01-01"      # identity-only depth (docs/branches/B4-DISCOVERY.md §8.2)
+CAREER_SINCE = "1990-01-01"    # electronic JORF
+JORF_FIELDS = ["cid", "query", "title", "nor", "signature_date", "jorf_date", "url", "article_1", "raw_json"]
+_NAME = r" - (?P<civ>M\.|Mme) (?P<last>[^()]+?) \((?P<first>[^()]+)\)\s*$"
+
+
+def piste_keys():
+    try:
+        from load_supabase import env  # scripts/core, on sys.path
+        vals = env()
+    except FileNotFoundError:
+        return None
+    return (vals["PISTE_CLIENT_ID"], vals["PISTE_CLIENT_SECRET"]) if all(vals.get(k) for k in
+                                                                      ("PISTE_CLIENT_ID", "PISTE_CLIENT_SECRET")) else None
+
+
+def jorf_row(client, cid, query):
+    import json
+    from legifrance import TEXT_URL, plain
+    body = client.text(cid)
+    articles = body.get("articles") or []
+    first = next((a for a in articles if str(a.get("num", "")).strip() in ("1", "1er")), articles[0] if articles else {})
+    return {"cid": cid, "query": query, "title": body.get("title") or "", "nor": body.get("nor") or "",
+            "signature_date": body.get("dateTexte") or body.get("dateSignature") or "",
+            "jorf_date": body.get("dateParution") or body.get("jorfDate") or "", "url": TEXT_URL.format(cid=cid),
+            "article_1": plain(first.get("content") or first.get("texte") or ""),
+            "raw_json": json.dumps(body, ensure_ascii=False, separators=(",", ":"))}
+
+
+def write_jorf(dest, rows):
+    with open(dest.with_suffix(".part"), "w", encoding="utf-8", newline="") as out:
+        w = csv.DictWriter(out, fieldnames=JORF_FIELDS, delimiter=";")
+        w.writeheader()
+        w.writerows(rows)
+    dest.with_suffix(".part").replace(dest)
+
+
+def fetch_nominations(dest):
+    from legifrance import Client, text_cid
+    client = Client(*piste_keys())
+    found = {}
+    for phrase in JORF_POSTS:
+        for res in client.search_titles(phrase, start=JORF_SINCE):
+            cid = text_cid(res)
+            if cid and cid not in found:
+                found[cid] = phrase
+        print(f"     « {phrase} »: {len(found)} texts so far")
+    write_jorf(dest, [jorf_row(client, cid, q) for cid, q in sorted(found.items())])
+
+
+def fetch_careers(dest):
+    """Every appointment decree naming a person found by jorf-nominations-972 (their career path)."""
+    import json, re
+    from legifrance import Client, text_cid
+    root = pathlib.Path(__file__).resolve().parents[2]
+    manifest = json.loads((root / "data" / "raw" / "prefet" / "manifest.json").read_text(encoding="utf-8"))
+    with open(root / manifest["jorf-nominations-972"]["file"], encoding="utf-8", newline="") as f:
+        names = {(m["last"].strip(), m["first"].strip()) for r in csv.DictReader(f, delimiter=";")
+                 if (m := re.search(_NAME, r["title"]))}
+    client, found = Client(*piste_keys()), {}
+    for last, first in sorted(names):
+        phrase = f"{last} ({first})"
+        for res in client.search_titles(phrase, start=CAREER_SINCE):
+            cid = text_cid(res)
+            if cid and cid not in found:
+                found[cid] = phrase
+    print(f"     {len(names)} people, {len(found)} texts")
+    write_jorf(dest, [jorf_row(client, cid, q) for cid, q in sorted(found.items())])
+
+
+def jorf_job(ds, fetcher, title, purpose):
+    page = "https://www.legifrance.gouv.fr/jorf/"
+    return {**file_job("jorf", ds, "https://api.piste.gouv.fr/dila/legifrance/lf-engine-app", title, page,
+                       "Journal officiel de la République française (Légifrance, DILA)", purpose),
+            "encoding": "utf-8", "fetcher": fetcher}
+
+
+if piste_keys():
+    JOBS += [
+        jorf_job("jorf-nominations-972", fetch_nominations,
+                 "Décrets de nomination aux postes de la préfecture de la Martinique (JORF)",
+                 f"Appointment decrees for préfet, secrétaire général, directeur de cabinet and sous-préfets in "
+                 f"Martinique since {JORF_SINCE[:4]} (Légifrance API search on titles + text)."),
+        jorf_job("jorf-parcours", fetch_careers, "Décrets de nomination des personnes concernées (JORF)",
+                 "Career path of the people above: every appointment decree naming them since 1990."),
+    ]
+else:
+    print("prefet: PISTE_CLIENT_ID / PISTE_CLIENT_SECRET not in .env.local: JORF jobs skipped "
+          "(see scripts/prefet/README.md)")
