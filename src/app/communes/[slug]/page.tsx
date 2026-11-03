@@ -19,7 +19,7 @@ import { getMedia, getSources } from "@/lib/core/data";
 import { OFFICIAL_SITES, SITES_SOURCE } from "@/lib/communes/sites";
 import { summarizeTerms } from "@/lib/communes/terms";
 import { BLOCKS, blockLines, blockValues } from "@/lib/communes/breakdown";
-import { functionTitle, missingDeputyRanks } from "@/lib/communes/council";
+import { functionTitle, mayorsOfTerm, missingDeputyRanks } from "@/lib/communes/council";
 import { computeHeadline, headlineKeys } from "@/lib/communes/headline";
 import { int } from "@/lib/core/format";
 import { deCommune } from "@/lib/communes/grammar";
@@ -57,8 +57,11 @@ export default async function CommunePage({ params }: PageProps<"/communes/[slug
   const bands = terms.filter((t) => t.election_year >= historyYears[0] && t.election_year <= historyYears.at(-1)!)
     .map((t) => ({ id: t.id, from: t.first_full_year, to: t.last_full_year, electionYear: t.election_year }));
   const charted = new Set(["rf_total", "df_total", "di_hors_remb", "epargne_brute", "encours_dette", "capacite_desendettement"]);
-  const historySources = [...new Set(history.filter((a) => charted.has(a.metric_key)).map((a) => a.source_id))]
-    .map((id) => sources.get(id)).filter((s) => s != null);
+  // Sources of the block: the accounts charted, and where each past mayor's name comes from (RNE, results, Wikipedia).
+  const historySources = [...new Set([
+    ...history.filter((a) => charted.has(a.metric_key)).map((a) => a.source_id),
+    ...pastMayors.map((m) => m.source_id),
+  ])].map((id) => sources.get(id)).filter((s) => s != null);
   const me = years.find((y) => y.commune_code === commune.code);
   const stratumOf = new Map(years.map((y) => [y.commune_code, y.stratum]));
   const sets = HEADLINE_SETS.map((s) => ({ ...s, values: computeHeadline(s.figures, commune.code, rows, stratumOf) }));
@@ -89,9 +92,16 @@ export default async function CommunePage({ params }: PageProps<"/communes/[slug
     ...missingDeputyRanks(council).map((rank) =>
       `Conseil municipal : le Répertoire national des élus ne mentionne pas de ${functionTitle({ role: "adjoint", rank, sex: null })} (poste vacant ou non déclaré).`),
     ...(() => {
-      const ids = summaries.filter((s) => s.term.id !== `${TERM.start}-${TERM.end}`)
-        .filter((s) => !pastMayors.some((m) => m.term_id === s.term.id)).map((s) => s.term.id.replace("-", "–"));
-      return ids.length ? [`Maire ${ids.length > 1 ? "des mandats" : "du mandat"} ${ids.join(", ")} : nom en cours de vérification.`] : [];
+      const past = summaries.filter((s) => s.term.id !== `${TERM.start}-${TERM.end}`);
+      const none = past.filter((s) => mayorsOfTerm(pastMayors, s.term.id).length === 0).map((s) => s.term.id.replace("-", "–"));
+      const secondary = past.filter((s) => mayorsOfTerm(pastMayors, s.term.id).some((m) => m.evidence === "secondaire"))
+        .map((s) => s.term.id.replace("-", "–"));
+      return [
+        ...(none.length ? [`Maire ${none.length > 1 ? "des mandats" : "du mandat"} ${none.join(", ")} : non trouvé dans les sources officielles.`] : []),
+        ...(secondary.length
+          ? [`Maire ${secondary.length > 1 ? "des mandats" : "du mandat"} ${secondary.join(", ")} : aucune liste officielle des maires n'est publiée pour cette période ; nom relevé sur Wikipédia, à confirmer.`]
+          : []),
+      ];
     })(),
     ...(() => {
       const have = new Set(history.filter((a) => a.metric_key === "rf_total").map((a) => a.year));

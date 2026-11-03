@@ -14,3 +14,28 @@ export function missingDeputyRanks(council: Pick<Officeholder, "role" | "rank">[
   const max = Math.max(0, ...ranks);
   return Array.from({ length: max }, (_, i) => i + 1).filter((r) => !ranks.has(r));
 }
+
+/** Where the name of a past mayor comes from (history.yaml `basis`, read from the source of the mandate). */
+export type MayorEvidence = "rne" | "liste" | "secondaire";
+export const SECONDARY_SOURCE = "vwapepla-historique-maires"; // Wikipedia rows (history_secondary.yaml)
+
+export function mayorEvidence(o: Pick<Officeholder, "source_id">): MayorEvidence {
+  if (o.source_id === SECONDARY_SOURCE) return "secondaire";
+  return o.source_id.startsWith("municipales-") ? "liste" : "rne";
+}
+
+export type TermMayor = { name: string; from: number; to: number | null; evidence: MayorEvidence; sourceUrl: string | null };
+
+/** Mayors of one term in order, with their years in office ("2008–2010"); several when the mayor changed. */
+export function mayorsOfTerm(pastMayors: Officeholder[], termId: string): TermMayor[] {
+  return pastMayors
+    .filter((m) => m.term_id === termId)
+    .sort((a, b) => a.mandate_start.localeCompare(b.mandate_start))
+    .map((m) => ({
+      name: `${m.first_name} ${m.last_name}`,
+      from: Number(m.mandate_start.slice(0, 4)),
+      to: m.mandate_end ? Number(m.mandate_end.slice(0, 4)) : null,
+      evidence: mayorEvidence(m),
+      sourceUrl: m.source_url,
+    }));
+}
