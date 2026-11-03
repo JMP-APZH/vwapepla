@@ -21,6 +21,12 @@ SOURCES = [
     *[("dgfip", f"balances-comptables-des-communes-en-{y}", DGFIP, {"where": 'startswith(siren,"21972")'},
        "DGFiP", f"Account-level balances {y}, communes of Martinique (all budgets).")
       for y in range(2012, 2026)],
+    # --- National stratum averages (Step 3): DGFiP "comptes individuels", MAIN BUDGET ONLY. For each commune: amount
+    #     (k€), € per inhabitant (f*), average of its national stratum (m*), structure ratios (r*, rm*).
+    #     Martinique = dep '103' in these files. Column guide: attachment "maquette_commune_ods" of each dataset.
+    *[("dgfip", f"comptes-individuels-des-communes-fichier-global-{p}", DGFIP, {"where": "dep='103'"}, "DGFiP",
+       f"Comptes individuels des communes {p} (budget principal seul): national stratum averages for comparison.")
+      for p in ("2018", "2019-2020", "2021", "2022", "2023-2024", "2025")],
     # --- Bodies that spend/invest for the communes' population ---
     ("ofgl", "ofgl-base-gfp-consolidee", OFGL, {"refine": "dep_code:972"}, "OFGL, d'après DGFiP",
      "Intercommunalities CACEM / CAESM / CAP Nord accounts (water, waste, transport, economic development)."),
