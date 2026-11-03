@@ -1,6 +1,6 @@
-import type { HeadlineValue } from "@/lib/headline";
-import { eur, pct, perHab, years } from "@/lib/format";
-import { t } from "@/i18n/strings";
+import type { HeadlineValue } from "@/lib/communes/headline";
+import { eur, pct, perHab, years } from "@/lib/core/format";
+import { communes } from "@/i18n";
 
 function show(h: HeadlineValue, v: number | null) {
   return h.figure.kind === "share" ? pct(v) : perHab(v);
@@ -26,12 +26,12 @@ export function HeadlineSet({ title, values }: { title: string; values: Headline
             )}
             <dl className="mt-2 space-y-0.5 text-[11px] leading-snug text-slate-500">
               <div>
-                <dt className="inline">{t.medianMartinique.fr} : </dt>
+                <dt className="inline">{communes.medianMartinique.fr} : </dt>
                 <dd className="inline">{show(h, h.medianMartinique)}</dd>
               </div>
               {h.medianStratum != null && (
                 <div>
-                  <dt className="inline">{t.medianStratum.fr} ({h.stratumSize}) : </dt>
+                  <dt className="inline">{communes.medianStratum.fr} ({h.stratumSize}) : </dt>
                   <dd className="inline">{show(h, h.medianStratum)}</dd>
                 </div>
               )}

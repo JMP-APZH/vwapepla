@@ -1,6 +1,6 @@
-import type { Source } from "@/lib/data";
-import { date } from "@/lib/format";
-import { t } from "@/i18n/strings";
+import type { Source } from "@/lib/core/data";
+import { date } from "@/lib/core/format";
+import { common } from "@/i18n";
 
 /** Footnote required under every block of figures: dataset, fiscal year, retrieval date, link. */
 export function SourceNote({ sources, year }: { sources: Source[]; year: number | string }) {
@@ -14,7 +14,7 @@ export function SourceNote({ sources, year }: { sources: Source[]; year: number 
           <a href={s.dataset_page ?? s.url} className="underline" target="_blank" rel="noopener noreferrer">
             {s.title ?? s.id}
           </a>
-          , {typeof year === "string" ? "exercices" : "exercice"} {year}, {t.retrieved.fr} {date(s.retrieved)} ({s.licence}).
+          , {typeof year === "string" ? "exercices" : "exercice"} {year}, {common.retrieved.fr} {date(s.retrieved)} ({s.licence}).
         </span>
       ))}
     </p>

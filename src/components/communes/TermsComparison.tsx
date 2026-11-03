@@ -1,6 +1,6 @@
-import type { Officeholder } from "@/lib/data";
-import { perHab, years as fmtYears } from "@/lib/format";
-import { TERM_ROWS, type TermSummary } from "@/lib/terms";
+import type { Officeholder } from "@/lib/communes/data";
+import { perHab, years as fmtYears } from "@/lib/core/format";
+import { TERM_ROWS, type TermSummary } from "@/lib/communes/terms";
 
 /** Side-by-side table of terms (also the accessible table view of the trend charts). */
 export function TermsComparison({ summaries, pastMayors }: { summaries: TermSummary[]; pastMayors: Officeholder[] }) {

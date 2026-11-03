@@ -1,6 +1,6 @@
-import type { AuditCriterion, SiteAudit } from "@/lib/data";
-import { date } from "@/lib/format";
-import { t } from "@/i18n/strings";
+import type { AuditCriterion, SiteAudit } from "@/lib/communes/data";
+import { date } from "@/lib/core/format";
+import { communes } from "@/i18n";
 
 // Town-hall website checklist (FACTS: dated observations with evidence). No overall score, no ranking
 // (CLAUDE.md principle 2, JM's amendment of 31 Oct 2026): counts are shown per theme only.
@@ -24,14 +24,14 @@ const STATUS = {
 
 export function SiteChecklist({ audit, criteria }: { audit: SiteAudit | null; criteria: AuditCriterion[] }) {
   if (!audit) {
-    return <p className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-600">{t.auditPending.fr}</p>;
+    return <p className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-600">{communes.auditPending.fr}</p>;
   }
   const byKey = new Map(audit.items.map((i) => [i.criterion_key, i]));
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-4">
-      <h3 className="font-semibold">{t.auditTitle.fr}</h3>
+      <h3 className="font-semibold">{communes.auditTitle.fr}</h3>
       <p className="mt-0.5 text-xs text-slate-500">
-        Constaté le {date(audit.audited_on)}, relu par {audit.reviewed_by}. {t.auditIntro.fr}
+        Constaté le {date(audit.audited_on)}, relu par {audit.reviewed_by}. {communes.auditIntro.fr}
       </p>
       <div className="mt-3 space-y-2">
         {THEMES.map((th, n) => {
@@ -80,7 +80,7 @@ export function SiteChecklist({ audit, criteria }: { audit: SiteAudit | null; cr
           );
         })}
       </div>
-      <p className="mt-3 text-[11px] leading-snug text-slate-500">{t.auditDisclaimer.fr}</p>
+      <p className="mt-3 text-[11px] leading-snug text-slate-500">{communes.auditDisclaimer.fr}</p>
     </div>
   );
 }

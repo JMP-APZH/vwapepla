@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
-import { MAX_COMPARE } from "@/lib/compare";
+import { MAX_COMPARE } from "@/lib/communes/compare";
 
 type Option = { code: string; name: string };
 
@@ -15,7 +15,7 @@ export function ComparePicker({ communes, codes, year, years }: {
   const slots = Array.from({ length: MAX_COMPARE }, (_, i) => codes[i] ?? "");
   const go = (next: string[], y: number) => {
     const c = [...new Set(next.filter(Boolean))].join(",");
-    start(() => router.replace(`/comparer?${new URLSearchParams({ ...(c ? { c } : {}), annee: String(y) })}`, { scroll: false }));
+    start(() => router.replace(`/communes/comparer?${new URLSearchParams({ ...(c ? { c } : {}), annee: String(y) })}`, { scroll: false }));
   };
   return (
     <form className="grid grid-cols-2 gap-2 sm:grid-cols-5" aria-busy={pending} onSubmit={(e) => e.preventDefault()}>

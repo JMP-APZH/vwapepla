@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import type { LineValue, Reference } from "@/lib/breakdown";
-import type { Source } from "@/lib/data";
-import { meur, pct, perHab, years as yrs } from "@/lib/format";
-import { SourceNote } from "./SourceNote";
-import { t } from "@/i18n/strings";
+import type { LineValue, Reference } from "@/lib/communes/breakdown";
+import type { Source } from "@/lib/core/data";
+import { meur, pct, perHab, years as yrs } from "@/lib/core/format";
+import { SourceNote } from "@/components/card/SourceNote";
+import { common } from "@/i18n";
 
 export type BlockYear = { id: string; title: string; values: LineValue[]; reference: Reference; sources: Source[] };
 export type BudgetYear = { year: number; provisional: boolean; blocks: BlockYear[] };
@@ -67,11 +67,11 @@ export function BudgetBreakdown({ data, defaultYear }: { data: BudgetYear[]; def
             className={`min-h-10 rounded-full border px-3 text-sm tabular-nums ${
               d.year === year ? "border-slate-900 bg-slate-900 text-white" : "border-slate-300 bg-white text-slate-700"}`}
           >
-            {d.year}{d.provisional && <span className="block text-[9px] uppercase leading-none opacity-75">{t.provisional.fr}</span>}
+            {d.year}{d.provisional && <span className="block text-[9px] uppercase leading-none opacity-75">{common.provisional.fr}</span>}
           </button>
         ))}
       </div>
-      {current.provisional && <p className="mt-2 text-xs text-amber-800">{t.provisionalNote.fr}</p>}
+      {current.provisional && <p className="mt-2 text-xs text-amber-800">{common.provisionalNote.fr}</p>}
       <div className="mt-3 space-y-3">
         {current.blocks.map((b) => {
           const bars = b.id !== "savings_debt";

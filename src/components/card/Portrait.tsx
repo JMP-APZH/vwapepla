@@ -1,9 +1,12 @@
 import Image from "next/image";
-import { CONTACT_EMAIL } from "@/lib/config";
-import { mediaUrl, type Media } from "@/lib/data";
+import { CONTACT_EMAIL } from "@/lib/core/config";
+import { mediaUrl, type Media } from "@/lib/core/data";
 
-/** Official portrait (credited, removable on request) or the same neutral initials avatar for every commune. */
-export function MayorPhoto({ name, photo, communeName }: { name: string; photo?: Media; communeName: string }) {
+/**
+ * Official portrait (credited, removable on request) or the same neutral initials avatar for everyone.
+ * `removalSubject` names the card in the photo-removal email (e.g. the commune).
+ */
+export function Portrait({ name, photo, removalSubject }: { name: string; photo?: Media; removalSubject: string }) {
   const initials = name.split(/\s+/).map((w) => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase();
   return (
     <figure className="shrink-0">
@@ -21,7 +24,7 @@ export function MayorPhoto({ name, photo, communeName }: { name: string; photo?:
           <a href={photo.source_page_url} className="underline" target="_blank" rel="noopener noreferrer">{photo.credit}</a>
           {" · "}
           <a className="underline"
-             href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(`Retrait de photo — ${communeName}`)}`}>
+             href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(`Retrait de photo — ${removalSubject}`)}`}>
             retrait
           </a>
         </figcaption>

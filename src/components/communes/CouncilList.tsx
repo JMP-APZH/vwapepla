@@ -1,7 +1,8 @@
 import Image from "next/image";
-import { mediaUrl, type Media, type Officeholder, type Source } from "@/lib/data";
-import { functionTitle, missingDeputyRanks } from "@/lib/council";
-import { date } from "@/lib/format";
+import type { Officeholder } from "@/lib/communes/data";
+import { mediaUrl, type Media, type Source } from "@/lib/core/data";
+import { functionTitle, missingDeputyRanks } from "@/lib/communes/council";
+import { date } from "@/lib/core/format";
 
 /** Whole municipal council as published in the RNE. Neutral: no list affiliation, no wording about responsibility. */
 export function CouncilList({ council, photo, source }: { council: Officeholder[]; photo?: Media; source?: Source }) {
