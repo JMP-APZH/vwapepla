@@ -1,0 +1,48 @@
+# Past mayors known ONLY from a secondary source (French Wikipedia, dated permalink of the page version read).
+# Used where no official list of mayors is published: 2008-2014 in communes under 3,500 inhabitants (the 2008 vote was
+# not by list, so the official results do not show who became mayor), and changes during a term that happened before the
+# first RNE version we can read (January 2020). The card shows these names with "d'après Wikipédia, à confirmer".
+# Read on 3 Nov 2026. Replace a row by an official source (council minutes, prefecture) when one is found.
+#
+# kind: mayor  -> one mayor for part of a term (start/end dates; `date_note` when Wikipedia gives only a month)
+# kind: end    -> sets the end date of a mayor built from an official source (left office before the next official row)
+
+# --- 2008-2014, communes under 3,500 inhabitants (no list vote in 2008) ---
+- {kind: mayor, commune: '97201', term: 2008-2014, last_name: BONTE, first_name: Maurice, start: 2008-03-09, end: 2014-03-23,
+   source_url: 'https://fr.wikipedia.org/w/index.php?oldid=240252488', note: 'Maire depuis 1995, réélu en 2008.'}
+- {kind: mayor, commune: '97202', term: 2008-2014, last_name: LARCHER, first_name: Eugène, start: 2008-03-09, end: 2014-03-23,
+   source_url: 'https://fr.wikipedia.org/w/index.php?oldid=238846501', note: 'Maire depuis 2000, réélu en 2008.'}
+- {kind: mayor, commune: '97204', term: 2008-2014, last_name: ECANVIL, first_name: Jean-Claude, start: 2008-03-09, end: 2014-03-23,
+   source_url: 'https://fr.wikipedia.org/w/index.php?oldid=240004496', note: 'Élu maire en mars 2008.'}
+- {kind: mayor, commune: '97208', term: 2008-2014, last_name: NELZY, first_name: Max, start: 2008-03-09, end: 2014-03-23,
+   source_url: 'https://fr.wikipedia.org/w/index.php?oldid=240004647', note: 'Maire de 1989 à 2014.'}
+- {kind: mayor, commune: '97211', term: 2008-2014, last_name: BOUQUETY, first_name: Joachim, start: 2008-03-09, end: 2014-03-23,
+   source_url: 'https://fr.wikipedia.org/w/index.php?oldid=240004675', note: 'Maire de 2001 à 2020.'}
+- {kind: mayor, commune: '97215', term: 2008-2014, last_name: CAKIN, first_name: Sainte-Rose, start: 2008-03-09, end: 2014-03-23,
+   source_url: 'https://fr.wikipedia.org/w/index.php?oldid=240119320', note: 'Maire depuis 1990.'}
+- {kind: mayor, commune: '97219', term: 2008-2014, last_name: NADEAU, first_name: Marcellin, start: 2008-03-09, end: 2014-03-23,
+   source_url: 'https://fr.wikipedia.org/w/index.php?oldid=239997655', note: 'Élu maire en mars 2008.'}
+- {kind: mayor, commune: '97233', term: 2008-2014, last_name: MAURICE, first_name: Marcel, start: 2008-03-09, end: 2013-04-20,
+   source_url: 'https://fr.wikipedia.org/w/index.php?oldid=240004788', note: 'Maire de 1989 à mars 2013.'}
+- {kind: mayor, commune: '97233', term: 2008-2014, last_name: SALIBER, first_name: Lucien, start: 2013-04-20, end: 2014-03-23,
+   source_url: 'https://fr.wikipedia.org/w/index.php?oldid=240004788', note: 'Élu maire le 20 avril 2013.'}
+- {kind: mayor, commune: '97234', term: 2008-2014, last_name: ISMAIN, first_name: Félix, start: 2008-03-09, end: 2014-03-23,
+   source_url: 'https://fr.wikipedia.org/w/index.php?oldid=240004426', note: 'Élu maire en mars 2008.'}
+
+# --- Changes during 2008-2014 in communes with an official 2008 result ---
+- {kind: end, commune: '97209', term: 2008-2014, last_name: LETCHIMY, end: 2010-03-31, date_note: mars 2010,
+   source_url: 'https://fr.wikipedia.org/w/index.php?oldid=240722888', note: 'Démission en mars 2010 (élu président du conseil régional).'}
+- {kind: mayor, commune: '97209', term: 2008-2014, last_name: SAINT-LOUIS-AUGUSTIN, first_name: Raymond, start: 2010-04-01,
+   end: 2014-03-23, date_note: avril 2010, source_url: 'https://fr.wikipedia.org/w/index.php?oldid=240722888',
+   note: 'Élu maire en avril 2010 après la démission de Serge Letchimy.'}
+
+# --- Changes during 2014-2020 before the first readable RNE version (January 2020) ---
+- {kind: end, commune: '97225', term: 2014-2020, last_name: MARTINE, end: 2015-01-30,
+   source_url: 'https://fr.wikipedia.org/w/index.php?oldid=240801690',
+   note: "Élection municipale de 2014 annulée (janvier 2015) ; nouvelle élection en mars 2015."}
+- {kind: end, commune: '97228', term: 2014-2020, last_name: AZEROT, end: 2017-07-11,
+   source_url: 'https://fr.wikipedia.org/w/index.php?oldid=240633406',
+   note: 'Démission le 11 juillet 2017 ; réélu maire le 2 décembre 2017.'}
+- {kind: mayor, commune: '97228', term: 2014-2020, last_name: VATENAR, first_name: René, start: 2017-07-11, end: 2017-10-23,
+   source_url: 'https://fr.wikipedia.org/w/index.php?oldid=240633406',
+   note: 'Maire du 11 juillet au 23 octobre 2017 (démissions de la majorité municipale).'}
