@@ -1,0 +1,257 @@
+# Audit du site de la mairie — PREMIÈRE PASSE AUTOMATIQUE, à relire par JM.
+# status: yes / partial / no / na · method: automated (règles par mots-clés) ou manual (relu à la main).
+# « no » automatique = non trouvé par la recherche, pas une preuve d'absence. Rien n'est publié avant reviewed_by.
+commune_code: '97213'
+commune: Le Lamentin
+site_url: https://www.mairie-lelamentin.fr/
+audited_on: '2026-11-02'
+auditor: Claude (première passe automatique)
+reviewed_by: null
+pages_read: 80
+items:
+  site_officiel:
+    status: 'yes'
+    evidence_url: https://www.mairie-lelamentin.fr/
+    archive_url: null
+    note: Site indiqué par l'annuaire Service-Public et accessible.
+    method: automated
+  budget_en_ligne:
+    status: partial
+    evidence_url: https://www.mairie-lelamentin.fr/ma-ville/ladministration/publications-officielles/budgets-et-finances/compte-financier-unique/
+    archive_url: null
+    note: 'Indice partiel (lien) : « Compte financier unique » ; à vérifier.'
+    method: automated
+  actes_publies:
+    status: 'yes'
+    evidence_url: https://www.mairie-lelamentin.fr/ma-ville/ladministration/publications-officielles/actes-administratifs/
+    archive_url: null
+    note: 'Trouvé (lien) : « Actes administratifs ».'
+    method: automated
+  liste_deliberations:
+    status: partial
+    evidence_url: https://www.mairie-lelamentin.fr/ma-ville/ladministration/publications-officielles/actes-administratifs/liste-des-deliberations/
+    archive_url: null
+    note: 'Indice partiel (lien) : « Délibérations » ; à vérifier.'
+    method: automated
+  proces_verbaux:
+    status: 'yes'
+    evidence_url: https://www.mairie-lelamentin.fr/ma-ville/ladministration/publications-officielles/actes-administratifs/proces-verbaux/
+    archive_url: null
+    note: 'Trouvé (lien) : « Procès verbaux ».'
+    method: automated
+  open_data:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Obligation si 3 500 habitants et 50 agents ou plus : effectif non vérifié. Rien trouvé par la recherche automatique (80 pages lues).'
+    method: automated
+  subventions_publiees:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  accessibilite:
+    status: partial
+    evidence_url: https://www.mairie-lelamentin.fr/ma-ville/le-conseil-municipal/les-elus/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « ations ccas clspd commission departementale de securite et daccessibilite  titulaire commission
+      de suivi de site  distillerie la favo » ; à vérifier.'
+    method: automated
+  mentions_legales:
+    status: 'yes'
+    evidence_url: https://www.mairie-lelamentin.fr/mentions-legales/
+    archive_url: null
+    note: 'Trouvé (lien) : « Mentions légales ».'
+    method: automated
+  donnees_personnelles:
+    status: 'yes'
+    evidence_url: https://www.mairie-lelamentin.fr/politique-de-confidentialite/
+    archive_url: null
+    note: 'Trouvé (lien) : « Politique de confidentialité ».'
+    method: automated
+  https:
+    status: 'yes'
+    evidence_url: https://www.mairie-lelamentin.fr/
+    archive_url: null
+    note: Connexion chiffrée (https) avec certificat valide.
+    method: automated
+  mobile:
+    status: 'yes'
+    evidence_url: https://www.mairie-lelamentin.fr/
+    archive_url: null
+    note: Page d'accueil adaptée aux écrans de téléphone (balise viewport) ; à confirmer à l'œil.
+    method: automated
+  demarches:
+    status: 'yes'
+    evidence_url: https://www.mairie-lelamentin.fr/moi-citoyen/portail-famille/
+    archive_url: null
+    note: 'Trouvé (lien) : « Portail Famille ».'
+    method: automated
+  contact:
+    status: 'yes'
+    evidence_url: https://www.mairie-lelamentin.fr/ma-ville/ladministration/la-collectivite-la-mairie/
+    archive_url: null
+    note: 'Trouvé (texte de la page) : « lamentin place antonio maceo 97232 le lamentin  telephone : 05 96 66 68 88  email : courrier@mairie-lelamentin.fr  horaires
+      douverture au pu ».'
+    method: automated
+  a_jour:
+    status: 'yes'
+    evidence_url: https://www.mairie-lelamentin.fr/
+    archive_url: null
+    note: 'Date la plus récente lue sur le site (accueil ou premières pages) : 02/11/2026 (il y a 0 jours).'
+    method: automated
+  elus_presentes:
+    status: 'yes'
+    evidence_url: https://www.mairie-lelamentin.fr/ma-ville/le-conseil-municipal/les-elus/
+    archive_url: null
+    note: 'Trouvé (lien) : « Les Élus ».'
+    method: automated
+  calendrier_conseils:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  rob_publie:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  budget_explique:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  marches_publics:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  indemnites_elus:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  projets_chiffres:
+    status: partial
+    evidence_url: https://www.mairie-lelamentin.fr/category/grands-projets/
+    archive_url: null
+    note: 'Indice partiel (lien) : « Grands Projets » ; à vérifier.'
+    method: automated
+  rapports_controle:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  question_budget:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  presentation_commune:
+    status: 'yes'
+    evidence_url: https://www.mairie-lelamentin.fr/ma-ville/
+    archive_url: null
+    note: 'Trouvé (lien) : « Ma Ville ».'
+    method: automated
+  bilan_activite:
+    status: partial
+    evidence_url: https://www.mairie-lelamentin.fr/ma-ville/le-lamentin/anciens-maire-et-personnalites/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « s habitants. nous en citons ci-dessous quelques-unes de ses realisations marquantes : amenagement
+      urbain et infrastructures : constr » ; à vérifier.'
+    method: automated
+  magazine_municipal:
+    status: partial
+    evidence_url: https://www.mairie-lelamentin.fr/politique-de-confidentialite/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « s donnees suivantes sont collectees dans les formulaires et newsletters selon les demandes :
+      nom, prenom, adresse postale, courrie » ; à vérifier.'
+    method: automated
+  annuaire_services:
+    status: partial
+    evidence_url: https://www.mairie-lelamentin.fr/ma-ville/le-lamentin/plu/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : «  batiments, les regles de voiries, les espaces publics, les equipements publics, etc. il fixe
+      egalement les orientations d''amenagement pour » ; à vérifier.'
+    method: automated
+  langue_kreyol:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  alertes_info:
+    status: partial
+    evidence_url: https://www.mairie-lelamentin.fr/ma-ville/je-mengage/les-instances/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « eil et de regroupement pour les sinistres participation a l''alerte des populations, a l''evacuation
+      d''un quartier aide a la pro » ; à vérifier.'
+    method: automated
+  abonnement_alertes:
+    status: partial
+    evidence_url: https://www.mairie-lelamentin.fr/politique-de-confidentialite/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « s donnees suivantes sont collectees dans les formulaires et newsletters selon les demandes :
+      nom, prenom, adresse postale, courrie » ; à vérifier.'
+    method: automated
+  suivi_demandes:
+    status: partial
+    evidence_url: https://www.mairie-lelamentin.fr/moi-citoyen/mes-demarches/passeport/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : «  de passeport. avec le numero de votre demande, vous pouvez suivre votre demande de carte nationale
+      didentite et de passeport sur le site du » ; à vérifier.'
+    method: automated
+  signalement:
+    status: partial
+    evidence_url: https://www.mairie-lelamentin.fr/mentions-legales/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « la collectivite. 5) contact pour toute question generale ou signalement technique, utilisez le
+      formulaire de contact ou les coordon » ; à vérifier.'
+    method: automated
+  risques_majeurs:
+    status: partial
+    evidence_url: https://www.mairie-lelamentin.fr/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « lactuelle ecole de pelletier, batisse centenaire inscrit au plan communal de sauvegarde de la
+      ville comme &nbsp;abri&nbsp;, ne repond plus a » ; à vérifier.'
+    method: automated
+  conseil_retransmis:
+    status: partial
+    evidence_url: https://www.mairie-lelamentin.fr/investiture-du-maire-et-installation-du-conseil-municipal-du-lamentin/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « t marque louverture de la nouvelle mandature 2026-2032. une retransmission en direct de linvestiture
+      sera proposee dans le hall de » ; à vérifier.'
+    method: automated
+  consultations:
+    status: 'yes'
+    evidence_url: https://www.mairie-lelamentin.fr/ma-ville/je-mengage/sondages-et-concertations/
+    archive_url: null
+    note: 'Trouvé (lien) : « Sondages et Concertations ».'
+    method: automated
+  budget_participatif:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  instances_participatives:
+    status: 'yes'
+    evidence_url: https://www.mairie-lelamentin.fr/le-lamentin-et-son-conseil-des-sages-dans-la-grande-famille-des-villages-et-villes-sages/
+    archive_url: null
+    note: 'Trouvé (lien) : « Le Lamentin et son Conseil des Sages dans la grande famille des « Villages et Villes Sages » ».'
+    method: automated
+  droit_petition:
+    status: partial
+    evidence_url: https://www.mairie-lelamentin.fr/moi-citoyen/mon-quotidien/sport/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « etit-manoir) : un espace moderne pour la natation et les competitions aquatiques. le complexe
+      sportif de basse-gondeau : ideal p » ; à vérifier.'
+    method: automated

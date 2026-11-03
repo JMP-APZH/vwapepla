@@ -1,0 +1,252 @@
+# Audit du site de la mairie — PREMIÈRE PASSE AUTOMATIQUE, à relire par JM.
+# status: yes / partial / no / na · method: automated (règles par mots-clés) ou manual (relu à la main).
+# « no » automatique = non trouvé par la recherche, pas une preuve d'absence. Rien n'est publié avant reviewed_by.
+commune_code: '97211'
+commune: Grand'Rivière
+site_url: http://www.grand-riviere.com/
+audited_on: '2026-11-02'
+auditor: Claude (première passe automatique)
+reviewed_by: null
+pages_read: 80
+items:
+  site_officiel:
+    status: 'yes'
+    evidence_url: http://www.grand-riviere.com/
+    archive_url: null
+    note: Site indiqué par l'annuaire Service-Public et accessible.
+    method: automated
+  budget_en_ligne:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Commune de moins de 3 500 habitants (544 hab.) : non concernée.'
+    method: automated
+  actes_publies:
+    status: partial
+    evidence_url: http://www.grand-riviere.com/patrimoine-et-histoire.html
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « otegee au titre des monuments historiques - inscription par arrete en date du 8 decembre 2009.
+      l''eglise sainte-catherine est d » ; à vérifier.'
+    method: automated
+  liste_deliberations:
+    status: partial
+    evidence_url: http://www.grand-riviere.com/les-services-de-la-mairie-de-grandriviere.html
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « ordonne lensemble des services. elle propose et execute les deliberations et decisions de lautorite
+      territoriale. elle pilote les mar » ; à vérifier.'
+    method: automated
+  proces_verbaux:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  open_data:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Commune de moins de 3 500 habitants (544 hab.) : non concernée.'
+    method: automated
+  subventions_publiees:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  accessibilite:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  mentions_legales:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  donnees_personnelles:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  https:
+    status: 'no'
+    evidence_url: http://www.grand-riviere.com/
+    archive_url: null
+    note: Le site s'ouvre en http (non chiffré).
+    method: automated
+  mobile:
+    status: 'yes'
+    evidence_url: http://www.grand-riviere.com/
+    archive_url: null
+    note: Page d'accueil adaptée aux écrans de téléphone (balise viewport) ; à confirmer à l'œil.
+    method: automated
+  demarches:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  contact:
+    status: 'yes'
+    evidence_url: http://www.grand-riviere.com/la-mairie-de-grand-riviere.html
+    archive_url: null
+    note: 'Trouvé (texte de la page) : « act avec les differents services de la mairie : tel :&nbsp; 05 96 55 77 77 cliquez sur le bouton pour
+      contactez les services municipaux les  ».'
+    method: automated
+  a_jour:
+    status: 'no'
+    evidence_url: http://www.grand-riviere.com/
+    archive_url: null
+    note: 'Date la plus récente lue sur le site (accueil ou premières pages) : 23/05/2020 (il y a 2354 jours).'
+    method: automated
+  elus_presentes:
+    status: partial
+    evidence_url: http://www.grand-riviere.com/le-conseil-municipal-de-grandriviere.html
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « uise jean-louis, le maire mr descas bruno,&nbsp; le premier adjoint mme jean-baptiste theodosie,&nbsp;
+      la deuxieme adjointe mr  » ; à vérifier.'
+    method: automated
+  calendrier_conseils:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  rob_publie:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Commune de moins de 3 500 habitants (544 hab.) : non concernée.'
+    method: automated
+  budget_explique:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  marches_publics:
+    status: partial
+    evidence_url: http://www.grand-riviere.com/les-services-de-la-mairie-de-grandriviere.html
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « ons et decisions de lautorite territoriale. elle pilote les marches publics et delegations de
+      services publics. elle veille a la bonne  » ; à vérifier.'
+    method: automated
+  indemnites_elus:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  projets_chiffres:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  rapports_controle:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  question_budget:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  presentation_commune:
+    status: 'yes'
+    evidence_url: http://www.grand-riviere.com/patrimoine-et-histoire.html
+    archive_url: null
+    note: 'Trouvé (lien) : « Patrimoine ».'
+    method: automated
+  bilan_activite:
+    status: partial
+    evidence_url: http://www.grand-riviere.com/les-realisations-et-les-projets-de-la-municipalite-de-grandriviere.html
+    archive_url: null
+    note: 'Indice partiel (lien (adresse seulement)) : « La Vidéo » ; à vérifier.'
+    method: automated
+  magazine_municipal:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  annuaire_services:
+    status: 'yes'
+    evidence_url: http://www.grand-riviere.com/contactez-un-service-de-la-mairie.html
+    archive_url: null
+    note: 'Trouvé (lien) : « Cliquez sur le bouton pour contactez les services municipaux ».'
+    method: automated
+  langue_kreyol:
+    status: partial
+    evidence_url: http://www.grand-riviere.com/se-restaurer-a-grand-riviere.html
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « : specialise dans le nord de l''ile en cuisine gastronomique creole vise a offrir a ses clients
+      une table dans un lieu de ville » ; à vérifier.'
+    method: automated
+  alertes_info:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  abonnement_alertes:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  suivi_demandes:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  signalement:
+    status: partial
+    evidence_url: http://www.grand-riviere.com/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : «  vous y etiez.&nbsp; vous pouvez communiquer vos doleances. signaler les problemes que vous rencontrez.
+      pour cela n''hesitez pas  » ; à vérifier.'
+    method: automated
+  risques_majeurs:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  conseil_retransmis:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  consultations:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  budget_participatif:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  instances_participatives:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  droit_petition:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated

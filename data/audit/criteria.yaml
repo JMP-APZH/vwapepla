@@ -39,16 +39,16 @@ criteria:
     theme: information
     label_fr: Liste des délibérations publiée après chaque conseil
     description_fr: Liste des délibérations examinées en séance, publiée dans la semaine.
-    legal_ref: CGCT art. L2121-25
-    ref_status: to_confirm
+    legal_ref: CGCT art. L2121-25 (liste affichée et mise en ligne dans un délai d'une semaine, si la commune a un site)
+    ref_status: verified          # Légifrance, version en vigueur au 2 nov. 2026
     applies_if: null
   - key: proces_verbaux
     family: legal
     theme: information
     label_fr: Procès-verbaux des séances du conseil municipal publiés
     description_fr: Procès-verbal arrêté au commencement de la séance suivante et publié sur le site.
-    legal_ref: CGCT art. L2121-15
-    ref_status: to_confirm
+    legal_ref: CGCT art. L2121-15 (procès-verbal publié sur le site dans la semaine qui suit son adoption, de manière permanente et gratuite)
+    ref_status: verified          # Légifrance, version en vigueur au 2 nov. 2026
     applies_if: null
   - key: open_data
     family: legal
@@ -63,9 +63,9 @@ criteria:
     theme: argent_public
     label_fr: Subventions versées publiées (données essentielles)
     description_fr: Publication des données essentielles des conventions de subvention au-delà du seuil réglementaire.
-    legal_ref: Loi n° 2000-321 art. 10 et décret n° 2017-779 (seuil de 23 000 €)
-    ref_status: to_confirm
-    applies_if: population >= 3500 and agents >= 50
+    legal_ref: Loi n° 2000-321 art. 10 (dernier alinéa) et décret n° 2017-779 art. 1 et 2 (données essentielles sur le site ou data.gouv.fr, dans les 3 mois ; seuil des conventions fixé par décret n° 2001-495 — 23 000 €, non relu)
+    ref_status: verified          # Légifrance, version en vigueur au 2 nov. 2026
+    applies_if: null            # l'art. 10 vise toute autorité administrative : pas d'exemption 3 500 hab. / 50 agents
   - key: accessibilite
     family: legal
     theme: site
@@ -79,8 +79,8 @@ criteria:
     theme: site
     label_fr: Mentions légales
     description_fr: Identité de l'éditeur, du directeur de la publication et de l'hébergeur.
-    legal_ref: Loi n° 2004-575 (LCEN) art. 6
-    ref_status: to_confirm
+    legal_ref: Loi n° 2004-575 (LCEN) art. 1-1 (créé par la loi n° 2024-449 « SREN » ; remplace l'ancien art. 6-III)
+    ref_status: verified          # Légifrance, version en vigueur au 2 nov. 2026
     applies_if: null
   - key: donnees_personnelles
     family: legal
@@ -163,16 +163,16 @@ criteria:
     theme: argent_public
     label_fr: Marchés publics publiés (avis et données essentielles)
     description_fr: Avis de marché et données essentielles des marchés attribués (objet, titulaire, montant, durée), accessibles depuis le site ou le profil d'acheteur.
-    legal_ref: Code de la commande publique, art. L2196-2 et R2196-1 ; arrêté du 22 décembre 2022 (données essentielles)
-    ref_status: to_confirm
+    legal_ref: Code de la commande publique, art. L2196-2 et R2196-1 (données essentielles des marchés de 40 000 € HT et plus, sur le portail national data.gouv.fr, dans les 2 mois) ; arrêté du 22 décembre 2022
+    ref_status: verified          # Légifrance, version en vigueur au 2 nov. 2026
     applies_if: null
   - key: indemnites_elus
     family: civic
     theme: argent_public
     label_fr: Indemnités des élus publiées
     description_fr: État annuel des indemnités perçues par les élus. La loi impose de le communiquer aux conseillers avant le vote du budget ; sa mise en ligne est une bonne pratique.
-    legal_ref: CGCT art. L2123-24-1-1 (communication au conseil, pas de mise en ligne obligatoire)
-    ref_status: to_confirm
+    legal_ref: CGCT art. L2123-24-1-1 (état annuel communiqué aux conseillers avant le budget ; pas de mise en ligne obligatoire ; modifié par la loi n° 2025-1249)
+    ref_status: verified          # Légifrance, version en vigueur au 2 nov. 2026
     applies_if: null
   - key: projets_chiffres
     family: civic
@@ -186,8 +186,8 @@ criteria:
     theme: argent_public
     label_fr: Rapports de la Chambre régionale des comptes accessibles
     description_fr: Lien vers les rapports d'observations de la Chambre régionale des comptes sur la commune et vers les suites données par la mairie.
-    legal_ref: Code des juridictions financières, art. L243-6 et L243-9 (présentation au conseil et rapport sur les suites données)
-    ref_status: to_confirm
+    legal_ref: Code des juridictions financières, art. L243-6 (rapport débattu en conseil puis publié, sans préciser où) et L243-9 (rapport sur les suites données, dans l'année)
+    ref_status: verified          # Légifrance, version en vigueur au 2 nov. 2026
     applies_if: null
   - key: question_budget
     family: civic
@@ -264,12 +264,12 @@ criteria:
     legal_ref: null
     applies_if: null
   - key: risques_majeurs
-    family: legal
+    family: civic                # JM, 2 nov. 2026 : bonne pratique (le document est obligatoire, sa mise en ligne ne l'est pas)
     theme: suivi_usagers
-    label_fr: Information sur les risques majeurs (DICRIM)
-    description_fr: Document d'information communal sur les risques majeurs (séisme, cyclone, tsunami, inondation, volcan) avec les consignes. Le DICRIM est obligatoire ; on vérifie ici qu'il est en ligne.
-    legal_ref: Code de l'environnement, art. L125-2 et R125-11
-    ref_status: to_confirm      # obligation d'établir le DICRIM ; la mise en ligne elle-même est à confirmer
+    label_fr: Information sur les risques majeurs (DICRIM) en ligne
+    description_fr: Document d'information communal sur les risques majeurs (séisme, cyclone, tsunami, inondation, volcan) avec les consignes, consultable sur le site. Le DICRIM lui-même est obligatoire ; sa mise en ligne est une bonne pratique, pas une obligation.
+    legal_ref: Code de l'environnement, art. L125-2 II et R125-11 (DICRIM établi par le maire, information « par tout moyen approprié » ; la mise en ligne n'est pas exigée)
+    ref_status: verified          # Légifrance, version en vigueur au 2 nov. 2026
     applies_if: null
 
   # --- Démocratie participative (ajout JM) ---
@@ -278,8 +278,8 @@ criteria:
     theme: participation
     label_fr: Conseils municipaux retransmis
     description_fr: Séances retransmises en direct ou disponibles en vidéo.
-    legal_ref: CGCT art. L2121-18 (retransmission permise, pas obligatoire)
-    ref_status: to_confirm
+    legal_ref: CGCT art. L2121-18 (séances publiques ; retransmission permise, pas obligatoire)
+    ref_status: verified          # Légifrance, version en vigueur au 2 nov. 2026
     applies_if: null
   - key: consultations
     family: civic
@@ -301,15 +301,15 @@ criteria:
     label_fr: Instances de participation présentées
     description_fr: Conseils de quartier, conseil municipal des jeunes, comités consultatifs, avec leur composition, leurs réunions et la façon d'y participer.
     legal_ref: CGCT art. L2143-1 et L2143-2 (conseils de quartier obligatoires dès 80 000 habitants ; comités consultatifs facultatifs)
-    ref_status: to_confirm
+    ref_status: verified          # Légifrance, version en vigueur au 2 nov. 2026   # aucune commune de Martinique n'atteint 80 000 hab. (Fort-de-France : 75 627)
     applies_if: null
   - key: droit_petition
     family: civic
     theme: participation
     label_fr: Droit de pétition et consultation locale expliqués
     description_fr: Explication de la façon dont les électeurs peuvent demander l'inscription d'un sujet à l'ordre du jour du conseil, ou une consultation locale.
-    legal_ref: CGCT art. L1112-15 et L1112-16
-    ref_status: to_confirm
+    legal_ref: CGCT art. L1112-15 et L1112-16 (consultation des électeurs ; un dixième des électeurs peut demander son inscription à l'ordre du jour)
+    ref_status: verified          # Légifrance, version en vigueur au 2 nov. 2026
     applies_if: null
 
 # Visitor opinion (separate block, never mixed with the checklist). 1 to 5. Adapted from DINUM "Je donne mon avis".

@@ -49,6 +49,13 @@ export const t = {
   // Visitor votes (opinion layer: website quality only)
   siteTitle: { fr: "Le site internet de la mairie", kr: null },
   votesShortcut: { fr: "Donnez votre avis sur le site internet de la mairie", kr: null },
+  auditTitle: { fr: "Ce que l'on trouve sur le site", kr: null },
+  auditIntro: { fr: "Chaque point renvoie à la page consultée.", kr: null },
+  auditPending: { fr: "Vérification du site de la mairie en cours : la liste des points contrôlés sera publiée après relecture.", kr: null },
+  auditDisclaimer: {
+    fr: "Constat factuel et daté sur le site internet de la mairie, pas une note du maire ni de la commune. « Non trouvé » signifie que l'information n'a pas été trouvée à cette date. La mairie peut signaler une erreur ou une mise à jour via le droit de réponse.",
+    kr: null,
+  },
   siteNone: { fr: "Aucun site internet n'est indiqué pour cette mairie dans l'annuaire officiel Service-Public.", kr: null },
   votesTitle: { fr: "Avis des visiteurs, non représentatif", kr: null },
   votesIntro: {

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Relecture des audits de sites</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+/* Layout: one column for a phone, sticky toolbar on top, one collapsible block per commune, one row per criterion. */
+:root {
+  --bg: #f4f6f5; --surface: #ffffff; --ink: #17201c; --muted: #5b6862; --line: #dde3e0;
+  --accent: #0f6b5a; --accent-ink: #ffffff;
+  --yes: #15803d; --partial: #c27c0e; --no: #64748b; --na: #a3aea9;
+  --display: "Bricolage Grotesque", system-ui, sans-serif; --body: "Source Sans 3", system-ui, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1513; --surface: #18201d; --ink: #e8efec; --muted: #9aa8a2; --line: #2b3632;
+    --accent: #3fb59b; --accent-ink: #06231c;
+    --yes: #4ade80; --partial: #f5b544; --no: #94a3b8; --na: #5f6d67; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1513; --surface: #18201d; --ink: #e8efec; --muted: #9aa8a2; --line: #2b3632;
+  --accent: #3fb59b; --accent-ink: #06231c;
+  --yes: #4ade80; --partial: #f5b544; --no: #94a3b8; --na: #5f6d67; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--ink); font: 16px/1.45 var(--body); }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+header.top { padding: 20px 16px 8px; max-width: 760px; margin: 0 auto; }
+h1 { font: 700 1.5rem/1.15 var(--display); margin: 0 0 6px; text-wrap: balance; }
+.lede { color: var(--muted); margin: 0; font-size: .95rem; max-width: 65ch; }
+.bar { position: sticky; top: 0; z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+.bar-in { max-width: 760px; margin: 0 auto; padding: 8px 16px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+select, input[type=text], input[type=url] { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; min-height: 40px; padding: 6px 10px; }
+#jump { flex: 1 1 180px; min-width: 0; }
+.btn { font: 600 .95rem var(--body); min-height: 40px; padding: 6px 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg button { font: 600 .85rem var(--body); border: 0; background: var(--surface); color: var(--muted); padding: 6px 10px; min-height: 40px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.progress { font-size: .85rem; color: var(--muted); width: 100%; font-variant-numeric: tabular-nums; }
+main { max-width: 760px; margin: 0 auto; padding: 12px 16px 80px; display: grid; gap: 12px; }
+details.commune { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; scroll-margin-top: 110px; }
+details.commune > summary { list-style: none; cursor: pointer; padding: 12px 14px; display: grid; gap: 4px; }
+details.commune > summary::-webkit-details-marker { display: none; }
+.c-head { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+.c-name { font: 700 1.1rem/1.2 var(--display); }
+.c-done { font-size: .75rem; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--yes); color: var(--surface); white-space: nowrap; }
+.c-meta { font-size: .85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.tally { display: flex; gap: 10px; flex-wrap: wrap; font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 4px; vertical-align: 0; }
+.c-body { border-top: 1px solid var(--line); padding: 4px 14px 14px; }
+.c-warn { margin: 10px 0 4px; padding: 10px 12px; border-radius: 8px; background: color-mix(in srgb, var(--partial) 14%, transparent); font-size: .9rem; }
+.theme { font: 600 .78rem var(--body); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 16px 0 4px; }
+.item { border-left: 4px solid var(--line); padding: 10px 0 10px 12px; margin-top: 8px; display: grid; gap: 6px; }
+.item.decided { border-left-color: var(--accent); }
+.i-top { display: flex; gap: 8px; align-items: flex-start; }
+.chip { flex: none; font-size: .72rem; font-weight: 600; padding: 2px 8px; border-radius: 999px; color: var(--surface); margin-top: 2px; white-space: nowrap; }
+.i-label { font-weight: 600; }
+.i-fam { font-size: .78rem; color: var(--muted); }
+.i-note { font-size: .85rem; color: var(--muted); overflow-wrap: anywhere; }
+.i-links { display: flex; gap: 14px; flex-wrap: wrap; font-size: .9rem; }
+.i-links a { min-height: 32px; display: inline-flex; align-items: center; }
+.decide { display: flex; flex-wrap: wrap; gap: 6px; }
+.decide button { font: 600 .85rem var(--body); min-height: 40px; padding: 4px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.decide button[aria-pressed="true"] { color: var(--surface); border-color: transparent; }
+.extra { display: grid; gap: 6px; }
+.extra input { width: 100%; }
+.reviewed { display: flex; gap: 10px; align-items: center; margin-top: 16px; padding: 12px; border-radius: 8px; border: 1px dashed var(--line); font-weight: 600; }
+.reviewed input { width: 22px; height: 22px; accent-color: var(--accent); }
+dialog { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--ink); width: min(92vw, 640px); padding: 16px; }
+dialog textarea { width: 100%; height: 50vh; font: .8rem/1.4 ui-monospace, monospace; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px; }
+.row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 10px; flex-wrap: wrap; }
+.hidden { display: none !important; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Relecture des audits de sites</h1>
+  <p class="lede">Première passe automatique du 2 novembre 2026 sur les sites des 34 mairies. Pour chaque point, ouvre la preuve ou la recherche, puis choisis ce que tu constates. Tes choix restent dans ce navigateur. Quand tu as fini, touche « Copier mes choix » et colle le texte dans la conversation avec Claude : il l'appliquera aux fichiers d'audit.</p>
+</header>
+<div class="bar"><div class="bar-in">
+  <select id="jump" aria-label="Aller à une commune"></select>
+  <div class="seg" role="group" aria-label="Points affichés">
+    <button type="button" id="f-todo" aria-pressed="true">À vérifier</button>
+    <button type="button" id="f-all" aria-pressed="false">Tout</button>
+  </div>
+  <button type="button" class="btn primary" id="copy">Copier mes choix</button>
+  <div class="progress" id="progress"></div>
+</div></div>
+<main id="list"></main>
+<dialog id="out">
+  <p style="margin-top:0">Copie ce texte et colle-le dans la conversation avec Claude.</p>
+  <textarea id="out-text" readonly></textarea>
+  <div class="row">
+    <button type="button" class="btn" id="clear">Effacer tous mes choix</button>
+    <button type="button" class="btn primary" id="close">Fermer</button>
+  </div>
+</dialog>
+<script>
+const DATA = /*__DATA__*/null;
+const THEMES = [["site","Le site de base"],["argent_public","Suivre et contrôler l'argent public"],["information","S'informer sur la commune et son action"],["suivi_usagers","Être tenu informé en tant qu'usager"],["participation","Participer aux décisions"]];
+const FAMILY = {legal:"Obligation légale", quality:"Qualité de service", civic:"Bonne pratique"};
+const STATUS = {yes:["présent","--yes"], partial:["partiel","--partial"], no:["non trouvé","--no"], na:["sans objet","--na"]};
+const CHOICES = [["yes","Présent"],["partial","Partiel"],["no","Absent"],["na","Sans objet"]];
+const KEY = "vwapepla-audit-review-v1";
+let state = {}; try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { state = {}; }
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
+let filter = "todo";
+const el = (tag, attrs = {}, ...kids) => { const n = document.createElement(tag); for (const [k, v] of Object.entries(attrs)) { if (k === "class") n.className = v; else if (k.startsWith("on")) n.addEventListener(k.slice(2), v); else n.setAttribute(k, v); } for (const k of kids) if (k != null) n.append(k); return n; };
+const crawled = c => c.pages > 0;
+const isTodo = (c, i) => crawled(c) ? (i.s === "partial" || i.s === "no") : false;
+
+function render() {
+  const list = document.getElementById("list"); list.textContent = "";
+  const jump = document.getElementById("jump"); jump.textContent = "";
+  jump.append(el("option", {value: ""}, "Aller à une commune…"));
+  for (const c of DATA.communes) {
+    const items = DATA.criteria.map(k => [k, c.items[k.key]]).filter(([, i]) => i);
+    const counts = {yes: 0, partial: 0, no: 0, na: 0}; items.forEach(([, i]) => counts[i.s]++);
+    const todo = items.filter(([, i]) => isTodo(c, i)).length;
+    const decided = items.filter(([k]) => state[c.code + " " + k.key]).length;
+    const done = !!state[c.code + " relu"];
+    jump.append(el("option", {value: c.code}, `${c.name}${todo ? ` · ${todo} à vérifier` : ""}${done ? " · relue" : ""}`));
+    const det = el("details", {class: "commune", id: "c-" + c.code});
+    const tally = el("div", {class: "tally"}, ...Object.entries(counts).filter(([, n]) => n).map(([s, n]) => el("span", {}, el("span", {class: "dot", style: `background:var(${STATUS[s][1]})`}), `${n} ${STATUS[s][0]}`)));
+    det.append(el("summary", {},
+      el("div", {class: "c-head"}, el("span", {class: "c-name"}, c.name), done ? el("span", {class: "c-done"}, "relue") : null),
+      el("div", {class: "c-meta"}, c.site ? `${c.pages} pages lues · ${todo} à vérifier · ${decided} choix faits` : "Aucun site dans l'annuaire Service-Public"),
+      tally));
+    const body = el("div", {class: "c-body"});
+    if (c.site) body.append(el("p", {class: "i-links", style: "margin:10px 0 0"}, el("a", {href: c.site, target: "_blank", rel: "noopener noreferrer"}, "Ouvrir le site de la mairie")));
+    if (!crawled(c)) body.append(el("p", {class: "c-warn"}, c.site
+      ? `La recherche automatique n'a pas pu lire ce site (${c.items.site_officiel.n}). À auditer à la main : choisis « Tout » pour voir les points.`
+      : "Si tu trouves un site officiel ou une page de la mairie, note-le sur le point « site internet officiel » (choisis « Tout »)."));
+    for (const [tid, ttitle] of THEMES) {
+      const rows = items.filter(([k, i]) => k.theme === tid && (filter === "all" || isTodo(c, i) || state[c.code + " " + k.key]));
+      if (!rows.length) continue;
+      body.append(el("p", {class: "theme"}, ttitle));
+      for (const [k, i] of rows) body.append(itemRow(c, k, i));
+    }
+    const chk = el("input", {type: "checkbox", id: "relu-" + c.code, onchange: e => { if (e.target.checked) state[c.code + " relu"] = {t: Date.now()}; else delete state[c.code + " relu"]; save(); refresh(c.code); }});
+    chk.checked = done;
+    body.append(el("label", {class: "reviewed", for: "relu-" + c.code}, chk, "J'ai relu cette commune : elle peut être publiée"));
+    det.append(body);
+    det.addEventListener("toggle", () => { if (det.open) openSet.add(c.code); else openSet.delete(c.code); });
+    if (openSet.has(c.code)) det.open = true;
+    list.append(det);
+  }
+  progress();
+}
+const openSet = new Set();
+
+function itemRow(c, k, i) {
+  const id = c.code + " " + k.key; const d = state[id];
+  const row = el("div", {class: "item" + (d ? " decided" : "")});
+  row.append(el("div", {class: "i-top"},
+    el("span", {class: "chip", style: `background:var(${STATUS[i.s][1]})`, title: "Résultat automatique"}, STATUS[i.s][0]),
+    el("div", {}, el("div", {class: "i-label"}, k.label_fr), el("div", {class: "i-fam"}, FAMILY[k.family] + (k.family === "legal" && k.legal_ref ? " · " + k.legal_ref : "")))));
+  if (i.n) row.append(el("div", {class: "i-note"}, i.n));
+  const links = el("div", {class: "i-links"});
+  if (i.u) links.append(el("a", {href: i.u, target: "_blank", rel: "noopener noreferrer"}, "Voir la preuve"));
+  if (i.q && i.s !== "yes") links.append(el("a", {href: i.q, target: "_blank", rel: "noopener noreferrer"}, "Chercher sur le site"));
+  if (links.childNodes.length) row.append(links);
+  const decide = el("div", {class: "decide", role: "group", "aria-label": "Ce que je constate"});
+  for (const [s, label] of CHOICES) {
+    const on = d && d.s === s;
+    const b = el("button", {type: "button", "aria-pressed": on ? "true" : "false", onclick: () => {
+      if (state[id] && state[id].s === s) delete state[id]; else state[id] = {...(state[id] || {}), s};
+      save(); refresh(c.code);
+    }}, label);
+    if (on) b.style.background = `var(${STATUS[s][1]})`;
+    decide.append(b);
+  }
+  row.append(decide);
+  if (d) {
+    const u = el("input", {type: "url", id: "u-" + id.replace(" ", "-"), placeholder: "Lien de la page trouvée (facultatif)", "aria-label": "Lien de la page trouvée"});
+    u.value = d.u || ""; u.addEventListener("change", () => { state[id].u = u.value.trim(); save(); });
+    const n = el("input", {type: "text", id: "n-" + id.replace(" ", "-"), placeholder: "Commentaire (facultatif)", "aria-label": "Commentaire"});
+    n.value = d.n || ""; n.addEventListener("change", () => { state[id].n = n.value.trim(); save(); });
+    row.append(el("div", {class: "extra"}, u, n));
+  }
+  return row;
+}
+
+function refresh(code) { const y = window.scrollY; render(); window.scrollTo(0, y); }
+
+function progress() {
+  const choices = Object.keys(state).filter(k => !k.endsWith(" relu")).length;
+  const relues = Object.keys(state).filter(k => k.endsWith(" relu")).length;
+  const todo = DATA.communes.reduce((a, c) => a + Object.values(c.items).filter(i => isTodo(c, i)).length, 0);
+  document.getElementById("progress").textContent = `${choices} choix faits · ${todo} points à vérifier au départ · ${relues} sur 34 communes relues`;
+  document.getElementById("copy").textContent = choices + relues ? `Copier mes choix (${choices + relues})` : "Copier mes choix";
+}
+
+function exportText() {
+  const lines = ["# vwapepla relecture audits " + new Date().toISOString().slice(0, 10) + " · JM"];
+  for (const c of DATA.communes) for (const k of [...DATA.criteria.map(k => k.key), "relu"]) {
+    const d = state[c.code + " " + k]; if (!d) continue;
+    if (k === "relu") { lines.push(`${c.code} relu`); continue; }
+    lines.push([c.code, k, d.s, d.u || "-"].join(" ") + (d.n ? " // " + d.n.replace(/\s+/g, " ") : ""));
+  }
+  return lines.join("\n");
+}
+
+document.getElementById("jump").addEventListener("change", e => {
+  const d = document.getElementById("c-" + e.target.value); if (!d) return;
+  openSet.add(e.target.value); d.open = true; d.scrollIntoView(); e.target.value = "";
+});
+for (const [id, f] of [["f-todo", "todo"], ["f-all", "all"]]) document.getElementById(id).addEventListener("click", () => {
+  filter = f; document.getElementById("f-todo").setAttribute("aria-pressed", f === "todo"); document.getElementById("f-all").setAttribute("aria-pressed", f === "all"); refresh();
+});
+const dlg = document.getElementById("out");
+document.getElementById("copy").addEventListener("click", async () => {
+  const text = exportText(); const ta = document.getElementById("out-text"); ta.value = text;
+  try { await navigator.clipboard.writeText(text); dlg.querySelector("p").textContent = "Copié. Colle ce texte dans la conversation avec Claude."; }
+  catch (e) { dlg.querySelector("p").textContent = "Sélectionne et copie ce texte, puis colle-le dans la conversation avec Claude."; }
+  dlg.showModal(); ta.focus(); ta.select();
+});
+document.getElementById("close").addEventListener("click", () => dlg.close());
+let armed = false;
+document.getElementById("clear").addEventListener("click", e => {
+  if (!armed) { armed = true; e.target.textContent = "Toucher encore pour tout effacer"; return; }
+  state = {}; save(); armed = false; e.target.textContent = "Effacer tous mes choix"; dlg.close(); refresh();
+});
+render();
+</script>
+</body>
+</html>

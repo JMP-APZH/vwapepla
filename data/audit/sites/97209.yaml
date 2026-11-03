@@ -1,0 +1,252 @@
+# Audit du site de la mairie — PREMIÈRE PASSE AUTOMATIQUE, à relire par JM.
+# status: yes / partial / no / na · method: automated (règles par mots-clés) ou manual (relu à la main).
+# « no » automatique = non trouvé par la recherche, pas une preuve d'absence. Rien n'est publié avant reviewed_by.
+commune_code: '97209'
+commune: Fort-de-France
+site_url: https://www.fortdefrance.fr/
+audited_on: '2026-11-02'
+auditor: Claude (première passe automatique)
+reviewed_by: null
+pages_read: 80
+items:
+  site_officiel:
+    status: 'yes'
+    evidence_url: https://www.fortdefrance.fr/
+    archive_url: null
+    note: Site indiqué par l'annuaire Service-Public et accessible.
+    method: automated
+  budget_en_ligne:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  actes_publies:
+    status: 'yes'
+    evidence_url: https://www.fortdefrance.fr/arretes-municipaux-pour-les-evenements-du-12-au-14-decembre-2025/
+    archive_url: null
+    note: 'Trouvé (lien) : « Arrêtés municipaux pour les évènements du 12 au 14 décembre 2025 ».'
+    method: automated
+  liste_deliberations:
+    status: partial
+    evidence_url: https://www.fortdefrance.fr/wp-content/uploads/2019/07/2Sommaire-délibs-et-permis-de-construire-2017.pdf
+    archive_url: null
+    note: 'Indice partiel (lien) : « Sommaire des délibération et de permis de construire délivrés en 2017 » ; à vérifier.'
+    method: automated
+  proces_verbaux:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  open_data:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Obligation si 3 500 habitants et 50 agents ou plus : effectif non vérifié. Rien trouvé par la recherche automatique (80 pages lues).'
+    method: automated
+  subventions_publiees:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  accessibilite:
+    status: partial
+    evidence_url: https://www.fortdefrance.fr/fort-de-france/grands-projets/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « cants, indivision, squats, problematiques dassainissement, daccessibilite et damenagement, vieillissement
+      de la population, expositio » ; à vérifier.'
+    method: automated
+  mentions_legales:
+    status: 'yes'
+    evidence_url: https://www.fortdefrance.fr/mentions-legales/
+    archive_url: null
+    note: 'Trouvé (lien) : « Mentions Légales ».'
+    method: automated
+  donnees_personnelles:
+    status: 'yes'
+    evidence_url: https://www.fortdefrance.fr/confidentialite/
+    archive_url: null
+    note: 'Trouvé (texte de la page) : « entialite accueil - confidentialite politique relative a la protection des donnees a caractere personnel
+      des usagers de la ville-capitale  u ».'
+    method: automated
+  https:
+    status: 'yes'
+    evidence_url: https://www.fortdefrance.fr/
+    archive_url: null
+    note: Connexion chiffrée (https) avec certificat valide.
+    method: automated
+  mobile:
+    status: 'yes'
+    evidence_url: https://www.fortdefrance.fr/
+    archive_url: null
+    note: Page d'accueil adaptée aux écrans de téléphone (balise viewport) ; à confirmer à l'œil.
+    method: automated
+  demarches:
+    status: 'yes'
+    evidence_url: https://www.fortdefrance.fr/mes-demarches-en-ligne/
+    archive_url: null
+    note: 'Trouvé (lien) : « Mes démarches en ligne ».'
+    method: automated
+  contact:
+    status: 'yes'
+    evidence_url: https://www.fortdefrance.fr/mes-demarches/urbanisme/
+    archive_url: null
+    note: 'Trouvé (texte de la page) : « l''onglet "guichet numerique des autorisations d''urbanisme". horaires de reception accueil : lundi au
+      vendredi de 7h15 - 12h30 et 14h30  15h3 ».'
+    method: automated
+  a_jour:
+    status: 'yes'
+    evidence_url: https://www.fortdefrance.fr/
+    archive_url: null
+    note: 'Date la plus récente lue sur le site (accueil ou premières pages) : 09/09/2026 (il y a 54 jours).'
+    method: automated
+  elus_presentes:
+    status: 'yes'
+    evidence_url: https://www.fortdefrance.fr/ma-mairie/elus-municipaux/
+    archive_url: null
+    note: 'Trouvé (lien) : « Élus municipaux ».'
+    method: automated
+  calendrier_conseils:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  rob_publie:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  budget_explique:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  marches_publics:
+    status: 'yes'
+    evidence_url: https://www.fortdefrance.fr/ma-mairie/marches-publics/
+    archive_url: null
+    note: 'Trouvé (lien) : « Marchés publics ».'
+    method: automated
+  indemnites_elus:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  projets_chiffres:
+    status: partial
+    evidence_url: https://www.fortdefrance.fr/fort-de-france/grands-projets/
+    archive_url: null
+    note: 'Indice partiel (lien) : « Grands projets » ; à vérifier.'
+    method: automated
+  rapports_controle:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  question_budget:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  presentation_commune:
+    status: partial
+    evidence_url: https://www.fortdefrance.fr/les-journees-europeennes-du-patrimoine-2026/
+    archive_url: null
+    note: 'Indice partiel (lien) : « Les Journées Européennes du Patrimoine 2026 » ; à vérifier.'
+    method: automated
+  bilan_activite:
+    status: partial
+    evidence_url: https://www.fortdefrance.fr/bilan-securite-des-festivites-du-carnaval-2026/
+    archive_url: null
+    note: 'Indice partiel (lien) : « Bilan sécurité des festivités du Carnaval 2026 » ; à vérifier.'
+    method: automated
+  magazine_municipal:
+    status: 'yes'
+    evidence_url: https://www.fortdefrance.fr/le-dixieme-magazine-de-la-ville-est-sorti/
+    archive_url: null
+    note: 'Trouvé (lien) : « Le dixième magazine de la Ville est sorti !!! ».'
+    method: automated
+  annuaire_services:
+    status: 'yes'
+    evidence_url: https://www.fortdefrance.fr/ma-mairie/services-municipaux/
+    archive_url: null
+    note: 'Trouvé (lien) : « Services Municipaux ».'
+    method: automated
+  langue_kreyol:
+    status: partial
+    evidence_url: https://www.fortdefrance.fr/la-journee-creole-des-centres-de-loisirs-de-fort-de-france/
+    archive_url: null
+    note: 'Indice partiel (lien) : « La Journée Créole des Centres de Loisirs de Fort-de-France » ; à vérifier.'
+    method: automated
+  alertes_info:
+    status: 'yes'
+    evidence_url: https://www.fortdefrance.fr/%e2%9a%a0%ef%b8%8f-%e2%9a%a0%ef%b8%8f-alerte-%e2%9a%a0%ef%b8%8f-%e2%9a%a0%ef%b8%8f-leau-de-lalma-impropre/
+    archive_url: null
+    note: 'Trouvé (lien) : « &#x26a0;&#xfe0f; &#x26a0;&#xfe0f; ALERTE ! &#x26a0;&#xfe0f; &#x26a0;&#xfe0f; L&#8217;eau de l&#8217;Alma impropre
+      ! ».'
+    method: automated
+  abonnement_alertes:
+    status: 'yes'
+    evidence_url: https://www.fortdefrance.fr/
+    archive_url: null
+    note: 'Trouvé (texte de la page) : « iles je m''engage pour ma ville mr le maire, j''ai une idee ! alerte sms marches publics une question
+      ? posez-la ici, un membre de l ».'
+    method: automated
+  suivi_demandes:
+    status: partial
+    evidence_url: https://www.fortdefrance.fr/mes-demarches/personnes-agees/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « ous invite a un echange pour vous accompagner et assurer le suivi de votre demande. 3) admission
+      en etablissement dhebergement pour personne » ; à vérifier.'
+    method: automated
+  signalement:
+    status: 'yes'
+    evidence_url: https://www.fortdefrance.fr/signaler-un-incident/
+    archive_url: null
+    note: 'Trouvé (lien) : « Signaler un incident ».'
+    method: automated
+  risques_majeurs:
+    status: partial
+    evidence_url: https://www.fortdefrance.fr/prevention-des-risques-majeurs/
+    archive_url: null
+    note: 'Indice partiel (lien) : « Prévention des risques majeurs » ; à vérifier.'
+    method: automated
+  conseil_retransmis:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  consultations:
+    status: 'yes'
+    evidence_url: https://www.fortdefrance.fr/forum-de-concertation-au-centre-ville/
+    archive_url: null
+    note: 'Trouvé (lien) : « Forum de concertation au Centre-Ville ».'
+    method: automated
+  budget_participatif:
+    status: partial
+    evidence_url: https://www.fortdefrance.fr/ma-mairie/je-mengage-pour-ma-ville/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « cer les moyens de decision des instances, mise en place dun budget participatif, permettre un
+      meilleur accompagnement des dynamiques par la » ; à vérifier.'
+    method: automated
+  instances_participatives:
+    status: 'yes'
+    evidence_url: https://www.fortdefrance.fr/nouveau-conseil-jeunes-foyalais/
+    archive_url: null
+    note: 'Trouvé (lien) : « Un nouveau Conseil des Jeunes Foyalais ».'
+    method: automated
+  droit_petition:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated

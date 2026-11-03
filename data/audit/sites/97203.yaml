@@ -1,0 +1,284 @@
+# Audit du site de la mairie — PREMIÈRE PASSE AUTOMATIQUE, à relire par JM.
+# status: yes / partial / no / na · method: automated (règles par mots-clés) ou manual (relu à la main).
+# « no » automatique = non trouvé par la recherche, pas une preuve d'absence. Rien n'est publié avant reviewed_by.
+commune_code: '97203'
+commune: Basse-Pointe
+site_url: https://villedebassepointe.fr
+audited_on: '2026-11-02'
+auditor: Claude (première passe automatique)
+reviewed_by: null
+pages_read: 0
+items:
+  site_officiel:
+    status: partial
+    evidence_url: https://villedebassepointe.fr
+    archive_url: null
+    note: 'Site indiqué par l''annuaire, mais site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly
+      closed by the remote host>) le 2026-11-02.'
+    method: automated
+  budget_en_ligne:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  actes_publies:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  liste_deliberations:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  proces_verbaux:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  open_data:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  subventions_publiees:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  accessibilite:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  mentions_legales:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  donnees_personnelles:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  https:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  mobile:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  demarches:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  contact:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  a_jour:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  elus_presentes:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  calendrier_conseils:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  rob_publie:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  budget_explique:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  marches_publics:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  indemnites_elus:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  projets_chiffres:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  rapports_controle:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  question_budget:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  presentation_commune:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  bilan_activite:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  magazine_municipal:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  annuaire_services:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  langue_kreyol:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  alertes_info:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  abonnement_alertes:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  suivi_demandes:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  signalement:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  risques_majeurs:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  conseil_retransmis:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  consultations:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  budget_participatif:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  instances_participatives:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated
+  droit_petition:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Non évalué : site inaccessible (URLError: <urlopen error [WinError 10054] An existing connection was forcibly closed by the remote
+      host>).'
+    method: automated

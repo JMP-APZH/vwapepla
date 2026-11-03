@@ -1,0 +1,254 @@
+# Audit du site de la mairie — PREMIÈRE PASSE AUTOMATIQUE, à relire par JM.
+# status: yes / partial / no / na · method: automated (règles par mots-clés) ou manual (relu à la main).
+# « no » automatique = non trouvé par la recherche, pas une preuve d'absence. Rien n'est publié avant reviewed_by.
+commune_code: '97234'
+commune: Bellefontaine
+site_url: https://www.ville-bellefontaine.fr/
+audited_on: '2026-11-02'
+auditor: Claude (première passe automatique)
+reviewed_by: null
+pages_read: 80
+items:
+  site_officiel:
+    status: 'yes'
+    evidence_url: https://www.ville-bellefontaine.fr/
+    archive_url: null
+    note: Site indiqué par l'annuaire Service-Public et accessible.
+    method: automated
+  budget_en_ligne:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Commune de moins de 3 500 habitants (2026 hab.) : non concernée.'
+    method: automated
+  actes_publies:
+    status: 'yes'
+    evidence_url: https://www.ville-bellefontaine.fr/category/arretes-municipaux/
+    archive_url: null
+    note: 'Trouvé (lien) : « Arrêtés municipaux ».'
+    method: automated
+  liste_deliberations:
+    status: partial
+    evidence_url: https://www.ville-bellefontaine.fr/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « e publique :  ce jeudi 17 septembre 2026,16h00,en salle des deliberations de la mairie. lordre
+      du jour... travaux travaux et restrict » ; à vérifier.'
+    method: automated
+  proces_verbaux:
+    status: partial
+    evidence_url: https://www.ville-bellefontaine.fr/category/actualite/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « jour sera le suivant : i. gestion de lassemblee 1. vote des proces-verbaux des seances du mercredi
+      29 avril et du jeudi 2 juillet 20262. par » ; à vérifier.'
+    method: automated
+  open_data:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Commune de moins de 3 500 habitants (2026 hab.) : non concernée.'
+    method: automated
+  subventions_publiees:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  accessibilite:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  mentions_legales:
+    status: 'yes'
+    evidence_url: https://www.ville-bellefontaine.fr/mentions-legales/
+    archive_url: null
+    note: 'Trouvé (lien) : « Mentions légales ».'
+    method: automated
+  donnees_personnelles:
+    status: 'yes'
+    evidence_url: https://www.ville-bellefontaine.fr/politique-de-confidentialite/
+    archive_url: null
+    note: 'Trouvé (lien) : « Politique de Confidentialité ».'
+    method: automated
+  https:
+    status: 'yes'
+    evidence_url: https://www.ville-bellefontaine.fr/
+    archive_url: null
+    note: Connexion chiffrée (https) avec certificat valide.
+    method: automated
+  mobile:
+    status: 'yes'
+    evidence_url: https://www.ville-bellefontaine.fr/
+    archive_url: null
+    note: Page d'accueil adaptée aux écrans de téléphone (balise viewport) ; à confirmer à l'œil.
+    method: automated
+  demarches:
+    status: 'yes'
+    evidence_url: https://www.service-public.gouv.fr/
+    archive_url: null
+    note: 'Trouvé (lien) : « Service-public.fr ».'
+    method: automated
+  contact:
+    status: 'yes'
+    evidence_url: https://www.ville-bellefontaine.fr/
+    archive_url: null
+    note: 'Trouvé (texte de la page) : « ine place simon charles-francois 97222 bellefontaine tel. : 0596 55 00 96 nous contacter horaires douverture
+      lundi et jeudi : 7h30 &#8211; 1 ».'
+    method: automated
+  a_jour:
+    status: 'yes'
+    evidence_url: https://www.ville-bellefontaine.fr/
+    archive_url: null
+    note: 'Date la plus récente lue sur le site (accueil ou premières pages) : 02/11/2026 (il y a 0 jours).'
+    method: automated
+  elus_presentes:
+    status: 'yes'
+    evidence_url: https://www.ville-bellefontaine.fr/tag/conseil-municipal/
+    archive_url: null
+    note: 'Trouvé (lien) : « Conseil municipal ».'
+    method: automated
+  calendrier_conseils:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  rob_publie:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Commune de moins de 3 500 habitants (2026 hab.) : non concernée.'
+    method: automated
+  budget_explique:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  marches_publics:
+    status: partial
+    evidence_url: https://www.ville-bellefontaine.fr/municipalite/nous-contacter/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « lite culture education et jeunesse facturation juridique et marches publics police municipale
+      population (etat civil, elections, cimeti » ; à vérifier.'
+    method: automated
+  indemnites_elus:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  projets_chiffres:
+    status: partial
+    evidence_url: https://www.ville-bellefontaine.fr/services/caisse-des-ecoles/ecole-maternelle-les-corossols/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « es objectifs pluridisciplinaires et transversaux actions et projets structurants les labellisations
+      de l&#039;ecole maternelle labellisation » ; à vérifier.'
+    method: automated
+  rapports_controle:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  question_budget:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  presentation_commune:
+    status: partial
+    evidence_url: https://www.ville-bellefontaine.fr/decouvrir-bellefontaine/histoire-et-patrimoine-de-la-ville/
+    archive_url: null
+    note: 'Indice partiel (lien) : « Histoire et patrimoine » ; à vérifier.'
+    method: automated
+  bilan_activite:
+    status: partial
+    evidence_url: https://www.ville-bellefontaine.fr/services/mdavc/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « tiques et services proposes aux administres. les projets et realisations de la municipalite,
+      l&rsquo;actualite des associations et d » ; à vérifier.'
+    method: automated
+  magazine_municipal:
+    status: partial
+    evidence_url: https://www.ville-bellefontaine.fr/services/bibliotheque/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « e ou se deploient de nombreux rayonnages remplis de livres, magazines. linterieur est organise
+      de facon a faciliter lacces aux d » ; à vérifier.'
+    method: automated
+  annuaire_services:
+    status: 'yes'
+    evidence_url: https://www.ville-bellefontaine.fr/commerces/
+    archive_url: null
+    note: 'Trouvé (lien) : « Annuaire ».'
+    method: automated
+  langue_kreyol:
+    status: partial
+    evidence_url: https://www.ville-bellefontaine.fr/evenement/rando-kreyol-a-bellefontaine/
+    archive_url: null
+    note: 'Indice partiel (lien (adresse seulement)) : « https://www.ville-bellefontaine.fr/evenement/rando-kreyol-a-bellefontaine/ » ; à vérifier.'
+    method: automated
+  alertes_info:
+    status: partial
+    evidence_url: https://www.ville-bellefontaine.fr/travaux-et-restriction-de-circulation-du-11-au-14-aout-2026/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « es usagers et les riverains pour leur comprehension et leur vigilance pendant la duree des travaux.  ces
+      dispositions sont fixees » ; à vérifier.'
+    method: automated
+  abonnement_alertes:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  suivi_demandes:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  signalement:
+    status: 'yes'
+    evidence_url: https://www.ville-bellefontaine.fr/vivre-a-bellefontaine/nuisances-olfactives-signalement/
+    archive_url: null
+    note: 'Trouvé (lien) : « Nuisances olfactives &#8211; Signalement ».'
+    method: automated
+  risques_majeurs:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  conseil_retransmis:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  consultations:
+    status: 'yes'
+    evidence_url: https://www.ville-bellefontaine.fr/projet-de-revision-generale-du-plan-local-durbanisme-enquete-publique/
+    archive_url: null
+    note: 'Trouvé (lien) : « Projet de révision générale du Plan Local d’Urbanisme &#8211; Enquête publique ».'
+    method: automated
+  budget_participatif:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  instances_participatives:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  droit_petition:
+    status: partial
+    evidence_url: https://www.ville-bellefontaine.fr/services/urbanisme/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « n les modalites definies par la ville pour les recevoir. le petitionnaire aura tout de meme la
+      possibilite de deposer ses demand » ; à vérifier.'
+    method: automated

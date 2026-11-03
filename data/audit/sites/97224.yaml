@@ -1,0 +1,255 @@
+# Audit du site de la mairie — PREMIÈRE PASSE AUTOMATIQUE, à relire par JM.
+# status: yes / partial / no / na · method: automated (règles par mots-clés) ou manual (relu à la main).
+# « no » automatique = non trouvé par la recherche, pas une preuve d'absence. Rien n'est publié avant reviewed_by.
+commune_code: '97224'
+commune: Saint-Joseph
+site_url: https://saintjoseph972.com
+audited_on: '2026-11-02'
+auditor: Claude (première passe automatique)
+reviewed_by: null
+pages_read: 80
+items:
+  site_officiel:
+    status: 'yes'
+    evidence_url: https://saintjoseph972.com
+    archive_url: null
+    note: Site indiqué par l'annuaire Service-Public et accessible.
+    method: automated
+  budget_en_ligne:
+    status: partial
+    evidence_url: https://saintjoseph972.com/vie-citoyenne/democratie-participative/concertation-revision-generale-du-plu-plan-local-durbanisme/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « t carto alea sismique carto enjeux2012 carto reglementation note de presentation : annexe 4 annexe
+      1 annexe 2 pprn rapportstjosephmars2012 r » ; à vérifier.'
+    method: automated
+  actes_publies:
+    status: 'yes'
+    evidence_url: https://saintjoseph972.com/vie-municipale/publications-officielles/arretes-municipaux/
+    archive_url: null
+    note: 'Trouvé (lien) : « Arrêtés Municipaux ».'
+    method: automated
+  liste_deliberations:
+    status: partial
+    evidence_url: https://saintjoseph972.com/vie-municipale/conseil-municipal/deliberations/
+    archive_url: null
+    note: 'Indice partiel (lien) : « Délibérations » ; à vérifier.'
+    method: automated
+  proces_verbaux:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  open_data:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Obligation si 3 500 habitants et 50 agents ou plus : effectif non vérifié. Rien trouvé par la recherche automatique (80 pages lues).'
+    method: automated
+  subventions_publiees:
+    status: partial
+    evidence_url: https://saintjoseph972.com/vie-municipale/demarches-administratives/associations/adm-subventions/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « endu financier de subvention infos: l&rsquo;utilisation des subventions attribuees par letat,
+      une collectivite territoriale ou un etablissem » ; à vérifier.'
+    method: automated
+  accessibilite:
+    status: partial
+    evidence_url: https://saintjoseph972.com/wp-content/uploads/2026/02/N°-57-PF-Wx-accessibilite.pdf
+    archive_url: null
+    note: 'Indice partiel (lien) : « N° 57 &#8211; PF Wx accessibilité » ; à vérifier.'
+    method: automated
+  mentions_legales:
+    status: 'yes'
+    evidence_url: https://saintjoseph972.com/mentions-legales/
+    archive_url: null
+    note: 'Trouvé (lien) : « Mentions légales ».'
+    method: automated
+  donnees_personnelles:
+    status: 'yes'
+    evidence_url: https://saintjoseph972.com/politique-de-confidentialite/
+    archive_url: null
+    note: 'Trouvé (lien) : « En continuant, vous acceptez la politique de confidentialité ».'
+    method: automated
+  https:
+    status: 'yes'
+    evidence_url: https://saintjoseph972.com
+    archive_url: null
+    note: Connexion chiffrée (https) avec certificat valide.
+    method: automated
+  mobile:
+    status: 'yes'
+    evidence_url: https://saintjoseph972.com
+    archive_url: null
+    note: Page d'accueil adaptée aux écrans de téléphone (balise viewport) ; à confirmer à l'œil.
+    method: automated
+  demarches:
+    status: 'yes'
+    evidence_url: https://saintjoseph972.com/vie-citoyenne/jeunesse-et-education/portail-famille/
+    archive_url: null
+    note: 'Trouvé (lien) : « Portail Famille ».'
+    method: automated
+  contact:
+    status: 'yes'
+    evidence_url: https://saintjoseph972.com/vie-municipale/la-mairie/horaires-ouvertures/
+    archive_url: null
+    note: 'Trouvé (texte de la page) : « durbanisme actes notaries la presse parle de nous la mairie horaires d&rsquo;ouverture horaires d&rsquo;ouverture
+      adresse de la mairie : hot ».'
+    method: automated
+  a_jour:
+    status: 'yes'
+    evidence_url: https://saintjoseph972.com
+    archive_url: null
+    note: 'Date la plus récente lue sur le site (accueil ou premières pages) : 30/10/2026 (il y a 3 jours).'
+    method: automated
+  elus_presentes:
+    status: 'yes'
+    evidence_url: https://saintjoseph972.com/vie-municipale/conseil-municipal/
+    archive_url: null
+    note: 'Trouvé (lien) : « Conseil municipal ».'
+    method: automated
+  calendrier_conseils:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  rob_publie:
+    status: partial
+    evidence_url: https://saintjoseph972.com/wp-content/uploads/2025/12/Ext-96-ROB-2026.pdf
+    archive_url: null
+    note: 'Indice partiel (lien) : « Ext 96 ROB 2026 » ; à vérifier.'
+    method: automated
+  budget_explique:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  marches_publics:
+    status: 'yes'
+    evidence_url: https://saintjoseph972.com/vie-economique/marches-public/
+    archive_url: null
+    note: 'Trouvé (lien) : « Marchés publics ».'
+    method: automated
+  indemnites_elus:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  projets_chiffres:
+    status: partial
+    evidence_url: https://saintjoseph972.com/wp-content/uploads/2025/11/N°2_creation_emploi_directeur.rice_projets_structurants.pdf
+    archive_url: null
+    note: 'Indice partiel (lien) : « N°2 création emploi directeur.rice projets structurants » ; à vérifier.'
+    method: automated
+  rapports_controle:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  question_budget:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  presentation_commune:
+    status: 'yes'
+    evidence_url: https://saintjoseph972.com/saint-joseph/histoire/
+    archive_url: null
+    note: 'Trouvé (lien) : « Histoire ».'
+    method: automated
+  bilan_activite:
+    status: partial
+    evidence_url: https://saintjoseph972.com/vie-citoyenne/espace-public-numerique/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « n plusieurs etapes. a la fin du cycle, ils conservent leurs realisations et recoivent un diplome
+      pour recompenser le merite de leurs » ; à vérifier.'
+    method: automated
+  magazine_municipal:
+    status: partial
+    evidence_url: https://saintjoseph972.com/vie-citoyenne/service-de-voirie/recyclage/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : «  par exemple : les papiers et emballages cartons ( journal, magazine ou prospectus, cahier avec
+      spirale, livre, feuille avec agr » ; à vérifier.'
+    method: automated
+  annuaire_services:
+    status: 'yes'
+    evidence_url: https://saintjoseph972.com/vie-municipale/la-mairie/horaires-ouvertures/services-municipaux/
+    archive_url: null
+    note: 'Trouvé (lien) : « Services municipaux ».'
+    method: automated
+  langue_kreyol:
+    status: partial
+    evidence_url: https://saintjoseph972.com/wp-content/uploads/2022/03/ARRETE-N°-46-AUTORISATION-LORGANISATION-DUNE-VENTE-DE-PRODUIT.pdf
+    archive_url: null
+    note: 'Indice partiel (lien) : « ARRETE n°46/DAJR/2022 autorisant l&rsquo;organisation d&rsquo;une vente de produits au profit de BALLET RACINE
+      CREOLE sur le parking de l&rs » ; à vérifier.'
+    method: automated
+  alertes_info:
+    status: 'yes'
+    evidence_url: https://saintjoseph972.com/vie-municipale/publications-officielles/annonces-legales/
+    archive_url: null
+    note: 'Trouvé (lien) : « Infos pratiques ».'
+    method: automated
+  abonnement_alertes:
+    status: 'yes'
+    evidence_url: https://play.google.com/store/apps/details?id=mq.martinique.rtm
+    archive_url: null
+    note: 'Trouvé (lien) : « Application Mobile (android) ».'
+    method: automated
+  suivi_demandes:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  signalement:
+    status: partial
+    evidence_url: https://saintjoseph972.com/contact/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « tacter nous contacter pour toute information, suggestion ou signalement d&rsquo;un probleme n&rsquo;hesitez
+      pas a prendre contact a » ; à vérifier.'
+    method: automated
+  risques_majeurs:
+    status: 'yes'
+    evidence_url: https://saintjoseph972.com/wp-content/uploads/2022/11/le-DICRIM-St-Joseph-2022-net-compressed.pdf
+    archive_url: null
+    note: 'Trouvé (lien) : « DICRIM format PDF ».'
+    method: automated
+  conseil_retransmis:
+    status: partial
+    evidence_url: https://saintjoseph972.com/vie-citoyenne/democratie-participative/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « nous mettons a votre disposition sous diverses formes ( les conseils municipaux en live sur facebook,
+      le mot du maire tous les 3 mois, la re » ; à vérifier.'
+    method: automated
+  consultations:
+    status: 'yes'
+    evidence_url: https://saintjoseph972.com/wp-content/uploads/2023/08/Arrete-prefectoral-enquete-publique-conjointe-amenagement-entree-bourg-CROIX-MISSION.pdf
+    archive_url: null
+    note: 'Trouvé (lien) : « Enquête publique conjointe aménagement entrée bourg CROIX MISSION ».'
+    method: automated
+  budget_participatif:
+    status: 'yes'
+    evidence_url: https://saintjoseph972.com/participez-au-budget-participatif-de-la-cacem/
+    archive_url: null
+    note: 'Trouvé (lien) : « PARTICIPEZ AU BUDGET PARTICIPATIF DE LA CACEM! ».'
+    method: automated
+  instances_participatives:
+    status: partial
+    evidence_url: https://saintjoseph972.com/vie-citoyenne/democratie-participative/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « 30; voir la rubrique boite a idees soutenez les actions des conseils de quartiers engagez-vous
+      au sein de votre conseil de quartier pour deb » ; à vérifier.'
+    method: automated
+  droit_petition:
+    status: 'yes'
+    evidence_url: https://saintjoseph972.com/wp-content/uploads/2021/07/ARRETE-N-82-REGLEMENTANT-LA-CIRCULATION-COMPETITION-CYCLISTE-TROFE-JENES-DU-25-JUILLET-2021.pdf
+    archive_url: null
+    note: 'Trouvé (lien) : « ARRETÉ N° 82/DAJR/2021 RÉGLEMENTANT LA CIRCULATION POUR LA COMPETITION CYCLISTE INTITULEE « TROFE JENES » LE DIMANCHE
+      25 JUILLET 2021 ORGANI ».'
+    method: automated

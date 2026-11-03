@@ -1,0 +1,257 @@
+# Audit du site de la mairie — PREMIÈRE PASSE AUTOMATIQUE, à relire par JM.
+# status: yes / partial / no / na · method: automated (règles par mots-clés) ou manual (relu à la main).
+# « no » automatique = non trouvé par la recherche, pas une preuve d'absence. Rien n'est publié avant reviewed_by.
+commune_code: '97228'
+commune: Sainte-Marie
+site_url: https://ville-saintemarie.com/
+audited_on: '2026-11-02'
+auditor: Claude (première passe automatique)
+reviewed_by: null
+pages_read: 80
+items:
+  site_officiel:
+    status: 'yes'
+    evidence_url: https://ville-saintemarie.com/
+    archive_url: null
+    note: Site indiqué par l'annuaire Service-Public et accessible.
+    method: automated
+  budget_en_ligne:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  actes_publies:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  liste_deliberations:
+    status: partial
+    evidence_url: https://ville-saintemarie.com/votre-mairie/les-decisions-du-conseil-municipal/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : «  temporairement indisponible 18 decembre 2024 : cliquez ici liste des deliberations 2025 12 fevrier
+      2025 : cliquez ici 19 mars 2025 : clique » ; à vérifier.'
+    method: automated
+  proces_verbaux:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  open_data:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Obligation si 3 500 habitants et 50 agents ou plus : effectif non vérifié. Rien trouvé par la recherche automatique (80 pages lues).'
+    method: automated
+  subventions_publiees:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  accessibilite:
+    status: partial
+    evidence_url: https://ville-saintemarie.com/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « e prochainement. de nouveaux bureaux respectant les normes daccessibilite aux personnes a mobilite
+      reduite seront realises. cette str » ; à vérifier.'
+    method: automated
+  mentions_legales:
+    status: 'yes'
+    evidence_url: https://ville-saintemarie.com/mentions-legales/
+    archive_url: null
+    note: 'Trouvé (lien) : « Mentions légales ».'
+    method: automated
+  donnees_personnelles:
+    status: 'yes'
+    evidence_url: https://ville-saintemarie.com/mentions-legales/
+    archive_url: null
+    note: 'Trouvé (texte de la page) : « des informations sont variables et aleatoires 6 gestion des donnees personnelles. preferences d&rsquo;utilisation
+      des cookies en france, les ».'
+    method: automated
+  https:
+    status: 'yes'
+    evidence_url: https://ville-saintemarie.com/
+    archive_url: null
+    note: Connexion chiffrée (https) avec certificat valide.
+    method: automated
+  mobile:
+    status: 'yes'
+    evidence_url: https://ville-saintemarie.com/
+    archive_url: null
+    note: Page d'accueil adaptée aux écrans de téléphone (balise viewport) ; à confirmer à l'œil.
+    method: automated
+  demarches:
+    status: 'yes'
+    evidence_url: https://www.service-public.fr/
+    archive_url: null
+    note: 'Trouvé (lien) : « https://www.service-public.fr/ ».'
+    method: automated
+  contact:
+    status: 'yes'
+    evidence_url: https://ville-saintemarie.com/enfance-jeunesse/petite-enfance/creche-assistance-maternelle/
+    archive_url: null
+    note: 'Trouvé (texte de la page) : « nnelle 47 rue de pologne derriere-morne 97230 sainte- marie 0596 69 05 56 haltegarderiecannelle@orange.fr
+      horaires d&rsquo;ouverture : lundi ».'
+    method: automated
+  a_jour:
+    status: 'yes'
+    evidence_url: https://ville-saintemarie.com/
+    archive_url: null
+    note: 'Date la plus récente lue sur le site (accueil ou premières pages) : 30/10/2026 (il y a 3 jours).'
+    method: automated
+  elus_presentes:
+    status: 'yes'
+    evidence_url: https://ville-saintemarie.com/votre-mairie/les-conseillers-municipaux/les-elus/
+    archive_url: null
+    note: 'Trouvé (lien) : « Elus ».'
+    method: automated
+  calendrier_conseils:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  rob_publie:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  budget_explique:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  marches_publics:
+    status: 'yes'
+    evidence_url: https://ville-saintemarie.com/votre-mairie/marches-publics/
+    archive_url: null
+    note: 'Trouvé (lien) : « Marchés publics ».'
+    method: automated
+  indemnites_elus:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  projets_chiffres:
+    status: partial
+    evidence_url: https://ville-saintemarie.com/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « scrit la reconstruction du stade xerces louis comme lun des projets structurants prioritaires
+      de la commune. loperation de reconstruction du » ; à vérifier.'
+    method: automated
+  rapports_controle:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  question_budget:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  presentation_commune:
+    status: 'yes'
+    evidence_url: https://ville-saintemarie.com/decouvrir-sainte-marie/presentation/
+    archive_url: null
+    note: 'Trouvé (lien) : « Histoire ».'
+    method: automated
+  bilan_activite:
+    status: partial
+    evidence_url: https://ville-saintemarie.com/actualites/3/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « , la municipalite a eu le plaisir dorganiser une reunion de bilan suivie dune petite collation
+      pour une vingtaine de jeunes a » ; à vérifier.'
+    method: automated
+  magazine_municipal:
+    status: partial
+    evidence_url: https://ville-saintemarie.com/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : «  nous contacter agenda ca m&rsquo;interesse abonnement a la newsletter nous contacter mentions
+      legales realisation tintamarre &amp » ; à vérifier.'
+    method: automated
+  annuaire_services:
+    status: 'yes'
+    evidence_url: https://ville-saintemarie.com/developpement-economique/peche/annuaire-professionnels-peche/
+    archive_url: null
+    note: 'Trouvé (lien) : « Annuaire des professionnels de la pêche ».'
+    method: automated
+  langue_kreyol:
+    status: partial
+    evidence_url: https://ville-saintemarie.com/decouvrir-sainte-marie/se-restaurer/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : «  rue de la liberte morne des esses tel : 0596 69 66 85 food kreol 82 rue schoelcher tel : 0596
+      67 82 46 portable : 0696 24 86 » ; à vérifier.'
+    method: automated
+  alertes_info:
+    status: partial
+    evidence_url: https://ville-saintemarie.com/enfance-jeunesse/education-et-enseignement/inscription/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « fondus) la situation sanitaire actuelle nous imposant de la vigilance et le respect des gestes
+      barrieres, une organisation nouvel » ; à vérifier.'
+    method: automated
+  abonnement_alertes:
+    status: 'yes'
+    evidence_url: https://ville-saintemarie.com/
+    archive_url: null
+    note: 'Trouvé (texte de la page) : « le 30 octobre 1926 a sainte-marie... cliquer ici actualites abonnez-vous ! octobre rose : une premiere
+      action de sensibilisation a l ».'
+    method: automated
+  suivi_demandes:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  signalement:
+    status: partial
+    evidence_url: https://ville-saintemarie.com/mentions-legales/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « t etre tenue responsable en cas derreur ou domissions. pour signaler une erreur ou demander la
+      rectification dinformations, nhes » ; à vérifier.'
+    method: automated
+  risques_majeurs:
+    status: 'yes'
+    evidence_url: https://ville-saintemarie.com/wp-content/uploads/2021/07/Web_Dicrim20-2.pdf
+    archive_url: null
+    note: 'Trouvé (lien) : « DICRIM : Le Document d&rsquo;Information Communal sur les Risques Majeurs ».'
+    method: automated
+  conseil_retransmis:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  consultations:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  budget_participatif:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  instances_participatives:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  droit_petition:
+    status: partial
+    evidence_url: https://ville-saintemarie.com/vie-associative-et-culturelle/service-des-sports/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « ciations sportives. communiquer sur levenementiel et les competitions. activites permanentes
+      ou occasionnelles camps multisports » ; à vérifier.'
+    method: automated
