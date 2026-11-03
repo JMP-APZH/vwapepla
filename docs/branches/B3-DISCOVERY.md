@@ -395,10 +395,12 @@ Person pages (`/ctm/elus/[id]`), if you want them: the seat history only, no fig
 - **Q2 portfolios:** yes, dedicated `ctm_portfolios` table.
 - **Q4 debt:** shown now with OFGL figures and a caveat stating the gap with the CRC (2021 −€105.0M, 2025 −€29.1M),
   with the CRC report linked. R2 stays open in the reconciliation script.
-- **Q5 octroi de mer (proposal, to confirm):** one block "Fiscalité ultramarine" = M57 account 734, which reconciles with
+- **Q5 octroi de mer:** confirmed. one block "Fiscalité ultramarine" = M57 account 734, which reconciles with
   the CRC (R4), split by account, with "octroi de mer régional" always meaning 73432 only. The CTM's role in the
   communes' octroi de mer (rates, FRDE) is a later sprint.
-- **Q3 groups:** pending, see the source list below.
+- **Q3 groups:** show "élu(e) sur la liste X (2021)" from the Ministère de l'Intérieur results, labelled as the
+  electoral list. A group is shown only once a CTM document sources it; ask the CTM for the group declarations in
+  parallel. Sources checked below.
 
 ### Sources for political groups (checked 3 Nov 2026)
 
