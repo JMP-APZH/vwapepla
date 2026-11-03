@@ -76,7 +76,7 @@ def main():
         if do_upload:
             upload(base, key, path, jpeg)
         rows.append({
-            "id": f"{code}-mayor_portrait", "commune_code": code, "institution_id": f"commune-{code}",
+            "id": f"{code}-mayor_portrait", "institution_id": f"commune-{code}",
             "person_id": mayor[code], "kind": "mayor_portrait", "storage_path": path,
             "source_page_url": p["source_page_url"], "credit": p["credit"], "retrieved": str(doc["retrieved"]),
             "note": p["evidence"],
