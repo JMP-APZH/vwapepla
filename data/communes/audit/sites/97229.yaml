@@ -1,0 +1,252 @@
+# Audit du site de la mairie — PREMIÈRE PASSE AUTOMATIQUE, à relire par JM.
+# status: yes / partial / no / na · method: automated (règles par mots-clés) ou manual (relu à la main).
+# « no » automatique = non trouvé par la recherche, pas une preuve d'absence. Rien n'est publié avant reviewed_by.
+commune_code: '97229'
+commune: Schœlcher
+site_url: https://www.mairie-schoelcher.fr/
+audited_on: '2026-11-02'
+auditor: Claude (première passe automatique)
+reviewed_by: null
+pages_read: 80
+items:
+  site_officiel:
+    status: 'yes'
+    evidence_url: https://www.mairie-schoelcher.fr/
+    archive_url: null
+    note: Site indiqué par l'annuaire Service-Public et accessible.
+    method: automated
+  budget_en_ligne:
+    status: partial
+    evidence_url: https://www.mairie-schoelcher.fr/ma-mairie/le-maire-et-le-conseil-municipal/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : «  les affaires de la commune. il vote le budget, approuve le compte administratif, il peut creer
+      et supprimer des services publics municipaux » ; à vérifier.'
+    method: automated
+  actes_publies:
+    status: 'yes'
+    evidence_url: https://www.mairie-schoelcher.fr/ma-mairie/arretes-municipaux/
+    archive_url: null
+    note: 'Trouvé (lien) : « Les arrêtés municipaux ».'
+    method: automated
+  liste_deliberations:
+    status: partial
+    evidence_url: https://www.mairie-schoelcher.fr/ma-mairie/deliberations-et-comptes-rendus/
+    archive_url: null
+    note: 'Indice partiel (lien) : « Délibérations des conseils municipaux » ; à vérifier.'
+    method: automated
+  proces_verbaux:
+    status: partial
+    evidence_url: https://www.mairie-schoelcher.fr/actualites/compte-rendu-du-conseil-municipal-du-26-mai-2026/
+    archive_url: null
+    note: 'Indice partiel (lien) : « Compte rendu du conseil municipal du 26 mai 2026 » ; à vérifier.'
+    method: automated
+  open_data:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Obligation si 3 500 habitants et 50 agents ou plus : effectif non vérifié. Rien trouvé par la recherche automatique (80 pages lues).'
+    method: automated
+  subventions_publiees:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  accessibilite:
+    status: partial
+    evidence_url: https://www.mairie-schoelcher.fr/accessibilite/
+    archive_url: null
+    note: 'Indice partiel (lien) : « Accessibilité » ; à vérifier.'
+    method: automated
+  mentions_legales:
+    status: 'yes'
+    evidence_url: https://www.mairie-schoelcher.fr/mentions-legales/
+    archive_url: null
+    note: 'Trouvé (lien) : « Mentions Légales ».'
+    method: automated
+  donnees_personnelles:
+    status: 'yes'
+    evidence_url: https://www.mairie-schoelcher.fr/politique-de-confidentialite/
+    archive_url: null
+    note: 'Trouvé (lien) : « Politique de confidentialité ».'
+    method: automated
+  https:
+    status: 'yes'
+    evidence_url: https://www.mairie-schoelcher.fr/
+    archive_url: null
+    note: Connexion chiffrée (https) avec certificat valide.
+    method: automated
+  mobile:
+    status: 'yes'
+    evidence_url: https://www.mairie-schoelcher.fr/
+    archive_url: null
+    note: Page d'accueil adaptée aux écrans de téléphone (balise viewport) ; à confirmer à l'œil.
+    method: automated
+  demarches:
+    status: 'yes'
+    evidence_url: https://www.mairie-schoelcher.fr/mes-demarches/famille/portail-famille-inscription-et-paiement-en-ligne/
+    archive_url: null
+    note: 'Trouvé (lien) : « Portail Famille Inscription et Paiement en ligne ».'
+    method: automated
+  contact:
+    status: 'yes'
+    evidence_url: https://www.mairie-schoelcher.fr/
+    archive_url: null
+    note: 'Trouvé (texte de la page) : « l de la ville de schoelcher aller au contenu nous contacter 05 96 72 72 72 recherche ma mairie ma ville
+      mon quotidien mes demarches mes lois ».'
+    method: automated
+  a_jour:
+    status: partial
+    evidence_url: https://www.mairie-schoelcher.fr/
+    archive_url: null
+    note: 'Date la plus récente lue sur le site (accueil ou premières pages) : 03/07/2026 (il y a 122 jours).'
+    method: automated
+  elus_presentes:
+    status: partial
+    evidence_url: https://www.mairie-schoelcher.fr/ma-mairie/le-maire-et-le-conseil-municipal/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « t les registres detat civil de la commune. le role des elus les elus sont au nombre de 33. parmi
+      ces elus figurent le maire et 9 » ; à vérifier.'
+    method: automated
+  calendrier_conseils:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  rob_publie:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  budget_explique:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  marches_publics:
+    status: 'yes'
+    evidence_url: https://www.mairie-schoelcher.fr/ma-mairie/marches-publics/
+    archive_url: null
+    note: 'Trouvé (lien) : « Marchés publics ».'
+    method: automated
+  indemnites_elus:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  projets_chiffres:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  rapports_controle:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  question_budget:
+    status: partial
+    evidence_url: https://www.mairie-schoelcher.fr/ma-ville/actualites/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « es actualites theme(s) acces aux droits appel a candidature avis de publicite biodiversite budget
+      participatif cacem cadre de vie catastroph » ; à vérifier.'
+    method: automated
+  presentation_commune:
+    status: 'yes'
+    evidence_url: https://www.mairie-schoelcher.fr/ma-ville/
+    archive_url: null
+    note: 'Trouvé (lien) : « Ma ville ».'
+    method: automated
+  bilan_activite:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  magazine_municipal:
+    status: 'yes'
+    evidence_url: https://www.mairie-schoelcher.fr/actualites/adressage/
+    archive_url: null
+    note: 'Trouvé (lien) : « Lettre d''information    Adressage ».'
+    method: automated
+  annuaire_services:
+    status: 'yes'
+    evidence_url: https://www.mairie-schoelcher.fr/ma-mairie/vos-services-municipaux/
+    archive_url: null
+    note: 'Trouvé (lien) : « Vos services municipaux ».'
+    method: automated
+  langue_kreyol:
+    status: 'yes'
+    evidence_url: https://www.mairie-schoelcher.fr/wp-content/uploads/2025/03/Arrete-n-050-Carnaval-association-Ti-Kreol.pdf
+    archive_url: null
+    note: 'Trouvé (lien) : « Arrêté n 050 &#8211; Carnaval association Ti Kréol ».'
+    method: automated
+  alertes_info:
+    status: 'yes'
+    evidence_url: https://www.mairie-schoelcher.fr/mes-demarches/inscription-aux-alertes-sms/
+    archive_url: null
+    note: 'Trouvé (lien) : « Inscription aux alertes SMS ».'
+    method: automated
+  abonnement_alertes:
+    status: 'yes'
+    evidence_url: https://www.mairie-schoelcher.fr/mes-demarches/inscription-aux-alertes-sms/
+    archive_url: null
+    note: 'Trouvé (lien) : « Inscription aux alertes SMS ».'
+    method: automated
+  suivi_demandes:
+    status: 'yes'
+    evidence_url: https://www.mairie-schoelcher.fr/mon-quotidien/comptoir-citoyen/
+    archive_url: null
+    note: 'Trouvé (lien) : « Espace Citoyen ».'
+    method: automated
+  signalement:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  risques_majeurs:
+    status: 'yes'
+    evidence_url: https://www.mairie-schoelcher.fr/mon-quotidien/cadre-de-vie/prevention-des-risques-et-securite/dicrim/
+    archive_url: null
+    note: 'Trouvé (lien) : « DICRIM ».'
+    method: automated
+  conseil_retransmis:
+    status: partial
+    evidence_url: https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.mairie-schoelcher.fr%2Fma-mairie%2Fle-maire-et-le-conseil-municipal%2F+&t=Le+Maire+et+le+Conseil+municipal
+    archive_url: null
+    note: 'Indice partiel (lien (adresse seulement)) : « https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.mairie-schoelcher.fr%2Fma-mairie%2Fle-maire-et-le-conseil-municipal%2F+&t=Le+
+      » ; à vérifier.'
+    method: automated
+  consultations:
+    status: partial
+    evidence_url: https://www.mairie-schoelcher.fr/mon-quotidien/petite-enfance-de-0-a-6-ans/je-preinscris-mon-enfant-a-la-creche/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « ne maladie chronique&nbsp;: apres avis du medecin de pmi en concertation avec le medecin de la
+      structure et le professionnel de sant » ; à vérifier.'
+    method: automated
+  budget_participatif:
+    status: partial
+    evidence_url: https://www.mairie-schoelcher.fr/ma-ville/actualites/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « x droits appel a candidature avis de publicite biodiversite budget participatif cacem cadre de
+      vie catastrophe naturelle communique communi » ; à vérifier.'
+    method: automated
+  instances_participatives:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  droit_petition:
+    status: 'yes'
+    evidence_url: https://www.mairie-schoelcher.fr/wp-content/uploads/2026/05/Arrete-n°-108-Reglementation-de-la-bande-littorale-et-stationnement-Competition-davirons.pdf
+    archive_url: null
+    note: 'Trouvé (lien) : « Arrêté n° 108 &#8211; Réglementation de la bande littorale et stationnement &#8211; Compétition d&rsquo;avirons ».'
+    method: automated

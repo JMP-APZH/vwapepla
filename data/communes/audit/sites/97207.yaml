@@ -1,0 +1,252 @@
+# Audit du site de la mairie — PREMIÈRE PASSE AUTOMATIQUE, à relire par JM.
+# status: yes / partial / no / na · method: automated (règles par mots-clés) ou manual (relu à la main).
+# « no » automatique = non trouvé par la recherche, pas une preuve d'absence. Rien n'est publié avant reviewed_by.
+commune_code: '97207'
+commune: Ducos
+site_url: https://www.villededucos.fr/
+audited_on: '2026-11-02'
+auditor: Claude (première passe automatique)
+reviewed_by: null
+pages_read: 80
+items:
+  site_officiel:
+    status: 'yes'
+    evidence_url: https://www.villededucos.fr/
+    archive_url: null
+    note: Site indiqué par l'annuaire Service-Public et accessible.
+    method: automated
+  budget_en_ligne:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  actes_publies:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  liste_deliberations:
+    status: partial
+    evidence_url: https://delibs.com/ducos
+    archive_url: null
+    note: 'Indice partiel (lien) : « ACTES ET DÉLIBÉRATIONS » ; à vérifier.'
+    method: automated
+  proces_verbaux:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  open_data:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Obligation si 3 500 habitants et 50 agents ou plus : effectif non vérifié. Rien trouvé par la recherche automatique (80 pages lues).'
+    method: automated
+  subventions_publiees:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  accessibilite:
+    status: partial
+    evidence_url: https://www.villededucos.fr/fr/services/votre-mairie?indexes%5B0%5D=3
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « frantz lucidarme eric c.c.a.p.h (commission communale pour laccessibilite des personnes handicapees)
+      mence mathieu joseph delepine ma » ; à vérifier.'
+    method: automated
+  mentions_legales:
+    status: 'yes'
+    evidence_url: https://www.illiwap.com/mentions-legales
+    archive_url: null
+    note: 'Trouvé (lien) : « Mentions Légales ».'
+    method: automated
+  donnees_personnelles:
+    status: 'yes'
+    evidence_url: https://www.villededucos.fr/fr/signalement
+    archive_url: null
+    note: 'Trouvé (texte de la page) : « t de votre signalement. coordonnees (*) champs obligatoires donnees personnelles lors de l&#039;envoi
+      de votre signalement, l&#039;integrali ».'
+    method: automated
+  https:
+    status: 'yes'
+    evidence_url: https://www.villededucos.fr/
+    archive_url: null
+    note: Connexion chiffrée (https) avec certificat valide.
+    method: automated
+  mobile:
+    status: 'yes'
+    evidence_url: https://www.villededucos.fr/
+    archive_url: null
+    note: Page d'accueil adaptée aux écrans de téléphone (balise viewport) ; à confirmer à l'œil.
+    method: automated
+  demarches:
+    status: 'yes'
+    evidence_url: https://www.villededucos.fr/fr/services/vos-demarches-6?indexes%5B0%5D=1
+    archive_url: null
+    note: 'Trouvé (lien) : « DEMARCHES EN LIGNE ».'
+    method: automated
+  contact:
+    status: 'yes'
+    evidence_url: https://www.villededucos.fr/fr/services/vos-demarches-6?indexes%5B0%5D=0
+    archive_url: null
+    note: 'Trouvé (texte de la page) : « liotheque adresse : 2, rue perinon, 97224 ducos telephone : 05 96 77 26 84 caisse des ecoles adresse
+      : 2, rue jules ferry, 97224 ducos telep ».'
+    method: automated
+  a_jour:
+    status: 'yes'
+    evidence_url: https://www.villededucos.fr/
+    archive_url: null
+    note: 'Date la plus récente lue sur le site (accueil ou premières pages) : 31/10/2026 (il y a 2 jours).'
+    method: automated
+  elus_presentes:
+    status: partial
+    evidence_url: https://www.villededucos.fr/fr/services/votre-mairie?indexes%5B0%5D=3
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « s municipales retour delegations et representations municipales elus representants du conseil
+      municipal au conseil dadministrati » ; à vérifier.'
+    method: automated
+  calendrier_conseils:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  rob_publie:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  budget_explique:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  marches_publics:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  indemnites_elus:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  projets_chiffres:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  rapports_controle:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  question_budget:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  presentation_commune:
+    status: 'yes'
+    evidence_url: https://www.villededucos.fr/fr/services/votre-ville?indexes%5B0%5D=3
+    archive_url: null
+    note: 'Trouvé (lien) : « PATRIMOINE ».'
+    method: automated
+  bilan_activite:
+    status: partial
+    evidence_url: https://www.villededucos.fr/fr/services/publications-4?indexes%5B0%5D=1
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « et en chiffres l''evolution des subventions aux clubs et les realisations sur les differents
+      equipements (parcours sante, plateau spo » ; à vérifier.'
+    method: automated
+  magazine_municipal:
+    status: 'yes'
+    evidence_url: https://www.villededucos.fr/fr/services/publications-4?indexes%5B0%5D=0
+    archive_url: null
+    note: 'Trouvé (lien) : « Magazine AN TJE DIKOS - Janvier 2025 ».'
+    method: automated
+  annuaire_services:
+    status: 'yes'
+    evidence_url: https://www.villededucos.fr/fr/annuaire
+    archive_url: null
+    note: 'Trouvé (lien) : « Annuaire ».'
+    method: automated
+  langue_kreyol:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  alertes_info:
+    status: partial
+    evidence_url: https://www.villededucos.fr/fr/actu
+    archive_url: null
+    note: 'Indice partiel (lien) : « Actualités » ; à vérifier.'
+    method: automated
+  abonnement_alertes:
+    status: 'yes'
+    evidence_url: https://www.villededucos.fr/fr/services/votre-mairie?indexes%5B0%5D=0
+    archive_url: null
+    note: 'Trouvé (texte de la page) : « nnonce le double lancement officiel du site internet et de lapplication mobile de notre belle ville de
+      ducos . ce projet, que nous avons m ».'
+    method: automated
+  suivi_demandes:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  signalement:
+    status: 'yes'
+    evidence_url: https://station.illiwap.com/fr/public/97207/signalement/
+    archive_url: null
+    note: 'Trouvé (lien) : « Signalement des incivilités ».'
+    method: automated
+  risques_majeurs:
+    status: partial
+    evidence_url: https://www.villededucos.fr/fr/services/votre-mairie?indexes%5B0%5D=2
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « ence peggy jean maguy lenerand line prevention - securite - risques majeurs vice-president :
+      mence mathieu membres : labinsky nathalie  » ; à vérifier.'
+    method: automated
+  conseil_retransmis:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  consultations:
+    status: partial
+    evidence_url: https://www.villededucos.fr/fr/sondages
+    archive_url: null
+    note: 'Indice partiel (lien) : « Sondage » ; à vérifier.'
+    method: automated
+  budget_participatif:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  instances_participatives:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  droit_petition:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated

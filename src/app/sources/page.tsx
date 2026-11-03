@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { getSources, type Source } from "@/lib/data";
-import { date } from "@/lib/format";
+import { getSources, type Source } from "@/lib/core/data";
+import { date } from "@/lib/core/format";
 
 export const metadata: Metadata = { title: "Sources" };
 

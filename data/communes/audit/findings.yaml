@@ -1,0 +1,90 @@
+# Town-hall online information — findings log (DRAFT, internal, not published).
+# Purpose (JM, 2 Nov 2026): feed each town hall's "list of improvements", to be published later with a right of reply
+# for the town hall and a citizen vote on each item. Until JM reviews an item (reviewed_by), it stays internal.
+#
+# One entry per observation. Facts only, dated, with the URL observed; no judgement words.
+# topic: website (site reachable / listed) · mayor_portrait · council (council members, photos, roles) ·
+#        directory (official Service-Public directory entry) · other
+# method: automated = script or browser by Claude (may miss content behind menus or scripts) · manual = JM / team
+# "Not listed in the directory" does NOT mean the commune has no website: it means Service-Public.fr does not list one.
+# Directory source: Annuaire de l'administration (Service-Public.fr), api-lannuaire.service-public.fr, read 2 Nov 2026.
+
+findings:
+  - {commune_code: "97203", topic: website, observed_on: 2026-11-02, method: automated, url: "https://villedebassepointe.fr",
+     finding: "Le site officiel indiqué par l'annuaire Service-Public ne répond pas (connexion impossible).", reviewed_by: null}
+  - {commune_code: "97203", topic: mayor_portrait, observed_on: 2026-11-02, method: automated, url: null,
+     finding: "Aucun portrait officiel du maire trouvé en ligne (site indisponible).", reviewed_by: null}
+  - {commune_code: "97204", topic: website, observed_on: 2026-11-02, method: automated, url: "https://www.villeducarbet.fr/",
+     finding: "Le site officiel affiche « This website is currently not published » (site non publié).", reviewed_by: null}
+  - {commune_code: "97206", topic: directory, observed_on: 2026-11-02, method: automated, url: null,
+     finding: "Aucun site internet indiqué dans l'annuaire Service-Public.", reviewed_by: null}
+  - {commune_code: "97206", topic: mayor_portrait, observed_on: 2026-11-02, method: automated, url: "https://espacesud.fr/les-elus/",
+     finding: "Portrait du maire trouvé uniquement sur le site de l'intercommunalité (Espace Sud, photo de 2022).", reviewed_by: null}
+  - {commune_code: "97207", topic: mayor_portrait, observed_on: 2026-11-02, method: automated, url: "https://www.villededucos.fr/",
+     finding: "Portrait de la maire non trouvé sur le site de la ville ; trouvé sur le site d'Espace Sud (photo de 2022).", reviewed_by: null}
+  - {commune_code: "97208", topic: directory, observed_on: 2026-11-02, method: automated, url: null,
+     finding: "Aucun site internet indiqué dans l'annuaire Service-Public.", reviewed_by: null}
+  - {commune_code: "97208", topic: mayor_portrait, observed_on: 2026-11-02, method: automated, url: null,
+     finding: "Aucun portrait officiel du maire trouvé en ligne.", reviewed_by: null}
+  - {commune_code: "97210", topic: mayor_portrait, observed_on: 2026-11-02, method: automated, url: "https://www.ville-francois.fr/",
+     finding: "Portrait du maire non trouvé sur le site de la ville ; trouvé sur le site d'Espace Sud (photo de 2022).", reviewed_by: null}
+  - {commune_code: "97211", topic: website, observed_on: 2026-11-02, method: automated, url: "http://www.grand-riviere.com/",
+     finding: "La page d'accueil du site s'affiche sans contenu lisible (texte vide dans le navigateur) ; site en http (non sécurisé).", reviewed_by: null}
+  - {commune_code: "97211", topic: mayor_portrait, observed_on: 2026-11-02, method: automated, url: null,
+     finding: "Aucun portrait officiel du maire trouvé en ligne.", reviewed_by: null}
+  - {commune_code: "97212", topic: directory, observed_on: 2026-11-02, method: automated, url: null,
+     finding: "Aucun site internet indiqué dans l'annuaire Service-Public.", reviewed_by: null}
+  - {commune_code: "97212", topic: mayor_portrait, observed_on: 2026-11-02, method: automated, url: null,
+     finding: "Aucun portrait officiel du maire trouvé en ligne.", reviewed_by: null}
+  - {commune_code: "97214", topic: website, observed_on: 2026-11-02, method: automated, url: "https://villedulorrain.com/v2/",
+     finding: "Le site impose une vérification anti-robot (Cloudflare) avant tout affichage ; contenu non lu.", reviewed_by: null}
+  - {commune_code: "97214", topic: mayor_portrait, observed_on: 2026-11-02, method: automated, url: null,
+     finding: "Aucun portrait officiel du maire trouvé (site non lisible automatiquement).", reviewed_by: null}
+  - {commune_code: "97215", topic: website, observed_on: 2026-11-02, method: automated, url: "https://www.facebook.com/people/Ville-du-Macouba/100064434534335/",
+     finding: "L'annuaire Service-Public indique une page Facebook comme site de la mairie (pas de site officiel).", reviewed_by: null}
+  - {commune_code: "97215", topic: mayor_portrait, observed_on: 2026-11-02, method: automated, url: null,
+     finding: "Aucun portrait officiel du maire trouvé hors Facebook.", reviewed_by: null}
+  - {commune_code: "97216", topic: directory, observed_on: 2026-11-02, method: automated, url: null,
+     finding: "Aucun site internet indiqué dans l'annuaire Service-Public.", reviewed_by: null}
+  - {commune_code: "97216", topic: mayor_portrait, observed_on: 2026-11-02, method: automated, url: null,
+     finding: "Aucun portrait officiel de la maire trouvé en ligne.", reviewed_by: null}
+  - {commune_code: "97218", topic: directory, observed_on: 2026-11-02, method: automated, url: null,
+     finding: "Aucun site internet indiqué dans l'annuaire Service-Public.", reviewed_by: null}
+  - {commune_code: "97218", topic: mayor_portrait, observed_on: 2026-11-02, method: automated, url: null,
+     finding: "Aucun portrait officiel de la maire trouvé en ligne.", reviewed_by: null}
+  - {commune_code: "97219", topic: mayor_portrait, observed_on: 2026-11-02, method: automated, url: "https://www.mairie-precheur.com/installation-du-nouveau-conseil-municipal-du-precheur",
+     finding: "Seules des photos de la cérémonie d'installation sont publiées ; pas de portrait de la maire ni page « le maire ».", reviewed_by: null}
+  - {commune_code: "97220", topic: directory, observed_on: 2026-11-02, method: automated, url: null,
+     finding: "Aucun site internet indiqué dans l'annuaire Service-Public.", reviewed_by: null}
+  - {commune_code: "97220", topic: mayor_portrait, observed_on: 2026-11-02, method: automated, url: "https://espacesud.fr/les-elus/",
+     finding: "Portrait du maire trouvé uniquement sur le site d'Espace Sud (photo de 2022).", reviewed_by: null}
+  - {commune_code: "97222", topic: council, observed_on: 2026-11-02, method: automated, url: "https://www.ville-robert.fr/votre-mairie/conseil-municipal",
+     finding: "La page « Le conseil municipal » ne mentionne pas le maire élu en mars 2026 (page non mise à jour) ; vignettes sans nom lisible.", reviewed_by: null}
+  - {commune_code: "97222", topic: mayor_portrait, observed_on: 2026-11-02, method: automated, url: null,
+     finding: "Aucun portrait officiel du maire actuel trouvé.", reviewed_by: null}
+  - {commune_code: "97223", topic: mayor_portrait, observed_on: 2026-11-02, method: automated, url: "https://www.villedusaintesprit.fr/",
+     finding: "Portrait du maire non trouvé sur le site de la ville ; trouvé sur le site d'Espace Sud (photo de 2022).", reviewed_by: null}
+  - {commune_code: "97225", topic: mayor_portrait, observed_on: 2026-11-02, method: automated, url: "https://saintpierre-mq.fr/en/municipality/the-mayor/",
+     finding: "La page « Le maire » contient une image qui ne s'affiche pas (fichier introuvable, erreur 404).", reviewed_by: null}
+  - {commune_code: "97226", topic: mayor_portrait, observed_on: 2026-11-02, method: automated, url: "http://www.sainte-anne972.fr",
+     finding: "Portrait du maire non trouvé sur le site de la ville ; trouvé sur le site d'Espace Sud (photo de 2022). Site en http (non sécurisé).", reviewed_by: null}
+  - {commune_code: "97227", topic: mayor_portrait, observed_on: 2026-11-02, method: automated, url: "https://www.sainteluce.fr/accueil.php",
+     finding: "Portrait du maire non trouvé sur le site de la ville ; trouvé sur le site d'Espace Sud (photo de 2022).", reviewed_by: null}
+  - {commune_code: "97230", topic: directory, observed_on: 2026-11-02, method: automated, url: null,
+     finding: "Aucun site internet indiqué dans l'annuaire Service-Public.", reviewed_by: null}
+  - {commune_code: "97230", topic: mayor_portrait, observed_on: 2026-11-02, method: automated, url: null,
+     finding: "Aucun portrait officiel de la maire trouvé en ligne.", reviewed_by: null}
+  - {commune_code: "97231", topic: mayor_portrait, observed_on: 2026-11-02, method: automated, url: "https://villedestroisilets.com/",
+     finding: "Portrait de la maire non trouvé sur le site de la ville ; trouvé sur le site d'Espace Sud (photo de 2022).", reviewed_by: null}
+  - {commune_code: "97232", topic: mayor_portrait, observed_on: 2026-11-02, method: automated, url: "https://ville-vauclin.fr/",
+     finding: "Portrait du maire non trouvé sur le site de la ville ; trouvé sur le site d'Espace Sud (photo de 2022).", reviewed_by: null}
+  - {commune_code: "97233", topic: directory, observed_on: 2026-11-02, method: automated, url: null,
+     finding: "Aucun site internet indiqué dans l'annuaire Service-Public.", reviewed_by: null}
+  - {commune_code: "97233", topic: mayor_portrait, observed_on: 2026-11-02, method: automated, url: null,
+     finding: "Aucun portrait officiel de la maire trouvé en ligne.", reviewed_by: null}
+  - {commune_code: "97234", topic: council, observed_on: 2026-11-02, method: automated, url: "https://www.ville-bellefontaine.fr/municipalite/le-conseil-municipal/",
+     finding: "Liste du conseil publiée (noms et fonctions) avec photos de groupe ; pas de portrait individuel du maire ni des élus.", reviewed_by: null}
+  - {commune_code: "97232", topic: website, observed_on: 2026-11-02, method: automated, url: "https://ville-vauclin.fr/",
+     finding: "L'adresse du site indiquée par l'annuaire Service-Public ne répond pas : le nom de domaine n'existe pas (erreur DNS).", reviewed_by: null}
+  - {commune_code: "97231", topic: website, observed_on: 2026-11-02, method: automated, url: "https://villedestroisilets.com/",
+     finding: "La page d'accueil ne contient presque aucun lien lisible sans exécuter de script (3 liens) : contenu difficile d'accès pour les outils et lecteurs d'écran ; audit à faire à la main.", reviewed_by: null}

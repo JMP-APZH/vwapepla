@@ -1,0 +1,255 @@
+# Audit du site de la mairie — PREMIÈRE PASSE AUTOMATIQUE, à relire par JM.
+# status: yes / partial / no / na · method: automated (règles par mots-clés) ou manual (relu à la main).
+# « no » automatique = non trouvé par la recherche, pas une preuve d'absence. Rien n'est publié avant reviewed_by.
+commune_code: '97210'
+commune: Le François
+site_url: https://www.ville-francois.fr/
+audited_on: '2026-11-02'
+auditor: Claude (première passe automatique)
+reviewed_by: null
+pages_read: 80
+items:
+  site_officiel:
+    status: 'yes'
+    evidence_url: https://www.ville-francois.fr/
+    archive_url: null
+    note: Site indiqué par l'annuaire Service-Public et accessible.
+    method: automated
+  budget_en_ligne:
+    status: partial
+    evidence_url: https://www.ville-francois.fr/articles/conseil-municipal/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : «  les affaires de la commune. il vote le budget, approuve le compte administratif, il peut creer
+      et supprimer des services publics municipaux » ; à vérifier.'
+    method: automated
+  actes_publies:
+    status: 'yes'
+    evidence_url: https://www.ville-francois.fr/articles/actes-administratifs/
+    archive_url: null
+    note: 'Trouvé (lien) : « ACTES ADMINISTRATIFS ».'
+    method: automated
+  liste_deliberations:
+    status: partial
+    evidence_url: https://www.ville-francois.fr/articles/actes-administratifs
+    archive_url: null
+    note: 'Indice partiel (lien) : « Délibérations du Conseil Municipal » ; à vérifier.'
+    method: automated
+  proces_verbaux:
+    status: partial
+    evidence_url: https://www.ville-francois.fr/articles/conseil-municipal/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « l peut former des commissions pouvant etudier des dossiers. compte rendu des conseils municipaux
+      le conseil municipal doit se reunir au moin » ; à vérifier.'
+    method: automated
+  open_data:
+    status: partial
+    evidence_url: https://www.ville-francois.fr/actualites/vous-avez-une-nouvelle-adresse-demandez-votre-certificat-d-adressage/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « ndant sur la base adresse locale en ligne : https://adresse.data.gouv.fr/carte-base-adresse-nationale?id=97210_0mtzpf#14.611103_-60.
+      » ; à vérifier.'
+    method: automated
+  subventions_publiees:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  accessibilite:
+    status: partial
+    evidence_url: https://www.ville-francois.fr/accessibilite/
+    archive_url: null
+    note: 'Indice partiel (lien) : « Accessibilité » ; à vérifier.'
+    method: automated
+  mentions_legales:
+    status: 'yes'
+    evidence_url: https://www.ville-francois.fr/mentions-legales/
+    archive_url: null
+    note: 'Trouvé (lien) : « Mentions légales ».'
+    method: automated
+  donnees_personnelles:
+    status: 'yes'
+    evidence_url: https://policies.google.com/privacy
+    archive_url: null
+    note: 'Trouvé (lien) : « Politique de confidentialité ».'
+    method: automated
+  https:
+    status: 'yes'
+    evidence_url: https://www.ville-francois.fr/
+    archive_url: null
+    note: Connexion chiffrée (https) avec certificat valide.
+    method: automated
+  mobile:
+    status: 'yes'
+    evidence_url: https://www.ville-francois.fr/
+    archive_url: null
+    note: Page d'accueil adaptée aux écrans de téléphone (balise viewport) ; à confirmer à l'œil.
+    method: automated
+  demarches:
+    status: partial
+    evidence_url: https://www.service-public.fr/
+    archive_url: null
+    note: 'Indice partiel (lien (adresse seulement)) : « E-administration » ; à vérifier.'
+    method: automated
+  contact:
+    status: partial
+    evidence_url: https://www.ville-francois.fr/contact/
+    archive_url: null
+    note: 'Indice partiel (lien) : « NOUS CONTACTER » ; à vérifier.'
+    method: automated
+  a_jour:
+    status: partial
+    evidence_url: https://www.ville-francois.fr/
+    archive_url: null
+    note: 'Date la plus récente lue sur le site (accueil ou premières pages) : 15/01/2026 (il y a 291 jours).'
+    method: automated
+  elus_presentes:
+    status: 'yes'
+    evidence_url: https://www.ville-francois.fr/articles/les-elus-72fd6a4b-9f6a-453c-8827-f0eebe163dac
+    archive_url: null
+    note: 'Trouvé (lien) : « Les élus ».'
+    method: automated
+  calendrier_conseils:
+    status: partial
+    evidence_url: https://www.ville-francois.fr/articles/conseil-municipal/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « tation, et restreint l&rsquo;acces du public aux debats. le prochain conseil municipal aura lieu
+      le jeudi 13 novembre 2025 a 17h30 precises  » ; à vérifier.'
+    method: automated
+  rob_publie:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  budget_explique:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  marches_publics:
+    status: 'yes'
+    evidence_url: https://www.ville-francois.fr/articles/marches-public
+    archive_url: null
+    note: 'Trouvé (lien) : « Marchés Publics ».'
+    method: automated
+  indemnites_elus:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  projets_chiffres:
+    status: partial
+    evidence_url: https://www.ville-francois.fr/articles/budget-municipal/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « tte et les depenses d&rsquo;equipement de la collectivite ( travaux en cours, operations pour
+      le compte de tiers, &#8230; ) &gt; en rece » ; à vérifier.'
+    method: automated
+  rapports_controle:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  question_budget:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  presentation_commune:
+    status: 'yes'
+    evidence_url: https://www.ville-francois.fr/articles/patrimoine
+    archive_url: null
+    note: 'Trouvé (lien) : « Patrimoine ».'
+    method: automated
+  bilan_activite:
+    status: partial
+    evidence_url: https://www.ville-francois.fr/actualites/?categorie=enfance-education
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « euni les directeurs des 11 ecoles de francois pour faire le bilan des actions municipales e 25
+      septembre 2024 en savoir plus enfance &amp » ; à vérifier.'
+    method: automated
+  magazine_municipal:
+    status: partial
+    evidence_url: https://www.ville-francois.fr/wp-content/uploads/sites/27/koba-documents/Magazine-Francois_BasDef.pdf
+    archive_url: null
+    note: 'Indice partiel (lien (adresse seulement)) : « Le François - Nouvèl &#039; Franswa N°1 » ; à vérifier.'
+    method: automated
+  annuaire_services:
+    status: 'yes'
+    evidence_url: https://www.ville-francois.fr/annuaire/
+    archive_url: null
+    note: 'Trouvé (lien) : « ANNUAIRE ».'
+    method: automated
+  langue_kreyol:
+    status: partial
+    evidence_url: https://www.ville-francois.fr/actualites/soiree-litteraire-rudy-rabathaly-presente-oliwon-d-imaginaire-creole/
+    archive_url: null
+    note: 'Indice partiel (lien) : « SOIRÉE LITTÉRAIRE : RUDY RABATHALY PRÉSENTE « OLIWON D&rsquo;IMAGINAIRE CRÉOLE » » ; à vérifier.'
+    method: automated
+  alertes_info:
+    status: partial
+    evidence_url: https://www.ville-francois.fr/articles/vie-citoyenne-et-demarches/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « &rsquo;est ce qu&rsquo;il vous est donne a voir grace a nos infos pratiques, actualite, histoire
+      et geographie ou encore les demarches  » ; à vérifier.'
+    method: automated
+  abonnement_alertes:
+    status: partial
+    evidence_url: https://www.ville-francois.fr/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « e recevoir des informations par sms je souhaite recevoir la newsletter par email s&#039;inscrire
+      ce site est protege par recaptcha » ; à vérifier.'
+    method: automated
+  suivi_demandes:
+    status: 'yes'
+    evidence_url: https://www.ville-francois.fr/articles/espace-citoyen
+    archive_url: null
+    note: 'Trouvé (lien) : « Espace Citoyen ».'
+    method: automated
+  signalement:
+    status: partial
+    evidence_url: https://www.ville-francois.fr/contact/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « ets plages probleme rencontre sur le site salles communales signaler un probleme de voirie urbanisme
+      ajouter un fichier telechargez votre do » ; à vérifier.'
+    method: automated
+  risques_majeurs:
+    status: 'yes'
+    evidence_url: https://www.ville-francois.fr/wp-content/uploads/sites/27/koba-documents/Dicrim2021-villedufrancois.pdf
+    archive_url: null
+    note: 'Trouvé (lien) : « DICRIM (Document d&#039;Information Communal sur les RIsques Majeurs) ».'
+    method: automated
+  conseil_retransmis:
+    status: partial
+    evidence_url: https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.ville-francois.fr%2Farticles%2Fconseil-municipal%2F
+    archive_url: null
+    note: 'Indice partiel (lien (adresse seulement)) : « https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.ville-francois.fr%2Farticles%2Fconseil-municipal%2F
+      » ; à vérifier.'
+    method: automated
+  consultations:
+    status: 'yes'
+    evidence_url: https://www.ville-francois.fr/wp-content/uploads/sites/27/koba-documents/Enquete-publique-HotelDeVille.pdf
+    archive_url: null
+    note: 'Trouvé (lien) : « Affiche Avis d&#039;enquête publique ».'
+    method: automated
+  budget_participatif:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  instances_participatives:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  droit_petition:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated

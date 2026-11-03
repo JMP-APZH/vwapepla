@@ -1,0 +1,247 @@
+# Audit du site de la mairie — PREMIÈRE PASSE AUTOMATIQUE, à relire par JM.
+# status: yes / partial / no / na · method: automated (règles par mots-clés) ou manual (relu à la main).
+# « no » automatique = non trouvé par la recherche, pas une preuve d'absence. Rien n'est publié avant reviewed_by.
+commune_code: '97231'
+commune: Les Trois-Îlets
+site_url: https://villedestroisilets.com/
+audited_on: '2026-11-02'
+auditor: Claude (première passe automatique)
+reviewed_by: null
+pages_read: 1
+items:
+  site_officiel:
+    status: 'yes'
+    evidence_url: https://villedestroisilets.com/
+    archive_url: null
+    note: Site indiqué par l'annuaire Service-Public et accessible.
+    method: automated
+  budget_en_ligne:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  actes_publies:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  liste_deliberations:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  proces_verbaux:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  open_data:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Obligation si 3 500 habitants et 50 agents ou plus : effectif non vérifié. Rien trouvé par la recherche automatique (1 pages lues).'
+    method: automated
+  subventions_publiees:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  accessibilite:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  mentions_legales:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  donnees_personnelles:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  https:
+    status: 'yes'
+    evidence_url: https://villedestroisilets.com/
+    archive_url: null
+    note: Connexion chiffrée (https) avec certificat valide.
+    method: automated
+  mobile:
+    status: 'yes'
+    evidence_url: https://villedestroisilets.com/
+    archive_url: null
+    note: Page d'accueil adaptée aux écrans de téléphone (balise viewport) ; à confirmer à l'œil.
+    method: automated
+  demarches:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  contact:
+    status: 'yes'
+    evidence_url: https://villedestroisilets.com/
+    archive_url: null
+    note: 'Trouvé (texte de la page) : « iphane de moirans 97229 les trois-ilets telephone &amp; fax 05 96 68 31 11 &nbsp;&nbsp; fax 05 96 68
+      30 39 courriel secretariat@mairie-trois ».'
+    method: automated
+  a_jour:
+    status: 'no'
+    evidence_url: https://villedestroisilets.com/
+    archive_url: null
+    note: Aucune date lisible sur la page d'accueil (recherche automatique).
+    method: automated
+  elus_presentes:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  calendrier_conseils:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  rob_publie:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  budget_explique:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  marches_publics:
+    status: partial
+    evidence_url: https://villedestroisilets.com/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « 8h12h jusqu''a 16h pour les passeports. services techniques  marches publics  urbanisme du lundi
+      au vendredi 7h14h realisation koredge » ; à vérifier.'
+    method: automated
+  indemnites_elus:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  projets_chiffres:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  rapports_controle:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  question_budget:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  presentation_commune:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  bilan_activite:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  magazine_municipal:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  annuaire_services:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  langue_kreyol:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  alertes_info:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  abonnement_alertes:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  suivi_demandes:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  signalement:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  risques_majeurs:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  conseil_retransmis:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  consultations:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  budget_participatif:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  instances_participatives:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated
+  droit_petition:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (1 pages lues) ; à vérifier.
+    method: automated

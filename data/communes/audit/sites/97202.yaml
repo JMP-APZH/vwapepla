@@ -1,0 +1,251 @@
+# Audit du site de la mairie — PREMIÈRE PASSE AUTOMATIQUE, à relire par JM.
+# status: yes / partial / no / na · method: automated (règles par mots-clés) ou manual (relu à la main).
+# « no » automatique = non trouvé par la recherche, pas une preuve d'absence. Rien n'est publié avant reviewed_by.
+commune_code: '97202'
+commune: Les Anses-d'Arlet
+site_url: https://ville-ansesdarlet.fr
+audited_on: '2026-11-02'
+auditor: Claude (première passe automatique)
+reviewed_by: null
+pages_read: 80
+items:
+  site_officiel:
+    status: 'yes'
+    evidence_url: https://ville-ansesdarlet.fr
+    archive_url: null
+    note: Site indiqué par l'annuaire Service-Public et accessible.
+    method: automated
+  budget_en_ligne:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  actes_publies:
+    status: 'yes'
+    evidence_url: https://ville-ansesdarlet.fr/recueil-des-actes-administratifs-des-anses-darlet/
+    archive_url: null
+    note: 'Trouvé (lien) : « Recueil des actes administratifs des Anses d’Arlet ».'
+    method: automated
+  liste_deliberations:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  proces_verbaux:
+    status: 'yes'
+    evidence_url: https://ville-ansesdarlet.fr/wp-content/uploads/2026/07/PV-CM-du-05-janvier-2026.pdf
+    archive_url: null
+    note: 'Trouvé (lien) : « PV du Conseil municipal du 5 janvier 2026 ».'
+    method: automated
+  open_data:
+    status: na
+    evidence_url: null
+    archive_url: null
+    note: 'Obligation si 3 500 habitants et 50 agents ou plus : effectif non vérifié. Rien trouvé par la recherche automatique (80 pages lues).'
+    method: automated
+  subventions_publiees:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  accessibilite:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  mentions_legales:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  donnees_personnelles:
+    status: 'yes'
+    evidence_url: https://ville-ansesdarlet.fr/contact/
+    archive_url: null
+    note: 'Trouvé (texte de la page) : « nom nom e-mail * e-mail accord votre votre message * accord rgpd * je consens a ce que ce site stocke
+      mes informations envoy ».'
+    method: automated
+  https:
+    status: 'yes'
+    evidence_url: https://ville-ansesdarlet.fr
+    archive_url: null
+    note: Connexion chiffrée (https) avec certificat valide.
+    method: automated
+  mobile:
+    status: 'yes'
+    evidence_url: https://ville-ansesdarlet.fr
+    archive_url: null
+    note: Page d'accueil adaptée aux écrans de téléphone (balise viewport) ; à confirmer à l'œil.
+    method: automated
+  demarches:
+    status: partial
+    evidence_url: https://ville-ansesdarlet.fr/france-services/
+    archive_url: null
+    note: 'Indice partiel (lien (adresse seulement)) : « France Services » ; à vérifier.'
+    method: automated
+  contact:
+    status: 'yes'
+    evidence_url: https://ville-ansesdarlet.fr
+    archive_url: null
+    note: 'Trouvé (texte de la page) : « acter rue felix eboue &#8211; 97217 les anses d&rsquo;arlet 0596 68 62 02 mairie@mairie-anses-arlet.fr
+      horaires lundi &#8211; jeudi 7h30 &#8 ».'
+    method: automated
+  a_jour:
+    status: partial
+    evidence_url: https://ville-ansesdarlet.fr
+    archive_url: null
+    note: 'Date la plus récente lue sur le site (accueil ou premières pages) : 06/07/2026 (il y a 119 jours).'
+    method: automated
+  elus_presentes:
+    status: partial
+    evidence_url: https://ville-ansesdarlet.fr/votre-mairie/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « l&rsquo;equipe municipale &#8211; ville de les anses d&#039;arlet passer au contenu l » ; à vérifier.'
+    method: automated
+  calendrier_conseils:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  rob_publie:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  budget_explique:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  marches_publics:
+    status: partial
+    evidence_url: https://ville-ansesdarlet.fr/appel-a-projets-candidatures-village-artisanal-commercial-les-anses-darlet/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « s securisees). candidatez via le lien suivant : https://www.marches-securises.fr/entreprise/?module=reponse|conditions_utilisation&#038;c
+      » ; à vérifier.'
+    method: automated
+  indemnites_elus:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  projets_chiffres:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  rapports_controle:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  question_budget:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  presentation_commune:
+    status: 'yes'
+    evidence_url: https://ville-ansesdarlet.fr/tag/patrimoine/
+    archive_url: null
+    note: 'Trouvé (lien) : « Patrimoine ».'
+    method: automated
+  bilan_activite:
+    status: partial
+    evidence_url: https://ville-ansesdarlet.fr/bilan-municipal-2020-2025/
+    archive_url: null
+    note: 'Indice partiel (lien) : « Bilan Municipal 2020-2025 » ; à vérifier.'
+    method: automated
+  magazine_municipal:
+    status: partial
+    evidence_url: https://ville-ansesdarlet.fr/service-communication/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « des parutions et annonces dans le france antilles et autres magazines, radio/tv couverture des
+      manifestations : photos, prise no » ; à vérifier.'
+    method: automated
+  annuaire_services:
+    status: 'yes'
+    evidence_url: https://ville-ansesdarlet.fr/annuaire-des-acteurs-economiques/
+    archive_url: null
+    note: 'Trouvé (lien) : « ANNUAIRE DES ACTEURS ECONOMIQUES ».'
+    method: automated
+  langue_kreyol:
+    status: partial
+    evidence_url: https://ville-ansesdarlet.fr/bibliotheque/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « ivites club de lecture adultes, atelier  aprann li ek matje kreyol  pour adultes, rencontres
+      litteraires, expositions, soiree  » ; à vérifier.'
+    method: automated
+  alertes_info:
+    status: 'yes'
+    evidence_url: https://ville-ansesdarlet.fr/quizz-alerte-tsunami-caribe-wave-2024/
+    archive_url: null
+    note: 'Trouvé (lien) : « QUIZZ ALERTE TSUNAMI | CARIBE WAVE 2024 ».'
+    method: automated
+  abonnement_alertes:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  suivi_demandes:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  signalement:
+    status: partial
+    evidence_url: https://ville-ansesdarlet.fr/5293-2/
+    archive_url: null
+    note: 'Indice partiel (texte de la page) : « ion contact webcam live mes demarches service des elections signalement  agenda manifestations
+      rechercher zot o kouran etiquettes a » ; à vérifier.'
+    method: automated
+  risques_majeurs:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  conseil_retransmis:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  consultations:
+    status: 'yes'
+    evidence_url: https://ville-ansesdarlet.fr/communique-enquete-publique-modification-du-scot/
+    archive_url: null
+    note: 'Trouvé (lien) : « COMMUNIQUE | Enquête publique : modification du SCOT ».'
+    method: automated
+  budget_participatif:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  instances_participatives:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated
+  droit_petition:
+    status: 'no'
+    evidence_url: null
+    archive_url: null
+    note: Non trouvé par la recherche automatique (80 pages lues) ; à vérifier.
+    method: automated

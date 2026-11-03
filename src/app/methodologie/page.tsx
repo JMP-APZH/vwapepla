@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { getSources } from "@/lib/data";
-import { PROVISIONAL_YEARS, REFERENCE_YEAR } from "@/lib/config";
-import { date } from "@/lib/format";
-import { t } from "@/i18n/strings";
+import { getSources } from "@/lib/core/data";
+import { PROVISIONAL_YEARS, REFERENCE_YEAR } from "@/lib/communes/config";
+import { date } from "@/lib/core/format";
+import { common, communes } from "@/i18n";
 
 export const metadata: Metadata = { title: "Méthodologie" };
 
@@ -11,7 +11,7 @@ export default async function Methodologie() {
   const sources = [...(await getSources()).values()].sort((a, b) => a.id.localeCompare(b.id));
   return (
     <article className="prose-sm space-y-6">
-      <h1 className="text-2xl font-semibold tracking-tight">{t.methodology.fr}</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">{common.methodology.fr}</h1>
       <section className="space-y-2">
         <h2 className="text-lg font-semibold">Nos principes</h2>
         <ul className="list-disc space-y-1 pl-5 text-slate-700">
@@ -25,7 +25,7 @@ export default async function Methodologie() {
       <section className="space-y-2">
         <h2 className="text-lg font-semibold">Précautions de lecture</h2>
         <ul className="list-disc space-y-1 pl-5 text-slate-700">
-          <li>{t.caveatEpci.fr}</li>
+          <li>{communes.caveatEpci.fr}</li>
           <li>
             Année de référence : {REFERENCE_YEAR}. Les comptes {PROVISIONAL_YEARS.join(", ")} sont provisoires jusqu&apos;à
             la publication des comptes définitifs par la DGFiP (fin décembre).
@@ -37,7 +37,7 @@ export default async function Methodologie() {
         </ul>
       </section>
       <section className="space-y-2">
-        <h2 className="text-lg font-semibold">{t.sources.fr}</h2>
+        <h2 className="text-lg font-semibold">{common.sources.fr}</h2>
         <ul className="space-y-1 text-sm text-slate-700">
           {sources.map((s) => (
             <li key={s.id}>
