@@ -20,7 +20,9 @@ Rules (ownership, shared files, rebase, ports): CLAUDE.md, "Parallel work". Scop
 | `scripts/pipeline`, `scripts/audit`, `reconcile_afd.py`, `explore_*` | Commune only | `scripts/communes/…` |
 | `data/audit`, `data/media`, `data/officeholders` | Commune only | `data/communes/…` |
 
-## Still to do after the next release reaches `main`
-Migration `…_core_drop_compat_views.sql`: drop the views with the old names (`communes`, `actuals`, `officeholders`…) and
-the old RPC names (`cast_site_vote`, `site_vote_summary`), which keep the production build of `main` working meanwhile.
-Then drop `media.commune_code` (replaced by `institution_id`).
+## Removing the compatibility layer (two steps)
+1. Code (PR "drop compat views"): votes call `com_cast_site_vote`; `build_media.py` no longer writes `media.commune_code`.
+   Released to `main` before step 2.
+2. Migration `20261103160000_core_drop_compat_views.sql`, applied after that release: drops the views with the old names
+   (`communes`, `actuals`, `officeholders`…), the old RPC names (`cast_site_vote`, `site_vote_summary`) and
+   `media.commune_code` (`institution_id` becomes NOT NULL). No CASCADE: it fails safely if anything still depends on them.
