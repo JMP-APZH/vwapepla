@@ -7,8 +7,13 @@ import { meur, pct, perHab, years as yrs } from "@/lib/core/format";
 import { SourceNote } from "@/components/card/SourceNote";
 import { HERO_METRICS } from "@/lib/communes/config";
 import { common, communes } from "@/i18n";
+import type { NationalLine } from "@/lib/communes/national";
+import { NationalCompare } from "./NationalCompare";
 
-export type BlockYear = { id: string; title: string; values: LineValue[]; reference: Reference; sources: Source[] };
+export type BlockYear = {
+  id: string; title: string; values: LineValue[]; reference: Reference; sources: Source[];
+  national?: NationalLine[]; nationalStratum?: string | null; // DGFiP national averages, main budget (Option A)
+};
 export type BudgetYear = { year: number; provisional: boolean; blocks: BlockYear[] };
 
 function refLabel(r: Reference) {
@@ -81,6 +86,7 @@ export function BudgetBreakdown({ data, defaultYear, heroYear }: { data: BudgetY
               <ul className="mt-1 space-y-2 text-sm">
                 {b.values.map((v) => <Line key={v.key} v={v} scale={scale} bars={bars} heroYear={current.year === heroYear} />)}
               </ul>
+              {b.national?.map((n) => <NationalCompare key={n.key} line={n} stratum={b.nationalStratum ?? null} showBasis />)}
               <SourceNote sources={b.sources} year={current.year} />
             </section>
           );

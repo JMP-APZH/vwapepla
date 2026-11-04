@@ -21,8 +21,9 @@ const UNIT: Record<ChartUnit, { caption: string; axis: (v: number) => string; ti
 };
 
 /** One indicator per year, with term bands and the shared election years shaded. */
-export function TermsChart({ title, points, bands, unit = "eur" }: {
+export function TermsChart({ title, points, bands, unit = "eur", reference }: {
   title: string; points: ChartPoint[]; bands: TermBand[]; unit?: ChartUnit;
+  reference?: { value: number; label: string }; // official threshold only (sourced under the charts)
 }) {
   const u = UNIT[unit];
   return (
@@ -52,6 +53,10 @@ export function TermsChart({ title, points, bands, unit = "eur" }: {
                 return `${y}${p?.provisional ? " (provisoire)" : ""}${bands.some((b) => b.electionYear === Number(y)) ? " — année d'élection" : ""}`;
               }}
             />
+            {reference && (
+              <ReferenceLine y={reference.value} stroke="#64748b" strokeDasharray="6 3" strokeWidth={1.5} ifOverflow="extendDomain"
+                             label={{ value: reference.label, position: "insideBottomRight", fontSize: 10, fill: "#475569" }} />
+            )}
             <Line type="monotone" dataKey="value" stroke={INK} strokeWidth={2} dot={{ r: 2.5, fill: INK }}
                   activeDot={{ r: 5 }} connectNulls={false} isAnimationActive={false} />
           </LineChart>

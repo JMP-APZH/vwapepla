@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Actual } from "./data";
-import { summarizeTerms, type Term } from "./terms";
+import { summarizeTerms, termChange, type Term } from "./terms";
 
 const terms: Term[] = [
   { id: "2008-2014", election_year: 2008, start_date: "2008-03-09", end_date: "2014-03-23", first_full_year: 2009, last_full_year: 2013 },
@@ -51,5 +51,19 @@ describe("summarizeTerms", () => {
   it("computes a term rate as sum / sum, not as an average of yearly rates", () => {
     // 2015-2019: épargne 10, 90, 10, 10, 10 over revenue 100, 300, 100, 100, 100 -> 130 / 700 (mean of rates = 0.14)
     expect(s[1].values.taux).toBeCloseTo(130 / 700);
+  });
+});
+
+describe("termChange", () => {
+  it("says rates in points, years in years, euros with %", () => {
+    expect(termChange("pct", 0.072, 0.06)).toBe("+1,2 pt");
+    expect(termChange("years", 5.7, 4.9)).toBe("+0,8 an");
+    expect(termChange("years", 81, 6)).toBe("+75 ans");
+    expect(termChange("eur", 300, 250)).toBe("+50 € / hab. (+20 %)");
+    expect(termChange("eur", 250, 250)).toBe("0 € / hab. (0 %)");
+  });
+  it("is null when a term has no value", () => {
+    expect(termChange("pct", null, 0.06)).toBeNull();
+    expect(termChange("eur", 300, undefined)).toBeNull();
   });
 });

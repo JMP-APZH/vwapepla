@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Actual } from "./data";
 import { HERO } from "./config";
-import { computeHero, heroKeys } from "./headline";
+import { computeHero, heroKeys, spread } from "./headline";
 import { median, perHab, years } from "@/lib/core/format";
 import { debtYears, pctDec } from "./format";
 
@@ -66,5 +66,13 @@ describe("computeHero", () => {
     const [rate, cap] = computeHero(HERO, "97201", rows, strata);
     expect(rate.sourceIds).toEqual(["src-epargne_brute", "src-rf_total"]);
     expect(cap.sourceIds).toEqual(["src-capacite_desendettement"]);
+  });
+});
+
+describe("spread", () => {
+  it("gives quartiles and range, never below 3 values", () => {
+    expect(spread([1, 2, 3, 4, 5])).toEqual({ p25: 2, p75: 4, min: 1, max: 5, n: 5 });
+    expect(spread([10, 0, 20, 30])).toEqual({ p25: 7.5, p75: 22.5, min: 0, max: 30, n: 4 });
+    expect(spread([1, 2])).toBeNull();
   });
 });
