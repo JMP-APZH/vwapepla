@@ -1,5 +1,22 @@
 # B1 — Comparisons (Step 3, proposal for JM, 3 Nov 2026)
 
+## Decisions and status
+- **JM, 4 Nov 2026: Option A** (relayed by the foundation session): official DGFiP national stratum averages, on their
+  own line, next to the commune's own DGFiP figure (main budget). Never compared with the card's consolidated figure.
+- §2, §3, §5, §6 built as proposed (they implement Step 3 as JM wrote it). §4: the 12-year line is now verified on
+  Légifrance (loi n° 2018-32, art. 29, I: « Douze années pour les communes et pour les établissements publics de
+  coopération intercommunale à fiscalité propre », https://www.legifrance.gouv.fr/jorf/article_jo/JORFARTI000036526081)
+  and drawn on the capacité chart, with a note that it was a benchmark of the 2018-2022 contracts, not a ban.
+- Pipeline: `nat_*` / `nat_*_strate` rows in `com_actuals` (block `national`, not on the card's budget blocks), no
+  migration. **Loading them into Supabase waits for JM's go**; until then the card shows no national line.
+- Column guide detail found while mapping: `rperso` is staff costs / **operating spending** (not revenue). The staff
+  national line therefore compares € per inhabitant (`fperso` / `mperso`); DGF uses `rdgf` / `rmdgf` (% of operating
+  revenue); the hero rate uses `rcaf` / `rmcaf`; capacité = `dette` / `caf` and, for the stratum, `mdette` / `mcaf`.
+- Reconciliation (`reconcile_afd.py`): staff costs, debt and DGF from the DGFiP file equal the main-budget part
+  (`amount_bp`) of the OFGL consolidated for 272/272 commune-years (2018-2025), within 1%. Équipement, operating
+  revenue and CAF are defined differently by the two publishers: shown, not gated. The build also checks that the
+  DGFiP population equals ours and falls in the DGFiP stratum band, for every row.
+
 No ranking, no score. Every comparison names its group and its source.
 
 ## 1. National stratum averages: the official dataset
