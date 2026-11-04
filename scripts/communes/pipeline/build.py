@@ -7,7 +7,7 @@ Checks (exit 1 on failure): 34 communes every year, accounting hierarchy (childr
 import collections, csv, glob, json, pathlib, re, sys, unicodedata
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))  # our own code dir (python -I drops it)
-from metrics import BY_AGGREGATE, METRICS, OCTROI_ACCOUNTS, UNITS  # noqa: E402
+from metrics import BY_AGGREGATE, METRICS, NATIONAL, OCTROI_ACCOUNTS, UNITS  # noqa: E402
 from people import core_people  # noqa: E402
 
 sys.stdout.reconfigure(encoding="utf-8")
@@ -119,6 +119,46 @@ for ds in sorted(d for d in MANIFEST if d.startswith("balances-comptables-des-co
                                             "amount": amount, "amount_bp": None, "amount_ba": None, "amount_flux": None,
                                             "eur_per_hab": per_hab(amount, pop.get((c, y))),
                                             "provisional": y in PROVISIONAL_YEARS, "source_id": ds}
+
+# --- national comparison: DGFiP comptes individuels (main budget only), commune figure + national stratum average ---
+def nat_row(c, y, key, amount, per_hab_val, ds):
+    return {"commune_code": c, "year": y, "metric_key": key, "amount": amount, "amount_bp": None, "amount_ba": None,
+            "amount_flux": None, "eur_per_hab": per_hab_val, "provisional": y in PROVISIONAL_YEARS, "source_id": ds}
+
+
+BANDS = [(0, 100), (100, 200), (200, 500), (500, 2000), (2000, 3500), (3500, 5000), (5000, 10000), (10000, 20000),
+         (20000, 50000), (50000, 100000), (100000, 10 ** 9)]
+nat_seen = collections.Counter()
+for ds in sorted(d for d in MANIFEST if d.startswith("comptes-individuels-des-communes-fichier-global-")):
+    for r in raw(ds):
+        c, y = "972" + r["icom"][-2:], int(r["an"])
+        if c not in communes:
+            errors.append(f"DGFiP CI {ds}: unknown commune {r['icom']} {r['inom']}")
+            continue
+        nat_seen[y] += 1
+        p = int(float(r["pop1"]))
+        if p != pop.get((c, y)):
+            errors.append(f"DGFiP CI population {c} {y}: {p} vs {pop.get((c, y))}")
+        # The card names the stratum from the population (app: dgfipStratum); check it is the band DGFiP used.
+        lo, hi = [int(x.replace(" ", "")) for x in re.findall(r"\d[\d ]*\d", r["nomsst1"])[:2]]
+        if not (lo <= p < hi) or not any(b == (lo, hi) for b in BANDS):
+            errors.append(f"DGFiP CI stratum {c} {y}: population {p} not in band '{r['nomsst1']}'")
+        for key, (_label, col, unit, _desc) in NATIONAL.items():
+            if unit == "eur":
+                actuals[(c, y, key)] = nat_row(c, y, key, round(num(r[col]) * 1000, 2), num(r["f" + col]), ds)
+                actuals[(c, y, key + "_strate")] = nat_row(c, y, key + "_strate", None, num(r["m" + col]), ds)
+            elif unit == "ratio":
+                actuals[(c, y, key)] = nat_row(c, y, key, round(num(r["r" + col]) / 100, 4), None, ds)
+                actuals[(c, y, key + "_strate")] = nat_row(c, y, key + "_strate", round(num(r["rm" + col]) / 100, 4),
+                                                           None, ds)
+            else:  # years
+                d, k, md, mk = (num(r[x]) for x in ("dette", "caf", "mdette", "mcaf"))
+                actuals[(c, y, key)] = nat_row(c, y, key, round(d / k, 2) if k and k > 0 else None, None, ds)
+                actuals[(c, y, key + "_strate")] = nat_row(c, y, key + "_strate",
+                                                           round(md / mk, 2) if mk and mk > 0 else None, None, ds)
+for y in range(2018, latest + 1):
+    if nat_seen[y] != 34:
+        errors.append(f"DGFiP CI {y}: {nat_seen[y]}/34 communes")
 
 # --- derived ratios (source = the dataset of the year's aggregates) --------------------------------------------------------------------------------------------------
 for (c, y) in sorted({(c, y) for c, y, _k in actuals if y >= FIRST_YEAR}):

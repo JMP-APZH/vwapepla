@@ -74,5 +74,17 @@ d = (eq - 352) / 352
 failed += abs(d) > TOLERANCE
 print(f"{'Dépenses d équipement 2014-2019 (total)':42s} {352:8.1f} {eq:8.1f} {d:+6.1%}      "
       f"{'OK' if abs(d) <= TOLERANCE else 'FAIL'}")
+
+# --- DGFiP comptes individuels (national comparison, main budget) vs the main-budget part of the OFGL consolidated --
+# Same accounts, two publishers: staff costs, debt and DGF must agree commune by commune, every year (gate, 1%).
+# Équipement, operating revenue and CAF are defined differently by the two (scope of the aggregate): not gated.
+at = {(r["commune_code"], r["year"], r["metric_key"]): r for r in rows}
+print("\nDGFiP comptes individuels vs OFGL (budget principal), commune by commune")
+for nat, ofgl in (("nat_perso", "frais_personnel"), ("nat_dette", "encours_dette"), ("nat_dgf", "dgf")):
+    pairs = [(r["amount"], (at.get((c, y, ofgl)) or {}).get("amount_bp")) for (c, y, k), r in at.items() if k == nat]
+    off = [(a, b) for a, b in pairs if a is None or b is None or abs(a - b) > max(0.01 * abs(b), 1000)]
+    failed += bool(off) or not pairs
+    print(f"{nat + ' = ' + ofgl + ' (part BP)':42s} {len(pairs) - len(off):4d}/{len(pairs):<4d} within 1%      "
+          f"{'OK' if pairs and not off else 'FAIL'}")
 print(f"\n{'ALL OK' if not failed else f'{failed} FAILED'}")
 sys.exit(1 if failed else 0)

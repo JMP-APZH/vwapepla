@@ -127,6 +127,30 @@ METRICS = [
      "ofgl:Fonds de soutien aux emprunts à risque", False, "Agrégat publié par l'OFGL jusqu'en 2017."),
 ]
 
+# --- National comparison (Step 3, Option A, JM 4 Nov 2026): DGFiP "Comptes individuels des communes", MAIN BUDGET ONLY.
+# Never compared with the consolidated figures above: the card shows the commune's own DGFiP figure next to the average.
+# key -> (label, DGFiP column of the commune, DGFiP column of the national stratum average, unit, description)
+#   eur: amount = column in k EUR x 1000, eur_per_hab = f<col> / m<col>;  ratio: r<col> / rm<col> in % -> share;
+#   years: dette / caf (commune) and mdette / mcaf (stratum), null when CAF <= 0.
+NATIONAL = {
+    "nat_caf": ("Capacité d'autofinancement (CAF)", "caf", "eur", "Épargne brute du budget principal."),
+    "nat_dette": ("Encours de la dette au 31/12", "dette", "eur", None),
+    "nat_equip": ("Dépenses d'équipement", "equip", "eur", None),
+    "nat_prod": ("Produits de fonctionnement", "prod", "eur", None),
+    "nat_perso": ("Charges de personnel", "perso", "eur", None),
+    "nat_dgf": ("Dotation globale de fonctionnement", "dgf", "eur", None),
+    "nat_taux_caf": ("CAF / produits de fonctionnement", "caf", "ratio", "Ratio publié par la DGFiP (rcaf, rmcaf)."),
+    "nat_taux_perso": ("Charges de personnel / charges de fonctionnement", "perso", "ratio",
+                       "Ratio publié par la DGFiP (rperso, rmperso)."),
+    "nat_taux_dgf": ("DGF / produits de fonctionnement", "dgf", "ratio", "Ratio publié par la DGFiP (rdgf, rmdgf)."),
+    "nat_capacite": ("Capacité de désendettement (dette / CAF)", None, "years",
+                     "Encours de la dette / CAF ; pour la strate : dette moyenne / CAF moyenne."),
+}
+for _k, (_label, _col, _unit, _desc) in NATIONAL.items():
+    METRICS.append((_k, "national", None, _label + " — budget principal", f"dgfip-ci:{_col or 'dette/caf'}", False, _desc))
+    METRICS.append((_k + "_strate", "national", None, _label + " — moyenne nationale de la strate",
+                    f"dgfip-ci:m{_col or 'dette/mcaf'}", False, _desc))
+
 OCTROI_ACCOUNTS = {"7373", "73431"}  # M14 / M57 (M57A uses 73431 too)
 
 BLOCKS = {
@@ -137,9 +161,11 @@ BLOCKS = {
     "savings_debt": "Épargne et dette",
     "totals": "Totaux",
     "other": "Autres",
+    "national": "Comparaison nationale (DGFiP, budget principal)",
 }
 
-UNITS = {"capacite_desendettement": "years", "taux_effort": "ratio"}  # everything else: eur
+UNITS = {"capacite_desendettement": "years", "taux_effort": "ratio",
+         **{k + s: u for k, (_l, _c, u, _d) in NATIONAL.items() for s in ("", "_strate")}}  # everything else: eur
 
 BY_AGGREGATE = {src[5:]: key for key, _b, _p, _l, src, _c, _d in METRICS if src.startswith("ofgl:")}
 KEYS = [m[0] for m in METRICS]
