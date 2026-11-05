@@ -396,3 +396,44 @@ JOBS += [
      "encoding": "utf-8", "fetcher": raa_fetcher(y)}
     for y in range(RAA_FROM, __import__("datetime").date.today().year + 1)
 ]
+
+
+# --- Natural disaster recognitions (« arrêtés CatNat »), GASPAR database (Géorisques, ministère de la Transition
+# écologique): one zip of national CSVs; only the CatNat table is kept, filtered on the 34 communes of Martinique.
+GASPAR_URL = "https://files.georisques.fr/GASPAR/gaspar.zip"
+
+
+def gaspar_fetcher(dest):
+    import zipfile
+    with tempfile.TemporaryDirectory() as tmp:
+        z = pathlib.Path(tmp) / "gaspar.zip"
+        fetch(GASPAR_URL, z)
+        with zipfile.ZipFile(z) as zf:
+            names = zf.namelist()
+            print(f"     zip: {', '.join(names)}")
+            name = next(n for n in names if "catnat" in n.lower() and n.lower().endswith(".csv"))
+            with zf.open(name) as raw:
+                text = io.TextIOWrapper(raw, encoding="utf-8-sig", newline="")
+                sample = text.readline()
+                delim = ";" if sample.count(";") >= sample.count(",") else ","
+                header = next(csv.reader([sample], delimiter=delim))
+                code = next(i for i, h in enumerate(header) if h.lower() in ("code_commune", "cod_commune"))
+                kept = 0
+                with open(dest.with_suffix(".part"), "w", encoding="utf-8", newline="") as out:
+                    w = csv.writer(out, delimiter=";")
+                    w.writerow(header)
+                    for row in csv.reader(text, delimiter=delim):
+                        if row and row[code].startswith("972"):
+                            w.writerow(row)
+                            kept += 1
+    dest.with_suffix(".part").replace(dest)
+    print(f"     {name}: {kept} Martinique rows kept")
+
+
+JOBS += [{**file_job("gaspar", "gaspar-catnat", GASPAR_URL,
+                     "Base GASPAR — arrêtés de reconnaissance de l'état de catastrophe naturelle (CatNat)",
+                     "https://www.data.gouv.fr/datasets/536995eea3a729239d20486b/",
+                     "Géorisques, ministère de la Transition écologique (base GASPAR)",
+                     "Natural disaster recognitions in the 34 communes of Martinique: event type, dates, decree and "
+                     "JO dates. National zip, CatNat table filtered on INSEE 972xx."),
+          "scope": "_972", "encoding": "utf-8", "fetcher": gaspar_fetcher}]

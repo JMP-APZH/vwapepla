@@ -12,6 +12,7 @@ import yaml
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))  # our own code dir (python -I drops it)
 from acts import build_acts  # noqa: E402
 from crime import build_crime, build_unemployment  # noqa: E402
+from disasters import build_disasters  # noqa: E402
 from dpt import build_dpt  # noqa: E402
 from grants import build_grants  # noqa: E402
 from postings import build_postings  # noqa: E402
@@ -142,6 +143,14 @@ for y in sorted(raa_years):
     mine = [a for a in acts if a["source_id"] == f"raa-{y}"]
     print(f"acts {y}: {len(mine):5d} acts in {len({a['bulletin'] for a in mine}):4d} bulletins")
 
+# --- natural disaster recognitions (GASPAR, arrêtés CatNat) ----------------------------------------------------------
+disasters = []
+if "gaspar-catnat" in MANIFEST:
+    disasters, errs = build_disasters(raw("gaspar-catnat"), "gaspar-catnat")
+    errors += errs
+    print(f"catnat: {len(disasters)} rows, {len({(d['nor'], d['risk_code'], d['event_start']) for d in disasters})} events, "
+          f"{len({d['commune_code'] for d in disasters})} communes")
+
 # --- State investment grants (DGCL) --------------------------------------------------------------------------------
 grant_files = {int(ds.rsplit("-", 1)[1]): raw(ds) for ds in MANIFEST if ds.startswith("dgcl-dotations-investissement-")}
 grants, report, errs = build_grants(grant_files, {y: f"dgcl-dotations-investissement-{y}" for y in grant_files})
@@ -166,7 +175,7 @@ for ds in sorted(d for d in MANIFEST if d.startswith("dpt-outre-mer-")):
 tables = {"sources": sources, "institutions": institutions, "bodies": bodies, "seats": seats, "persons": persons,
           "mandates": mandates, "pref_posting_events": events, "pref_career_steps": steps,
           "pref_person_facts": facts, "pref_vote_criteria": vote_criteria,
-          "pref_crime_stats": crime, "pref_context_figures": context, "pref_acts": acts,
+          "pref_crime_stats": crime, "pref_context_figures": context, "pref_acts": acts, "pref_disaster_recognitions": disasters,
           "pref_investment_grants": sorted(grants, key=lambda g: (g["year"], g["id"])),
           "pref_dpt_credits": sorted(dpt, key=lambda r: r["id"])}
 ids = {}

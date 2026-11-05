@@ -9,10 +9,12 @@ import { StateGrants } from "@/components/prefet/StateGrants";
 import { StateVotes } from "@/components/prefet/StateVotes";
 import { CrimeBlock, SocialContext, StateSplit } from "@/components/prefet/SecurityContext";
 import { ActsBlock } from "@/components/prefet/ActsBlock";
+import { DisastersBlock } from "@/components/prefet/DisastersBlock";
+import { eventsPerYear, toEvents } from "@/lib/prefet/disasters";
 import { getSources } from "@/lib/core/data";
 import { date } from "@/lib/core/format";
 import { lastExecutedYear, topMissions, totalsByYear as creditsByYear } from "@/lib/prefet/credits";
-import { getActCounts, getCommuneNames, getContextFigures, getLatestActs, getCrimeStats, getDptCredits, getGrants, getMandates, getStateVoteSummary, getToday, getVoteCriteria } from "@/lib/prefet/data";
+import { getActCounts, getCommuneNames, getContextFigures, getLatestActs, getCrimeStats, getDisasterRecognitions, getDptCredits, getGrants, getMandates, getStateVoteSummary, getToday, getVoteCriteria } from "@/lib/prefet/data";
 import { byBeneficiary, totalsByYear as grantsByYear } from "@/lib/prefet/grants";
 import { crimeLines, stateSplit, unemploymentRows } from "@/lib/prefet/context";
 import { currentHolder, gaps, postLabel, SEAT_ORDER, toPostings } from "@/lib/prefet/postings";
@@ -34,6 +36,9 @@ export default async function PrefetPage() {
     getDptCredits(), getGrants(), getCommuneNames(), getSources(), getMandates(), getToday()]);
   const [crimeStats, contextFigures, actCounts, latestActs] = await Promise.all([
     getCrimeStats(), getContextFigures(), getActCounts(), getLatestActs()]);
+  const recognitions = await getDisasterRecognitions();
+  const CATNAT_FROM = 2016; // same cut-off as the acts
+  const disasterEvents = toEvents(recognitions).filter((e) => Number(e.start?.slice(0, 4)) >= CATNAT_FROM);
   const crime = crimeLines(crimeStats);
   const unemployment = unemploymentRows(contextFigures);
   const poverty = contextFigures.filter((f) => f.indicator === "pauvrete_menages");
@@ -91,6 +96,10 @@ export default async function PrefetPage() {
                       sources={src(credits.filter((c) => c.level === "mission" && c.year === topYear).map((c) => c.source_id))} />
         )}
         {crime.years && <CrimeBlock years={crime.years} groups={crime.groups} sources={src(crimeStats.map((c) => c.source_id))} />}
+        {disasterEvents.length > 0 && (
+          <DisastersBlock events={disasterEvents} perYear={eventsPerYear(disasterEvents, CATNAT_FROM)} communes={communes}
+                          from={CATNAT_FROM} sources={src(recognitions.map((r) => r.source_id))} />
+        )}
         {unemployment.length > 0 && <SocialContext rows={unemployment} poverty={poverty} sources={src(contextFigures.map((f) => f.source_id))} />}
       </section>
       {actCounts.length > 0 && (

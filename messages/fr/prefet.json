@@ -117,5 +117,12 @@
   "actsBulletin": "recueil",
   "actsRules": "Règles de classement par thème (d'après le titre de l'acte)",
   "actsCaveat": "Le classement par thème repose uniquement sur des mots du titre : un acte peut relever d'un thème sans le mentionner dans son titre (il est alors classé dans « Autres actes »). Le nombre d'actes ne mesure ni l'importance ni l'efficacité de l'action de l'État. Liste établie à partir du sommaire de chaque recueil publié depuis 2016.",
-  "missingActs": "Actes de la préfecture : liste en cours d'import (recueils des actes administratifs depuis 2016)."
+  "missingActs": "Actes de la préfecture : liste en cours d'import (recueils des actes administratifs depuis 2016).",
+  "catnatTitle": "Catastrophes naturelles reconnues par l'État",
+  "catnatIntro": "Événements pour lesquels l'État a reconnu l'état de catastrophe naturelle dans une ou plusieurs communes, par arrêté interministériel publié au Journal officiel (ce qui ouvre l'indemnisation des assurés). Nombre d'événements par année de l'événement :",
+  "catnatList": "Événements reconnus",
+  "catnatDecree": "Arrêté NOR",
+  "catnatOf": "du",
+  "catnatJo": "publié au JO le",
+  "catnatCaveat": "La reconnaissance dépend d'une demande de la commune et de critères techniques nationaux : un événement grave peut ne pas y figurer (demande non faite, refusée ou en cours), et un même événement peut faire l'objet de plusieurs arrêtés. Ce n'est pas un relevé de toutes les crises. Les alertes, vigilances et mesures d'urgence prises par le préfet figurent dans ses actes publiés."
 }

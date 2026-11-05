@@ -6,6 +6,7 @@ import type { Grant } from "./grants";
 import type { CareerStep, MandateRow, PostingEvent } from "./postings";
 import type { ContextFigure, CrimeStat } from "./context";
 import { THEMES, type Act, type ActCount } from "./acts";
+import type { Recognition } from "./disasters";
 import { distributions, type Distribution, type SummaryRow, type VoteCriterion } from "./votes";
 
 // Préfet domain (B4): typed, cached reads of the pref_* tables. Data changes a few times a year (DGCL release, new DPT
@@ -172,4 +173,16 @@ export async function getLatestActs(n = 6): Promise<Act[]> {
     check(await supabase.from("pref_acts").select(cols).eq("theme", t.key)
       .order("act_date", { ascending: false }).order("id").limit(n), "pref_acts") as Act[]));
   return parts.flat();
+}
+
+/** Natural disaster recognitions (arrêtés CatNat, GASPAR) in Martinique. */
+export async function getDisasterRecognitions(): Promise<Recognition[]> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("data");
+  return check(
+    await supabase.from("pref_disaster_recognitions")
+      .select("id,nor,commune_code,risk,event_start,event_end,decree_date,jo_date,source_id").order("id").limit(5000),
+    "pref_disaster_recognitions",
+  ) as Recognition[];
 }

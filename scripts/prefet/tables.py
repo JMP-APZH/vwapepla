@@ -21,6 +21,7 @@ TABLES = {
     "pref_crime_stats": "id",        # SSMSI recorded crime (scripts/prefet/crime.py)
     "pref_context_figures": "id",    # INSEE unemployment + published poverty figures
     "pref_acts": "id",               # RAA acts (scripts/prefet/raa.py, acts.py)
+    "pref_disaster_recognitions": "id",  # GASPAR arrêtés CatNat (scripts/prefet/disasters.py)
     "pref_investment_grants": "id",
     "pref_dpt_credits": "id",
 }

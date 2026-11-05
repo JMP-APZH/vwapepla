@@ -10,7 +10,7 @@ const pct = new Intl.NumberFormat("fr-FR", { style: "percent", maximumFractionDi
 const FACT_LABEL: Record<string, string> = {
   dpt_par_programme: prefet.creditsTitle.fr, subventions_etat: prefet.grantsTitle.fr,
   delinquance_enregistree: prefet.crimeTitle.fr, contexte_social_insee: prefet.socialTitle.fr,
-  actes_publies: prefet.actsTitle.fr, actes_chlordecone: prefet.actsTitle.fr, crises_alertes: prefet.actsTitle.fr,
+  actes_publies: prefet.actsTitle.fr, actes_chlordecone: prefet.actsTitle.fr, crises_alertes: prefet.catnatTitle.fr,
   prix_encadres: prefet.actsTitle.fr,
 };
 
