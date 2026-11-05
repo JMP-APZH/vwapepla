@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { lastExecutedYear, topMissions, totalsByYear as dptByYear, type DptCredit } from "./credits";
 import { beneficiaryLabel, byBeneficiary, totalsByYear, type Grant } from "./grants";
+import { distributions, overallStatus as stateOverall, parseStateAnswers } from "./votes";
 import { coverage, currentHolder, gaps, postLabel, postingYears, seatTimeline, toPostings, type MandateRow } from "./postings";
 
 const c = (edition: number, level: DptCredit["level"], label: string, stage: DptCredit["stage"], cp: number): DptCredit => ({
@@ -105,5 +106,30 @@ describe("postings", () => {
     expect(coverage("2020-02-05", "2022-07-29")).toBe("full");
     expect(postingYears(postings.find((p) => p.lastName === "CAZELLES")!, "2026-11-05")).toEqual([2020, 2021, 2022]);
     expect(postingYears(postings.find((p) => p.lastName === "DESPLANQUES")!, "2026-11-05")).toEqual([2025, 2026]);
+  });
+});
+
+describe("visitor votes on the State's action", () => {
+  const keys = ["vie_chere", "chomage"];
+
+  it("hides the distribution below 20 votes and shows counts per level from 20, with no average", () => {
+    const rows = [
+      { criterion: "vie_chere", total: 19, score: null, votes: null },
+      { criterion: "chomage", total: "20", score: 1, votes: "12" }, { criterion: "chomage", total: "20", score: 5, votes: "8" },
+    ];
+    const [a, b] = distributions(rows, keys);
+    expect(a).toEqual({ criterion: "vie_chere", total: 19, counts: null });
+    expect(b.total).toBe(20);
+    expect(b.counts).toEqual({ 1: 12, 2: 0, 3: 0, 4: 0, 5: 8 });
+    expect(Object.keys(b)).not.toContain("average");
+  });
+
+  it("keeps known criteria and scores 1-5, skips « sans avis », rejects anything else", () => {
+    const f = (o: Record<string, string>) => { const fd = new FormData(); for (const [k, v] of Object.entries(o)) fd.set(k, v); return fd; };
+    expect(parseStateAnswers(f({ vie_chere: "4", chomage: "0", autre: "5" }), keys)).toEqual([{ criterion: "vie_chere", score: 4 }]);
+    expect(parseStateAnswers(f({ vie_chere: "0", chomage: "" }), keys)).toBeNull();
+    expect(parseStateAnswers(f({ vie_chere: "6" }), keys)).toBeNull();
+    expect(stateOverall(["already_voted", "ok"])).toBe("ok");
+    expect(stateOverall(["already_voted", "rate_limited"])).toBe("rate_limited");
   });
 });

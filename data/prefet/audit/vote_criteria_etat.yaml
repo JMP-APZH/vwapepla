@@ -83,7 +83,7 @@ criteria:
 
   - key: risques_naturels
     label_fr: Comment évaluez-vous l'action de l'État en Martinique sur les risques naturels ?
-    description_fr: Cyclones, séismes, volcan, submersion, sargasses : prévention, alerte, gestion de crise.
+    description_fr: "Cyclones, séismes, volcan, submersion, sargasses : prévention, alerte, gestion de crise."
     competence: partagee
     others: [communes, CTM]           # plan communal de sauvegarde, pouvoirs de police du maire
     state_role_fr: L'État organise l'alerte et la gestion de crise (ORSEC), les plans de prévention des risques et le plan séisme Antilles ; les maires ont leur plan communal de sauvegarde.
