@@ -135,7 +135,9 @@ def add_fum(ds, rows, years):
 
 
 add_fum("balances-comptables-des-departements", records("balances-comptables-des-departements"), range(2019, 2026))
-for y in (2016, 2017, 2018, 2019):  # 2019 in both: overlap check
+# 2016-2017 use the M57 chart before its 2018 renumbering (no 73432; octroi de mer elsewhere): not loaded, no guessed
+# mapping (shown as missing on the card). 2019 is in both sources: overlap check.
+for y in (2018, 2019):
     add_fum(NATURE_FONCTION[y], records(NATURE_FONCTION[y]), {y})
 fum_overlap = {key: (fum_sum[(2019, key, "balances-comptables-des-departements")], fum_sum[(2019, key, NATURE_FONCTION[2019])])
                for key in FUM}
@@ -202,13 +204,13 @@ for r in rne:
     role = RNE_SEAT[function]
     body = EXECUTIF if "exécutif" in function else ASSEMBLEE
     start, fstart = r["Date de début du mandat"], r["Date de début de la fonction"] or None
-    odd = fstart is not None and fstart < start  # e.g. RNE gives 2021-02-07 for a function of the 2021 term
+    odd = (fstart is not None and fstart < start) or start < START_2021  # e.g. RNE gives 2021-02-07 for a 2021-term mandate
     mandates.append({"person_id": pid, "seat_id": f"{body}:{role}", "start_date": start,
                      "function_start": fstart if role != "conseiller" else None, "end_date": None,
                      "acquired": "direct_election" if role == "conseiller" else "indirect_election", "term_id": T2021,
                      "verified": not odd, "source_id": sid("rne-membres-assemblees"), "source_url": None})
     if odd:
-        print(f"RNE: {last} {first}: function start {fstart} before the mandate start {start}: kept, verified=false")
+        print(f"RNE: {last} {first}: mandate {start} / function {fstart} before the start of the term: kept, verified=false")
     section_members.append({"person_id": pid, "term_id": T2021, "section": SECTION[r["Libellé de la section - collectivité à statut particulier"]],
                             "source_id": sid("rne-membres-assemblees")})
 
