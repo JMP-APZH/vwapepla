@@ -10,6 +10,7 @@ import csv, json, pathlib, sys
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))  # our own code dir (python -I drops it)
 from dpt import build_dpt  # noqa: E402
 from grants import build_grants  # noqa: E402
+from postings import build_postings  # noqa: E402
 
 sys.stdout.reconfigure(encoding="utf-8")
 ROOT = pathlib.Path(__file__).resolve().parents[2]
@@ -49,6 +50,28 @@ bodies = [{"id": BODY, "institution_id": INSTITUTION, "kind": "corps_prefectoral
 seats = [{"id": f"{BODY}:{role}" + (f"-{rank}" if rank else ""), "body_id": BODY, "role": role, "rank": rank,
           "label_fr": label, "constituency": constituency} for role, rank, label, constituency in SEATS]
 
+# --- postings (JORF appointment decrees, scripts/prefet/postings.py) --------------------------------------------------
+persons, mandates, events, steps = [], [], [], []
+if "jorf-nominations-972" in MANIFEST and "jorf-parcours" in MANIFEST:
+    csv.field_size_limit(1 << 30)  # raw_json column
+    persons, mandates, events, steps, report, errs = build_postings(
+        raw("jorf-nominations-972"), raw("jorf-parcours"), BODY, "jorf-nominations-972", "jorf-parcours")
+    errors += errs
+    for line in report:
+        print("postings:", line)
+    for seat in seats:
+        rows = sorted((m for m in mandates if m["seat_id"] == seat["id"]), key=lambda m: m["start_date"])
+        print(f"postings {seat['label_fr']}:")
+        for m in rows:
+            print(f"   {m['start_date']} -> {m['end_date'] or 'en fonction'}  {m['person_id']}")
+    # the six current holders: at most one open posting per seat
+    for seat in seats:
+        open_ = [m for m in mandates if m["seat_id"] == seat["id"] and m["end_date"] is None]
+        if len(open_) > 1:
+            errors.append(f"{seat['id']}: {len(open_)} postings without end date")
+else:
+    print("postings: JORF files not downloaded (PISTE keys missing), postings skipped")
+
 # --- State investment grants (DGCL) --------------------------------------------------------------------------------
 grant_files = {int(ds.rsplit("-", 1)[1]): raw(ds) for ds in MANIFEST if ds.startswith("dgcl-dotations-investissement-")}
 grants, report, errs = build_grants(grant_files, {y: f"dgcl-dotations-investissement-{y}" for y in grant_files})
@@ -70,11 +93,14 @@ for ds in sorted(d for d in MANIFEST if d.startswith("dpt-outre-mer-")):
     print(f"DPT {edition}: " + ", ".join(f"{r['stage']} {r['year']} CP {r['cp']:,} €".replace(",", " ") for r in t))
 
 # --- write -----------------------------------------------------------------------------------------------------------
-tables = {"sources": sources, "institutions": institutions, "bodies": bodies, "seats": seats,
+tables = {"sources": sources, "institutions": institutions, "bodies": bodies, "seats": seats, "persons": persons,
+          "mandates": mandates, "pref_posting_events": events, "pref_career_steps": steps,
           "pref_investment_grants": sorted(grants, key=lambda g: (g["year"], g["id"])),
           "pref_dpt_credits": sorted(dpt, key=lambda r: r["id"])}
 ids = {}
 for name, rows in tables.items():
+    if name == "mandates":
+        continue  # identity id; unique (person_id, seat_id, start_date) checked in postings.py
     dup = len(rows) - len({r["id"] for r in rows})
     if dup:
         errors.append(f"{name}: {dup} duplicate ids")

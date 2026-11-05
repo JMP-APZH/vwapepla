@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { lastExecutedYear, topMissions, totalsByYear as dptByYear, type DptCredit } from "./credits";
 import { beneficiaryLabel, byBeneficiary, totalsByYear, type Grant } from "./grants";
+import { coverage, currentHolder, gaps, postLabel, postingYears, seatTimeline, toPostings, type MandateRow } from "./postings";
 
 const c = (edition: number, level: DptCredit["level"], label: string, stage: DptCredit["stage"], cp: number): DptCredit => ({
   edition, page: 1, level, mission: level === "total" ? null : label, code: null, label, stage, ae: cp,
@@ -54,5 +55,55 @@ describe("investment grants", () => {
     const b = byBeneficiary(grants, communes);
     expect(b.map((x) => [x.key, x.total, x.slug])).toEqual([["commune-97209", 150, "fort-de-france"], ["ctm", 120, null]]);
     expect(b[0].grants.map((x) => x.id)).toEqual(["b", "a"]);
+  });
+});
+
+const m = (person: string, seat: string, start: string, end: string | null, sex: "F" | "M" = "M"): MandateRow => ({
+  person_id: `pref:${person}:X`, seat_id: `prefecture-972-corps:${seat}`, start_date: start, function_start: null,
+  end_date: end, source_id: "jorf-nominations-972", source_url: `https://www.legifrance.gouv.fr/jorf/id/${person}`,
+  persons: { last_name: person, first_name: "X", sex },
+});
+
+describe("postings", () => {
+  const rows = [
+    m("ROBINE", "prefet", "2017-06-29", "2020-01-15"),
+    m("CAZELLES", "prefet", "2020-02-05", "2022-07-29"),
+    m("DESPLANQUES", "prefet", "2025-01-15", null),
+    m("POSTEL-VINAY", "sous_prefet-2", "2013-10-08", "2015-06-01"),
+    m("POSTEL-VINAY", "sous_prefet-4", "2013-10-08", "2015-06-01"),
+    m("OPPILLIART", "sous_prefet-2", "2019-09-06", "2020-05-20", "F"),
+    m("DE SOUSA", "sous_prefet-4", "2023-08-02", null, "F"),
+  ];
+  const postings = toPostings(rows);
+
+  it("merges a joint appointment (La Trinité et Saint-Pierre) into one posting with two seats", () => {
+    const pv = postings.filter((p) => p.lastName === "POSTEL-VINAY");
+    expect(pv).toHaveLength(1);
+    expect(pv[0].seats).toEqual(["sous_prefet-2", "sous_prefet-4"]);
+    expect(postLabel(pv[0].seats, "M")).toBe("Sous-préfet de La Trinité et de Saint-Pierre");
+    expect(seatTimeline(postings, "sous_prefet-4").map((p) => p.lastName)).toEqual(["DE SOUSA", "POSTEL-VINAY"]);
+  });
+
+  it("builds unique, stable slugs and writes posts in the feminine when the decree says Mme", () => {
+    const slugs = postings.map((p) => p.slug);
+    expect(new Set(slugs).size).toBe(slugs.length);
+    expect(slugs).toContain("2025-prefet-desplanques");
+    expect(slugs).toContain("2023-sous-prefet-de-sousa");
+    expect(postLabel(["sous_prefet-2"], "F")).toBe("Sous-préfète de La Trinité");
+  });
+
+  it("finds the current holder and the periods without any decree", () => {
+    expect(currentHolder(postings, "prefet")?.lastName).toBe("DESPLANQUES");
+    expect(currentHolder(postings, "sous_prefet-3")).toBeUndefined();
+    expect(gaps(postings, "prefet")).toEqual([{ from: "2022-07-29", to: "2025-01-15" }]);
+    expect(gaps(postings, "sous_prefet-2")).toEqual([{ from: "2015-06-01", to: "2019-09-06" }]);
+  });
+
+  it("applies the cut-off: identity only before Dec 2015, partial until 2017, full from 2018", () => {
+    expect(coverage("2013-10-08", "2015-06-01")).toBe("identity");
+    expect(coverage("2014-07-31", "2017-06-29")).toBe("partial");
+    expect(coverage("2020-02-05", "2022-07-29")).toBe("full");
+    expect(postingYears(postings.find((p) => p.lastName === "CAZELLES")!, "2026-11-05")).toEqual([2020, 2021, 2022]);
+    expect(postingYears(postings.find((p) => p.lastName === "DESPLANQUES")!, "2026-11-05")).toEqual([2025, 2026]);
   });
 });

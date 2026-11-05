@@ -9,11 +9,11 @@ TABLES = {
     "institutions": "id",
     "bodies": "id",
     "seats": "id",
-    # postings: once the JORF decrees are fetched (scripts/prefet/legifrance.py)
-    # "persons": "id",
-    # "mandates": "person_id,seat_id,start_date",
-    # "pref_posting_events": "id",
-    # "pref_career_steps": "id",
+    # postings (JORF decrees, scripts/prefet/postings.py)
+    "persons": "id",
+    "mandates": "person_id,seat_id,start_date",
+    "pref_posting_events": "id",
+    "pref_career_steps": "id",
     # préfet domain
     "pref_investment_grants": "id",
     "pref_dpt_credits": "id",
