@@ -1,0 +1,41 @@
+# Official portraits of Martinique's deputies and senators (JM, Q6: official AN / Sénat photos, credited,
+# removed on request). Built with: python -I scripts/core/media.py --domain parlement [--upload]
+# Evidence = the official page naming the person shows this exact image (checked 5 Nov 2026).
+retrieved: 2026-11-05
+portraits:
+  - person_id: "parl-an:PA720992"
+    institution_id: assemblee-nationale
+    image_url: https://www.assemblee-nationale.fr/dyn/static/tribun/17/photos/carre/720992.jpg
+    source_page_url: https://www.assemblee-nationale.fr/dyn/deputes/PA720992
+    credit: "Photo : © Assemblée nationale"
+    evidence: 'Page title "M. Jiovanny William - Martinique (1re circonscription) - Assemblée nationale" shows this photo.'
+  - person_id: "parl-an:PA795820"
+    institution_id: assemblee-nationale
+    image_url: https://www.assemblee-nationale.fr/dyn/static/tribun/17/photos/carre/795820.jpg
+    source_page_url: https://www.assemblee-nationale.fr/dyn/deputes/PA795820
+    credit: "Photo : © Assemblée nationale"
+    evidence: 'Page title "M. Marcellin Nadeau - Martinique (2e circonscription) - Assemblée nationale" shows this photo.'
+  - person_id: "parl-an:PA842211"
+    institution_id: assemblee-nationale
+    image_url: https://www.assemblee-nationale.fr/dyn/static/tribun/17/photos/carre/842211.jpg
+    source_page_url: https://www.assemblee-nationale.fr/dyn/deputes/PA842211
+    credit: "Photo : © Assemblée nationale"
+    evidence: 'Page title "Mme Béatrice Bellay - Martinique (3e circonscription) - Assemblée nationale" shows this photo.'
+  - person_id: "parl-an:PA610654"
+    institution_id: assemblee-nationale
+    image_url: https://www.assemblee-nationale.fr/dyn/static/tribun/17/photos/carre/610654.jpg
+    source_page_url: https://www.assemblee-nationale.fr/dyn/deputes/PA610654
+    credit: "Photo : © Assemblée nationale"
+    evidence: 'Page title "M. Jean-Philippe Nilor - Martinique (4e circonscription) - Assemblée nationale" shows this photo.'
+  - person_id: "parl-sen:19295A"
+    institution_id: senat
+    image_url: https://www.senat.fr/senimg/conconne_catherine19295a_carre.jpg
+    source_page_url: https://www.senat.fr/senateur/conconne_catherine19295a.html
+    credit: "Photo : © Sénat"
+    evidence: 'Page title "Mme Catherine CONCONNE, sénatrice de la Martinique (Martinique) - Sénat" shows this photo.'
+  - person_id: "parl-sen:21096Q"
+    institution_id: senat
+    image_url: https://www.senat.fr/senimg/buval_frederic21096q_carre.jpg
+    source_page_url: https://www.senat.fr/senateur/buval_frederic21096q.html
+    credit: "Photo : © Sénat"
+    evidence: 'Page title "M. Frédéric BUVAL, sénateur de la Martinique (Martinique) - Sénat" shows this photo.'
