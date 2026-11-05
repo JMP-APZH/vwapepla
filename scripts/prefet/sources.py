@@ -370,8 +370,7 @@ def raa_fetcher(year):
         folders = raa.year_folders()
         if year not in folders:
             raise SystemExit(f"RAA {year}: no folder on {raa.SITE}{raa.ROOT_PATH}")
-        acts, bulletins, problems = raa.index_year(year, folders[year], root / "data" / "raw" / "prefet" / "raa" / "cache",
-                                                   fetch)
+        acts, bulletins, problems = raa.index_year(year, folders[year], root / "data" / "raw" / "prefet" / "raa" / "cache")
         fields = ["act_id", "act_date", "service", "title", "pages", "page", "bulletin", "published", "pdf_url",
                   "listing_page"]
         with open(dest.with_suffix(".part"), "w", encoding="utf-8", newline="") as out:

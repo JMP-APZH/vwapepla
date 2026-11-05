@@ -45,6 +45,34 @@ def get(url):
     return patient(call, url)
 
 
+def download(url, dest, resumes=10):
+    """One bulletin, with our User-Agent (the site drops Python's default one), checked against Content-Length.
+    The site ends long transfers early (4.4 MB bulletin cut at 1.9 MB, 5 Nov 2026): a short read is resumed with an
+    HTTP Range request from the last byte. Still incomplete: raises, so `patient` retries and nothing is parsed."""
+    dest = pathlib.Path(dest)
+    with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=900) as r, open(dest, "wb") as f:
+        expected = r.headers.get("Content-Length")
+        final = r.geturl()
+        while chunk := r.read(1 << 20):
+            f.write(chunk)
+    if not (expected and expected.isdigit()):
+        return
+    size = int(expected)
+    for _ in range(resumes):
+        got = dest.stat().st_size
+        if got >= size:
+            break
+        time.sleep(PAUSE)
+        req = urllib.request.Request(final, headers={**UA, "Range": f"bytes={got}-"})
+        with urllib.request.urlopen(req, timeout=900) as r, open(dest, "ab") as f:
+            if r.status != 206:
+                raise OSError(f"incomplete download ({got} of {size} bytes) and the server does not resume")
+            while chunk := r.read(1 << 20):
+                f.write(chunk)
+    if dest.stat().st_size != size:
+        raise OSError(f"incomplete download: {dest.stat().st_size} of {size} bytes")
+
+
 def year_folders():
     """{year: folder path} from the RAA home page and its archives."""
     out = {}
@@ -67,7 +95,7 @@ def crawl(folder):
         s = get(SITE + urllib.parse.quote(path, safe="/()%"))
         for href, rest in PDF_LINK.findall(s):
             m = META.search(html.unescape(re.sub(r"<[^>]+>", " ", rest)))
-            url = SITE + href
+            url = SITE + urllib.parse.quote(html.unescape(href), safe="/%")  # 2016 names: « RAA - N° 02-2016-016.pdf »
             if url not in pdfs:
                 size = float(m[1].replace(",", ".")) * {"k": 1 / 1024, "m": 1, "g": 1024}[m[2][0].lower()] if m else None
                 d = m[3] if m else None
@@ -83,8 +111,8 @@ def crawl(folder):
 # --- Sommaire --------------------------------------------------------------------------------------------------------
 # Lines look like:  « R02-2026-10-30-00005 - Arrêté autorisation drones DTPN (3 pages) Page 3 »
 # preceded by the service: « Préfecture de la Martinique / Cabinet du Préfet ». Titles may wrap over several lines.
-ACT = re.compile(r"^(?P<id>R02-\d{4}-\d\d-\d\d-\d{5})\s*-\s*(?P<title>.+?)\s*\((?P<pages>\d+)\s*pages?\)\s*Page\s*(?P<page>\d+)\s*$")
-ACT_START = re.compile(r"^R02-\d{4}-\d\d-\d\d-\d{5}\s*-")
+ACT = re.compile(r"^(?P<id>R02-\d{4}-\d\d-\d\d-\d{3,5})\s*-\s*(?P<title>.+?)\s*\((?P<pages>\d+)\s*pages?\)\s*Page\s*(?P<page>\d+)\s*$")
+ACT_START = re.compile(r"^R02-\d{4}-\d\d-\d\d-\d{3,5}\s*-")  # 3 digits in 2016, 5 later
 
 
 def sommaire(pdf_path, max_pages=40):
@@ -123,11 +151,13 @@ def sommaire(pdf_path, max_pages=40):
 
 
 def bulletin_number(name):
-    m = re.search(r"r02-(\d{4})-(\d+)", name, re.I)
+    """'recueil-r02-2026-374-…' or 'RAA - N° 02-2016-016.pdf' -> '2026-0374', '2016-0016'."""
+    name = urllib.parse.unquote(name)
+    m = re.search(r"r?0?2-(\d{4})-(\d+)", name, re.I)
     return f"{m[1]}-{int(m[2]):04d}" if m else None
 
 
-def index_year(year, folder, cache_dir, fetch, log=print):
+def index_year(year, folder, cache_dir, log=print):
     """Acts of one year's bulletins (cached per bulletin). Returns (acts, bulletins, problems)."""
     cache_dir.mkdir(parents=True, exist_ok=True)
     bulletins = crawl(folder)
@@ -141,7 +171,7 @@ def index_year(year, folder, cache_dir, fetch, log=print):
             with tempfile.TemporaryDirectory() as tmp:
                 pdf = pathlib.Path(tmp) / "raa.pdf"
                 try:
-                    patient(lambda: fetch(b["url"], pdf), b["name"])
+                    patient(lambda: download(b["url"], pdf), b["name"])
                     found = sommaire(pdf)
                 except Exception as e:  # noqa: BLE001 — one unreadable bulletin must not stop the year
                     problems.append(f"{b['name']}: {e}")
