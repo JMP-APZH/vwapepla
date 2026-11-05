@@ -1,0 +1,34 @@
+# Official portraits of the préfecture's current post holders — official source only, credited, removed on request
+# (media.removed_at). JM's decision (5 Nov 2026). Processed by scripts/core/media.py --domain prefet.
+# `evidence` = why we know the photo shows the person: the official page names the person. Never a match by eye.
+# Checked on 5 Nov 2026: each image is a portrait of one person (no group or ceremony photo).
+# Missing (no portrait on martinique.gouv.fr, 5 Nov 2026): Virginie AVEROUS (sous-préfète de La Trinité),
+# Véronique MOREAU (sous-préfète du Marin).
+
+retrieved: 2026-11-05
+
+portraits:
+  - person_id: "pref:DESPLANQUES:Etienne"
+    institution_id: prefecture-972
+    image_url: https://www.martinique.gouv.fr/var/ezwebin_site/storage/images/media/images/etienne-desplanques/184654-1-fre-FR/Etienne-Desplanques_gallerythumbnail.jpg
+    source_page_url: https://www.martinique.gouv.fr/Services-de-l-Etat/Prefecture-et-sous-prefectures/Prefecture-de-la-Martinique/Le-corps-prefectoral-et-les-directeurs-de-services/Le-Prefet-de-la-Martinique
+    credit: "Photo : préfecture de la Martinique"
+    evidence: 'Page « Le Préfet de la Martinique » titled « Étienne DESPLANQUES »; image file etienne-desplanques.'
+  - person_id: "pref:ADAM:Aurelien"
+    institution_id: prefecture-972
+    image_url: https://www.martinique.gouv.fr/var/ezwebin_site/storage/images/media/images/aurelien-adam/182128-1-fre-FR/Aurelien-ADAM_highlighted.jpg
+    source_page_url: https://www.martinique.gouv.fr/Services-de-l-Etat/Prefecture-et-sous-prefectures/Prefecture-de-la-Martinique/Le-corps-prefectoral-et-les-directeurs-de-services/Le-Secretaire-General-de-la-prefecture
+    credit: "Photo : préfecture de la Martinique"
+    evidence: 'Page « Le Secrétaire Général de la préfecture »: « Monsieur Aurélien ADAM est le nouveau secrétaire général »; image file aurelien-adam.'
+  - person_id: "pref:PERROT:Philemon"
+    institution_id: prefecture-972
+    image_url: https://www.martinique.gouv.fr/var/ezwebin_site/storage/images/media/images/screenshot-2025-08-19-at-15-49-58-cv_philemon_perrot.pdf/191072-1-fre-FR/Screenshot-2025-08-19-at-15-49-58-cv_philemon_perrot.pdf_medium.png
+    source_page_url: https://www.martinique.gouv.fr/Services-de-l-Etat/Prefecture-et-sous-prefectures/Prefecture-de-la-Martinique/Le-corps-prefectoral-et-les-directeurs-de-services/Le-Directeur-de-cabinet-du-prefet2
+    credit: "Photo : préfecture de la Martinique"
+    evidence: 'Page « Le Directeur de cabinet du préfet »: « Monsieur Philémon PERROT est le directeur de cabinet »; image file cv_philemon_perrot (crop of his published CV).'
+  - person_id: "pref:URSULET:David"
+    institution_id: prefecture-972
+    image_url: https://www.martinique.gouv.fr/var/ezwebin_site/storage/images/media/images/20250721_092720-ter/190118-1-fre-FR/20250721_092720-ter_medium.jpg
+    source_page_url: https://www.martinique.gouv.fr/Services-de-l-Etat/Prefecture-et-sous-prefectures/Prefecture-de-la-Martinique/Le-corps-prefectoral-et-les-directeurs-de-services/Le-Sous-Prefet-de-Saint-Pierre
+    credit: "Photo : préfecture de la Martinique"
+    evidence: 'Page « Le Sous-Préfet de Saint-Pierre »: « Monsieur David URSULET est le nouveau Sous-Préfet de Saint-Pierre »; only image on the page.'

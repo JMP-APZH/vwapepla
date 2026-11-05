@@ -87,3 +87,18 @@ export async function getToday(): Promise<string> {
   cacheTag("data");
   return new Date().toISOString().slice(0, 10);
 }
+
+export type PersonFact = { id: string; person_id: string; fact: "birthplace"; value: string; quote: string;
+  source_id: string; source_page_url: string; retrieved: string };
+
+/** Facts stated in an official biography (place of birth only), never inferred. */
+export async function getPersonFacts(personId: string): Promise<PersonFact[]> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("data");
+  return check(
+    await supabase.from("pref_person_facts").select("id,person_id,fact,value,quote,source_id,source_page_url,retrieved")
+      .eq("person_id", personId),
+    "pref_person_facts",
+  ) as PersonFact[];
+}
