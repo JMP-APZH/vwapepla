@@ -54,7 +54,7 @@ class Client:
                 "champs": [{"typeChamp": "TITLE", "operateur": "ET",
                             "criteres": [{"typeRecherche": "EXACTE", "valeur": phrase, "operateur": "ET"}]}],
                 "filtres": filtres, "pageNumber": page, "pageSize": page_size, "operateur": "ET",
-                "sort": "SIGNATURE_DATE_DESC", "typePagination": "DEFAULT"}})
+                "sort": "SIGNATURE_DATE_DESC"}})
             results = body.get("results") or []
             yield from results
             if page * page_size >= int(body.get("totalResultNumber") or 0) or not results:
