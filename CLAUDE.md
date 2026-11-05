@@ -24,15 +24,18 @@ Sister projects of the same author: prix-martinique.org (cost of living, live) a
    (communes) and (2) the State's action in Martinique by policy area (préfet card; criteria with competence tags in
    `data/prefet/audit/vote_criteria_etat.yaml`). Same safeguards everywhere: separate block and table; shown only from
    20 votes per criterion, as a distribution (no average, no global score, no ranking); labelled "avis des visiteurs,
-   non représentatif"; written only server-side (secret key), never by the browser; anonymous daily-salted voter hash,
+   non représentatif"; written only server-side (secret key), never by the browser; anonymous salted voter hash,
    no IP stored; rate limits. Never about a named person.
-   *Amendment (JM, <date of merge>) — votes on the commune's action:* (3) the commune's action by criterion (commune
-   card; criteria with competence tags commune / EPCI / CTM / État in `data/communes/audit/vote_criteria.yaml`; only
-   topics where the commune acts, the others name who is in charge). Same safeguards, plus: scale 1–5 and « je ne sais
-   pas » (counted apart, never in the distribution); 20 votes per criterion **and per commune**, current term only; no
-   question on the budget or the management of public money (principle 2); never a comparison or ranking between
-   communes; Cloudflare Turnstile checked server-side before any write (widget loaded only when the form is opened);
-   voter hash erased after 60 days; votes closed during official pre-election periods (to confirm in the legal review).
+   *Amendment (JM, 5 Nov 2026) — votes on the commune's action:* (3) the commune's action by criterion (commune
+   card; criteria with competence tags commune / EPCI / CTM / État in `data/communes/audit/vote_criteria.yaml`, each
+   validated by JM; only topics where the commune acts, the others name who is in charge). Same safeguards, plus: scale
+   1–5 and « je ne sais pas » (recorded, its share shown next to the distribution, never inside it); 20 votes per
+   criterion **and per commune**, current term only; no question on the budget or the management of public money
+   (principle 2); never a comparison or ranking between communes. For **all** visitor votes (1)–(3): monthly-salted
+   voter hash and « one vote per criterion per month » (a daily salt cannot enforce a 30-day limit); Cloudflare
+   Turnstile checked server-side before any write, through a shared helper (widget loaded only when the form is
+   opened); voter hash erased after 60 days; votes closed during official pre-election periods (dates to confirm in the
+   legal review).
    *Amendment (JM, 5 Nov 2026) — editorial layer « Le regard de Vwapepla »*, distinct from facts and from visitor
    opinions: its own block and style, outside `FactBlock`, never in a chart or card header; signed (author or « la
    rédaction de Vwapepla ») and dated, with update date and a visible correction log; every factual claim links to a
