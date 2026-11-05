@@ -102,9 +102,11 @@ Used only to cross-check names and for `sex` (correct titles: "députée", "sén
 Two DSPM (modified asset declarations) of the senators are "Déclaration déposée – publication en préfecture à venir":
 shown as such. hatvp.fr cuts Python downloads every ~100 kB and then refuses them while serving curl normally: the job
 resumes with `Range` and falls back to the system `curl` (same URL, still scripted and hashed). Contents of
-declarations: `declarations.xml` (large XML). **We do not copy declaration contents**: the card links to the
-HATVP page (`url_dossier`; AN `uri_hatvp` gives the same link for deputies) with type and publication date. The
-reuse rules for declaration contents (especially asset declarations) go to the pre-launch legal review: link only until then.
+declarations: `declarations.xml` (large XML; job to add in sprint 2). Every declaration of interests (DIA/DIAM) of
+the 6 members has an open-data XML (`open_data` column, checked 5 Nov 2026). **Decision Q7**: the card shows the link
+(`url_dossier`; AN `uri_hatvp` gives the same link for deputies), type and dates, **and the declared outside activities
+from the latest declaration of interests**, as published, dated and sourced. **Asset declarations (DSP/DSPM): link and
+dates only**, never their contents; the reuse rules for declaration contents go to the pre-launch legal review.
 
 ### 1.5 Légifrance
 Not needed in sprint 1: laws promulgated are referenced from AN/Sénat dossiers (`titreChemin`, JO links). Later: link the
@@ -182,7 +184,7 @@ Senate seats are not numbered (2 senators for one constituency): `rank` only to 
 | `parl_votes` | scrutin × person | `scrutin_id`, `person_id`, `position` (pour/contre/abstention/non-votant), `by_delegation`, `group_id`, `group_position`, `mise_au_point` | an-scrutins |
 | `parl_amendments` | amendment × person | `id`, `person_id`, `role` (auteur/cosignataire), `text_id`, `article`, `filed`, `outcome` (adopté, rejeté, retiré, tombé, irrecevable, non soutenu), `url` | an-amendements (Ameli later) |
 | `parl_questions` | question | `id`, `person_id`, `chamber`, `kind` (QE, QOSD, QAG/QG), `number`, `title/rubrique`, `ministry`, `asked`, `answered`, `status`, `url` | an-questions-*, senat-questions |
-| `parl_interest_declarations` | HATVP declaration (metadata only) | `person_id`, `doc_type` (DI, DSP, DIA…), `deposited`, `published`, `status`, `url` | hatvp-liste |
+| `parl_interest_declarations` | HATVP declaration (metadata; DI items in `parl_interest_items`: `declaration_id`, `section`, `label`, `period`, `amount`, as published) | `person_id`, `doc_type` (DI, DSP, DIA…), `deposited`, `published`, `status`, `url` | hatvp-liste |
 | `parl_recusals` | déport | `person_id`, `target`, `scope`, `date`, `explanation` | an-deports |
 Every row carries `source_id` (→ `sources`) like the commune domain. Counts shown on the card are **views** over these
 tables (no stored "score").
@@ -246,7 +248,9 @@ offices (Sénat `ODSEN_MANDAT_LOCAL`, AN `mandats` of type conseil, RNE) → `ve
    side by side. No "rebel/loyal" label or percentage. *Mises au point* (corrections after the vote) shown as published,
    never replacing the official record.
 6. **Interests (HATVP)**: link + type + publication date; "déclaration non encore publiée" stated when HATVP says so.
-   Never quote or summarise declaration contents in sprint 2.
+   Outside activities: copied **as declared** from the latest declaration of interests (no summary, no rewording, no
+   € totals across items), with its date and a link to the original; an older declaration is never shown as current.
+   Asset declarations: link and dates only.
 7. **Missing data is stated** (`MissingInfo`): Senate votes not in open data; Senate amendments pending (Ameli);
    committee participation at the Sénat not published; activity before 2012 (AN) / 2011 (Sénat) not available.
 8. **Right of reply** on every card; corrections logged.
@@ -316,13 +320,19 @@ List page `/parlementaires`: 4 deputies by circonscription + 2 senators, alphabe
 | Q4 | Senate votes | **(a) now**: stated as missing on the card ("votes du Sénat non publiés en open data"). **(b) later**: senat.fr scrutin pages, see §7. |
 | Q5 | Cut-off | **Accepted as proposed** (§1bis): deputies full card from the XIVth (Jun 2012), identity-only 2002–2012; senators full card from the Oct 2011 term, identity-only before. Current terms first; earlier terms: see §7. |
 | Q6 | Photos | **Official AN/Sénat portraits**, credited, removable on request (same rule as mayors). |
-| Q7 | HATVP | **Link + declaration dates only** (no contents). |
+| Q7 | HATVP | **Link + dates, and the declared outside activities** from the latest declaration of interests (§1.4, §3.6). Asset declarations: link and dates only. Sections shown: see Q7 bis. |
 | Q8 | Suppléants | **Shown on the deputy card** (AMO30). |
 | Q9 | Kréyòl | **Later**: French only for this domain for now. |
 | Q10 | Refresh | **Weekly rebuild.** Scheduling (cron / CI workflow) touches `.github/**`: separate PR to `dev` (§5). |
 
+Q2 bis (JM): **yes**, each deputy card also offers the **complete list of every public vote** of the term as a download
+(CSV: date, scrutin n°, title, type, the deputy's position or "pas de vote enregistré", group majority position, result,
+link to the AN page), not filtered by V1. Source footnote: `an-scrutins-17`, `an-scrutins-17-liste`.
+
 Still open:
-- **Q2 bis**: also publish *all* public votes as a complete downloadable list (not curated), next to the V1 selection?
+- **Q7 bis**: the declaration of interests also has sections about **other people** (spouse's professional activity,
+  parliamentary assistants' other activities). Recommended: show only the member's own sections (professional and
+  consulting activities, boards, financial holdings, volunteer functions, other mandates) and link to HATVP for the rest.
 
 ---
 
