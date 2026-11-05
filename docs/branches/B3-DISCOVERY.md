@@ -236,7 +236,7 @@ but not the 2015–2021 term or the former Région/Département. Past presidents
 installation délibérations (not online before 2022), the prefecture's Recueil des actes administratifs, or the
 archives. Until then, past terms show accounts and election results, and the officeholders as MissingInfo.
 
-**HATVP for the current Exécutif:** it lists 8 "Conseiller(e) exécutif(ve) de Martinique" with declaration dates
+**HATVP for the current Exécutif:** it lists the "Conseiller(e) exécutif(ve) de Martinique" who filed (at least 7 seen in a partial read), with declaration dates
 (including Odonnat, 2025-05-29), which RNE lacks. It can corroborate the composition from the délibérations (Q1).
 The check was a one-off read; the file has to go into JOBS before any use.
 
