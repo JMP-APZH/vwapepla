@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CardHeader, CardShell, Caveat, MissingInfo, RightOfReply } from "@/components/card/Card";
+import { CardHeader, CardShell, Caveat, MissingInfo, OpinionBlock, RightOfReply } from "@/components/card/Card";
 import { Portrait } from "@/components/card/Portrait";
 import { CompetencePanel } from "@/components/prefet/CompetencePanel";
 import { PostingsOverview } from "@/components/prefet/PostingsOverview";
 import { StateCredits } from "@/components/prefet/StateCredits";
 import { StateGrants } from "@/components/prefet/StateGrants";
+import { StateVotes } from "@/components/prefet/StateVotes";
 import { getSources } from "@/lib/core/data";
 import { date } from "@/lib/core/format";
 import { lastExecutedYear, topMissions, totalsByYear as creditsByYear } from "@/lib/prefet/credits";
-import { getCommuneNames, getDptCredits, getGrants, getMandates, getToday } from "@/lib/prefet/data";
+import { getCommuneNames, getDptCredits, getGrants, getMandates, getStateVoteSummary, getToday, getVoteCriteria } from "@/lib/prefet/data";
 import { byBeneficiary, totalsByYear as grantsByYear } from "@/lib/prefet/grants";
 import { currentHolder, gaps, postLabel, SEAT_ORDER, toPostings } from "@/lib/prefet/postings";
 import { prefet } from "@/i18n";
@@ -18,6 +19,13 @@ export const metadata: Metadata = { title: prefet.cardTitle.fr };
 
 // The State in Martinique: facts about State action and funding, not a judgement of any person (B4 neutrality charter,
 // docs/branches/B4-DISCOVERY.md §3). Postings come from the appointment decrees of the Journal officiel.
+/** Opinion layer, streamed apart from the facts (its cache is refreshed when a vote is recorded). */
+async function Votes() {
+  const criteria = await getVoteCriteria();
+  const summary = await getStateVoteSummary(criteria.map((c) => c.key));
+  return <StateVotes criteria={criteria} summary={summary} />;
+}
+
 export default async function PrefetPage() {
   const [credits, grants, communes, sources, mandates, today] = await Promise.all([
     getDptCredits(), getGrants(), getCommuneNames(), getSources(), getMandates(), getToday()]);
@@ -63,6 +71,7 @@ export default async function PrefetPage() {
                     sources={src(credits.filter((c) => c.level === "total").map((c) => c.source_id))} />
       <StateGrants years={grantsByYear(grants)} beneficiaries={byBeneficiary(grants, communes)}
                    sources={src(grants.map((g) => g.source_id))} />
+      <OpinionBlock><Votes /></OpinionBlock>
     </CardShell>
   );
 }

@@ -96,6 +96,20 @@ for f in bio.get("facts") or []:
                   "source_id": "prefet-biographies", "source_page_url": f["source_page_url"],
                   "retrieved": str(bio["retrieved"])})
 
+# --- visitor-vote criteria (validated by JM, data/prefet/audit/vote_criteria_etat.yaml) -------------------------------
+vc = yaml.safe_load((ROOT / "data" / "prefet" / "audit" / "vote_criteria_etat.yaml").read_text(encoding="utf-8"))
+STEM = "Comment évaluez-vous "
+vote_criteria = []
+for i, c in enumerate(vc["criteria"], 1):
+    if not c["label_fr"].startswith(STEM) or "Martinique" not in c["label_fr"]:
+        errors.append(f"vote criteria: {c['key']}: question must start with « {STEM}» and name Martinique")
+    vote_criteria.append({"key": c["key"], "label_fr": c["label_fr"], "description_fr": c["description_fr"],
+                          "competence": c["competence"], "others": c.get("others") or [],
+                          "state_role_fr": c["state_role_fr"], "fact_blocks": c.get("fact_blocks") or [],
+                          "display_order": i})
+if vc.get("min_votes") != 20:
+    errors.append("vote criteria: min_votes must be 20 (CLAUDE.md principle 4)")
+
 # --- State investment grants (DGCL) --------------------------------------------------------------------------------
 grant_files = {int(ds.rsplit("-", 1)[1]): raw(ds) for ds in MANIFEST if ds.startswith("dgcl-dotations-investissement-")}
 grants, report, errs = build_grants(grant_files, {y: f"dgcl-dotations-investissement-{y}" for y in grant_files})
@@ -119,11 +133,13 @@ for ds in sorted(d for d in MANIFEST if d.startswith("dpt-outre-mer-")):
 # --- write -----------------------------------------------------------------------------------------------------------
 tables = {"sources": sources, "institutions": institutions, "bodies": bodies, "seats": seats, "persons": persons,
           "mandates": mandates, "pref_posting_events": events, "pref_career_steps": steps,
-          "pref_person_facts": facts,
+          "pref_person_facts": facts, "pref_vote_criteria": vote_criteria,
           "pref_investment_grants": sorted(grants, key=lambda g: (g["year"], g["id"])),
           "pref_dpt_credits": sorted(dpt, key=lambda r: r["id"])}
 ids = {}
 for name, rows in tables.items():
+    if name == "pref_vote_criteria":
+        rows = [{**r, "id": r["key"]} for r in rows]
     if name == "mandates":
         continue  # identity id; unique (person_id, seat_id, start_date) checked in postings.py
     dup = len(rows) - len({r["id"] for r in rows})

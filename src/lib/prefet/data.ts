@@ -4,6 +4,7 @@ import { supabase } from "@/lib/core/supabase";
 import type { DptCredit } from "./credits";
 import type { Grant } from "./grants";
 import type { CareerStep, MandateRow, PostingEvent } from "./postings";
+import { distributions, type Distribution, type SummaryRow, type VoteCriterion } from "./votes";
 
 // Préfet domain (B4): typed, cached reads of the pref_* tables. Data changes a few times a year (DGCL release, new DPT
 // edition, new appointment decree): cached for days and pre-rendered; a redeploy or revalidateTag("data") refreshes it.
@@ -101,4 +102,28 @@ export async function getPersonFacts(personId: string): Promise<PersonFact[]> {
       .eq("person_id", personId),
     "pref_person_facts",
   ) as PersonFact[];
+}
+
+/** Criteria of the visitor votes on the State's action (validated by JM). */
+export async function getVoteCriteria(): Promise<VoteCriterion[]> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("data");
+  return check(
+    await supabase.from("pref_vote_criteria")
+      .select("key,label_fr,description_fr,competence,others,state_role_fr,fact_blocks,display_order").order("display_order"),
+    "pref_vote_criteria",
+  ) as VoteCriterion[];
+}
+
+/**
+ * Distribution of visitor answers per criterion (opinion layer). Counts are hidden by the SQL function below 20 votes.
+ * Cached a few minutes (traffic hits the cache, not the database); a new vote calls updateTag("votes-etat").
+ */
+export async function getStateVoteSummary(keys: string[]): Promise<Distribution[]> {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag("votes-etat");
+  const rows = check(await supabase.rpc("pref_state_vote_summary"), "pref_state_vote_summary") as SummaryRow[];
+  return distributions(rows, keys);
 }
