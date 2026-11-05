@@ -8,9 +8,9 @@ Who is who (checked on the portals, 3 Nov 2026):
   (reg_code 02, categ CTU); DGFiP files it with the départements (ndept 103).
 - Before 2016: Région Martinique (SIREN 239720014) and Département de la Martinique (SIREN 229720016).
 """
-import csv, html, re, time, urllib.request
+import csv, html, pathlib, re, time, urllib.parse, urllib.request
 
-from fetching import file_job, portal_job  # scripts/core (put on sys.path by download_sources.py)
+from fetching import fetch, file_job, portal_job  # scripts/core (put on sys.path by download_sources.py)
 
 OFGL = "https://data.ofgl.fr/api/explore/v2.1/catalog/datasets"
 DGFIP = "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets"
@@ -140,9 +140,154 @@ def listing_fetcher(path):
     return fetch_index
 
 
+# --- Before the CTM: DGFiP "comptes individuels" 2008-2011 (main budget only; OFGL starts in 2012) -----------------
+# One dataset per year (2011 and 2012 share one), filtered on the budget label ("REG MARTINIQUE" / "DEP MARTINIQUE").
+for kind, label in (("regions", "Région"), ("departements", "Département")):
+    for years in ("2008", "2009", "2010", "2011-2012"):
+        SOURCES.append(("dgfip", f"comptes-individuels-des-{kind}-fichier-global-{years}", DGFIP,
+                        {"where": 'lbudg like "MARTINIQUE"'}, "DGFiP",
+                        f"{label} Martinique {years}, main budget only (summary lines and ratios). Pre-2012 history; "
+                        "2012 overlaps OFGL and is used to check the join."))
+
+# --- Elections (Ministère de l'Intérieur, data.gouv.fr). National files, kept whole; Martinique selected at import ----
+# (folder, id, url, title, page, purpose). The xls/xlsx files are converted to a ';' CSV (one "feuille" column + the
+# cells) by ministry_fetcher; the original file is kept next to it with its sha256 in <file>.source.json.
+DG = "https://www.data.gouv.fr/datasets"
+ELECTIONS = [
+    ("elections", "elections-regionales-2004-resultats-572139",
+     "https://static.data.gouv.fr/97/4fb8c291dfaa82ebc74ee253c28ea1c937dbe7d63bda03fd4a16f2a6b99890.xls",
+     "Elections régionales 2004 – Résultats (par régions… et liste des élus)",
+     "Conseil régional 2004-2010: list results and elected councillors."),
+    ("elections", "elections-regionales-2010-resultats-572146",
+     "https://static.data.gouv.fr/2a/c08b6cecd4d266b84e0b0d57ac3aaf06e06a89d0f034dbc297bb5d0c81df14.xls",
+     "Elections régionales 2010 – Résultats (par régions… et liste des élus)",
+     "Conseil régional 2010-2015: list results and elected councillors."),
+    ("elections", "elections-cantonales-2004-resultats-572045",
+     "https://static.data.gouv.fr/24/3e463e02def1d6b581092bf8c02783222832b4c2c2094cb2c23136ca10b350.xls",
+     "Elections cantonales 2004 – Résultats (par régions… et liste des élus)",
+     "Conseil général, half renewed in 2004: results by canton and elected councillors."),
+    ("elections", "elections-cantonales-2008-resultats-572049",
+     "https://static.data.gouv.fr/b9/a40c29e78c4d2f7720665671e6a5c972094dc492b13e6d2de740dce2fcc937.xls",
+     "Elections cantonales 2008 – Résultats (par régions… et liste des élus)",
+     "Conseil général, half renewed in 2008: results by canton and elected councillors."),
+    ("elections", "elections-cantonales-2011-resultats-572053",
+     "https://static.data.gouv.fr/34/2a57a8195976f4406c9d73ebab3cc506084617616da83b033edfd6d2ecfad9.xls",
+     "Elections cantonales 2011 – Résultats (par régions… et liste des élus)",
+     "Conseil général, half renewed in 2011 (last before the CTM): results by canton and elected councillors."),
+    ("elections", "elections-regionales-2015-et-des-assemblees-de-corse-de-guyane-et-de-martinique-candidatures-1er-tour",
+     "https://static.data.gouv.fr/resources/elections-regionales-2015-et-des-assemblees-de-corse-de-guyane-et-de-martinique-candidatures-1er-tour/20151110-192107/Reg_15_Candidatures_T1.xlsx",
+     "Elections régionales 2015 et des assemblées de Corse, de Guyane et de Martinique – Candidatures 1er tour",
+     "First CTM assembly (Dec 2015): candidate lists, round 1."),
+    ("elections", "elections-regionales-2015-et-des-assemblees-de-corse-de-guyane-et-de-martinique-candidatures-2eme-tour",
+     "https://static.data.gouv.fr/resources/elections-regionales-2015-et-des-assemblees-de-corse-de-guyane-et-de-martinique-candidatures-2eme-tour/20151209-160248/Reg_15_Candidatures_T2.xlsx",
+     "Elections régionales 2015 et des assemblées de Corse, de Guyane et de Martinique – Candidatures 2ème tour",
+     "First CTM assembly: candidate lists, round 2 (after mergers). With the results, gives the list of each councillor."),
+    ("elections", "elections-regionales-2015-et-des-assemblees-de-corse-de-guyane-et-de-martinique-resultats-tour-1-1",
+     None, "Elections régionales 2015 et des assemblées de Corse, de Guyane et de Martinique – Résultats tour 1",
+     "First CTM assembly: results round 1."),
+    ("elections", "elections-regionales-2015-et-des-assemblees-de-corse-de-guyane-et-de-martinique-resultats-tour-2-1",
+     None, "Elections régionales 2015 et des assemblées de Corse, de Guyane et de Martinique – Résultats tour 2",
+     "First CTM assembly: results round 2 (seats per list)."),
+    ("elections", "elections-regionales-2021-candidatures-au-1er-tour",
+     "https://static.data.gouv.fr/resources/elections-regionales-2021-candidatures-au-1er-tour/20210519-120334/livre-des-listes-et-candidats-reg-t1-france-entiere-2021-05-18-clean.txt",
+     "Elections régionales 2021 – Candidatures au 1er tour",
+     "Current CTM assembly (Jun 2021): candidate lists, round 1. Round-2 lists (after mergers) are not on data.gouv.fr. "
+     "Licence not specified on data.gouv.fr."),
+    ("elections", "elections-regionales-2021-resultats-du-1er-tour-1", None,
+     "Elections régionales 2021 – Résultats du 1er tour",
+     "Current CTM assembly: results round 1, territory level (Martinique = code 02). Licence not specified."),
+    ("elections", "elections-regionales-2021-resultats-du-2eme-tour", None,
+     "Elections Régionales 2021 – résultats du 2ème tour",
+     "Current CTM assembly: results round 2, territory level, seats per list (source of 'élu(e) sur la liste X'). "
+     "Licence not specified."),
+]
+# Resources picked by file name when the dataset holds several (None above = resolved from the data.gouv.fr API).
+RESOURCE = {"elections-regionales-2021-resultats-du-1er-tour-1": "resultats-par-niveau-reg-t1-france-entiere.txt",
+            "elections-regionales-2021-resultats-du-2eme-tour": "resultats-par-niveau-reg-t2-france-entiere.txt"}
+
+
+def resource_url(ds):
+    """Stable URL of the dataset's resource (the only one, or the one named in RESOURCE)."""
+    import json
+    with urllib.request.urlopen(f"https://www.data.gouv.fr/api/1/datasets/{ds}/", timeout=60) as r:
+        res = json.load(r)["resources"]
+    if ds in RESOURCE:
+        res = [x for x in res if x["title"] == RESOURCE[ds] or x["url"].endswith(RESOURCE[ds])]
+    if len(res) != 1:
+        raise RuntimeError(f"{ds}: expected 1 resource, found {len(res)}")
+    return res[0]["url"]
+
+
+def _cell(v):
+    if isinstance(v, float) and v.is_integer():
+        return str(int(v))
+    return "" if v is None else str(v)
+
+
+def _table(path):
+    """(sheet, row) pairs from a txt (';'), xls or xlsx file."""
+    ext = path.suffix.lower()
+    if ext == ".txt":
+        data = path.read_bytes()
+        try:
+            text = data.decode("utf-8-sig")
+        except UnicodeDecodeError:
+            text = data.decode("cp1252")
+        for row in csv.reader(text.splitlines(), delimiter=";"):
+            yield "", row
+    elif ext == ".xls":
+        import xlrd
+        book = xlrd.open_workbook(str(path), on_demand=True)
+        for name in book.sheet_names():
+            sh = book.sheet_by_name(name)
+            for i in range(sh.nrows):
+                yield name, [_cell(v) for v in sh.row_values(i)]
+            book.unload_sheet(name)
+    else:
+        import openpyxl
+        book = openpyxl.load_workbook(str(path), read_only=True, data_only=True)
+        for ws in book.worksheets:
+            for row in ws.iter_rows(values_only=True):
+                yield ws.title, [_cell(v) for v in row]
+        book.close()
+
+
+def ministry_fetcher(ds, url):
+    def fetch_file(dest):
+        import hashlib, json
+        src = url or resource_url(ds)
+        ext = pathlib.PurePosixPath(urllib.parse.urlparse(src).path).suffix.lower()
+        orig = dest.with_name(dest.stem + "_source" + ext)
+        fetch(src, orig)
+        tmp = dest.with_suffix(".part")
+        with open(tmp, "w", encoding="utf-8", newline="") as f:
+            w = csv.writer(f, delimiter=";")
+            w.writerow(["feuille", "cellules..."])
+            for sheet, row in _table(orig):
+                w.writerow([sheet, *row])
+        tmp.replace(dest)
+        meta = {"source_url": src, "source_file": orig.name, "bytes": orig.stat().st_size,
+                "sha256": hashlib.sha256(orig.read_bytes()).hexdigest()}
+        dest.with_suffix(".source.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
+        print(f"     original kept: {orig.name} ({meta['bytes']} bytes)")
+    return fetch_file
+
+
+# HATVP open list of declarations (Licence Ouverte 2.0, stated on hatvp.fr/open-data). National, CTM rows at import
+# (type_mandat "ctsp", departement 972).
+FILES.append(("hatvp", "hatvp-liste-declarations", "https://www.hatvp.fr/livraison/opendata/liste.csv",
+              "HATVP — liste des déclarations publiées (open data)", "https://www.hatvp.fr/open-data/",
+              "Haute Autorité pour la transparence de la vie publique",
+              "Current CTM officeholders who filed declarations (Président and conseillers exécutifs, Président and "
+              "VPs of the Assemblée), with filing dates. Corroborates the Exécutif from the délibérations."))
+
 JOBS = [portal_job(folder, ds, base, params, credit, purpose) for folder, ds, base, params, credit, purpose in SOURCES]
 JOBS += [file_job(folder, ds, url, title, page, credit, purpose) for folder, ds, url, title, page, credit, purpose in FILES]
 JOBS += [{"folder": "actes", "id": ds, "url": f"{SITE}{path}", "title": (lambda t=title: t), "page": f"{SITE}{path}",
           "credit": "Collectivité Territoriale de Martinique", "purpose": purpose, "scope": "", "encoding": "utf-8",
           "fetcher": listing_fetcher(path)}
          for ds, (path, title, purpose) in LISTINGS.items()]
+JOBS += [{"folder": folder, "id": ds, "url": url or f"{DG}/{ds}/", "title": (lambda t=title: t), "page": f"{DG}/{ds}/",
+          "credit": "Ministère de l'Intérieur", "purpose": purpose, "scope": "", "encoding": "utf-8",
+          "fetcher": ministry_fetcher(ds, url)}
+         for folder, ds, url, title, purpose in ELECTIONS]
