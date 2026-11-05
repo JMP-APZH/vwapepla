@@ -1,0 +1,5 @@
+# Réseaux sociaux de la mairie — BROUILLON pré-rempli le 2026-11-02 à partir des liens publiés
+# sur le site officiel (https://villedebassepointe.fr). À compléter par un observateur (guide : docs/branches/B1-CHANNELS-GUIDE.md),
+# puis relu par JM. Rien n'est publié avant observed_on + reviewed_by.
+commune: '97203'
+observations: []
