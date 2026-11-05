@@ -4,6 +4,17 @@ Nothing is built. This document, the draft criteria (`data/communes/audit/vote_c
 the CLAUDE.md amendment (separate shared PR) are for JM to decide on. Same safeguards as the State's-action votes
 already in production (B4, `pref_state_votes`), adapted to 34 communes.
 
+## Decisions (JM, 5 Nov 2026, in writing)
+1. CLAUDE.md amendment accepted (PR #34, text updated with decisions 2-6).
+2. « Je ne sais pas » recorded, its share shown next to the distribution.
+3. Monthly salt + « one vote per criterion per commune per month »; the same fix to be proposed for the website votes
+   (B1) and the State votes (B4).
+4. Turnstile as a shared helper for all votes (separate shared PR); JM creates the Turnstile widget in Cloudflare and
+   adds the keys in Vercel.
+5. Criteria: JM validates the 12 one by one (pending).
+6. Voter hash erased after 60 days; votes closed during official pre-election periods.
+Build starts once the 12 criteria are validated and #34 is merged.
+
 ## 1. What visitors are asked
 Stem, identical for every criterion: « Comment évaluez-vous l'action de la commune sur … ? ». About the commune's
 services, **never about a named person** (no mayor or deputy named in a question), and **never about the budget**
