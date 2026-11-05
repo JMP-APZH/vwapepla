@@ -335,7 +335,7 @@ the script output and never hidden.
 | # | Our figure | Must match | Status found in discovery |
 |---|---|---|---|
 | R1 | OFGL `Epargne brute` `montant_bp` | CRC 2026, table 17, CAF brute of the budget principal | **Exact**: 2021 €83,382,291 · 2022 €128,172,823 · 2023 €93,274,038 · 2024 €48,568,574 |
-| R2 | OFGL `Encours de dette` | CRC 2026 §3.4.1 | **Gap**: 2021 OFGL €849,427,970 vs CRC €744,427,970 (exactly −€105.0M); 2025 OFGL bp €1,006.2M vs CRC €977.1M (−2.9%). 2022–2024 not in the CRC text. To explain before display |
+| R2 | OFGL `Encours de dette` | CRC 2026 §3.4.1 and annex | **Explained (sprint 2)**: OFGL bp = the CRC annex table (p. 80) to the euro, 2021–2024. The €744.4M is in the CRC's text (p. 56) only, against €849.4M in its own annex. 2025: text €977.1M vs OFGL provisional €1,006.2M. See `B3-MAPPING.md` §D |
 | R3 | `Encours / Epargne brute` (capacité de désendettement) | CRC: 10 years (2021), 20 years (2024) | 2024: 954.8 / 48.4 = 19.7 years ✓ |
 | R4 | DGFiP account family **734** "Fiscalité spécifique … Outre-mer", budget principal | CRC: €197M (2021) → €224M (2024) | **Explained** (local DGFiP file): the CRC figure is the whole 734 family, not only octroi de mer. 734 = 73411 rhums + 7342 carburants + 73432 octroi de mer régional + 73433 transport + 7348 autres. 2021 €197.7M · 2024 €224.1M (2024: 73432 €92.9M, 7342 €92.0M, 7348 €35.9M, 73433 €2.0M, 73411 €1.3M) |
 | R5 | OFGL aggregates (each, each year) | Sum of DGFiP balance accounts using the OFGL formula file | Mechanical check, all years 2019–2025 |
@@ -448,8 +448,8 @@ Person pages (`/ctm/elus/[id]`), if you want them: the seat history only, no fig
 - **Q1 composition:** yes. Délibérations are the source for the Conseil exécutif, RNE for the Assemblée; every
   disagreement is listed on the card (MissingInfo).
 - **Q2 portfolios:** yes, dedicated `ctm_portfolios` table.
-- **Q4 debt:** shown now with OFGL figures and a caveat stating the gap with the CRC (2021 −€105.0M, 2025 −€29.1M),
-  with the CRC report linked. R2 stays open in the reconciliation script.
+- **Q4 debt:** shown now with OFGL figures and a caveat. Sprint 2 found that OFGL equals the CRC's annex table; the
+  caveat states that the CRC's text (p. 56) gives other figures for 2021 and 2025, with the report linked.
 - **Q5 octroi de mer:** confirmed. one block "Fiscalité ultramarine" = M57 account 734, which reconciles with
   the CRC (R4), split by account, with "octroi de mer régional" always meaning 73432 only. The CTM's role in the
   communes' octroi de mer (rates, FRDE) is a later sprint.

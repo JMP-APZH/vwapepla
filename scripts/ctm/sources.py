@@ -235,7 +235,10 @@ def _table(path):
             text = data.decode("utf-8-sig")
         except UnicodeDecodeError:
             text = data.decode("cp1252")
-        for row in csv.reader(text.splitlines(), delimiter=";"):
+        lines = text.splitlines()
+        head = lines[0] if lines else ""
+        sep = "\t" if head.count("\t") > head.count(";") else ";"  # 2021 candidatures: tab; 2021 results: ';'
+        for row in csv.reader(lines, delimiter=sep):
             yield "", row
     elif ext == ".xls":
         import xlrd
@@ -303,3 +306,7 @@ JOBS += [file_job("crc", "crc-ctm-2026-rapport-observations-definitives",
                   "https://www.ccomptes.fr/", "Chambre régionale des comptes",
                   "Benchmark for the reconciliation (CAF brute, debt, fiscalité ultramarine 734, satellites).",
                   licence=NO_LICENCE, ext="pdf")]
+
+# Not archived (5 Nov 2026): the convocation decrees 2015-939 and 2021-483 and the loi 2021-191 (end of the 2021 term,
+# March 2028). Their copies on prefecture sites answer HTTP 401 to scripted downloads; to add from Légifrance.
+# Election dates come from the Ministry datasets (description of the 2015 round-2 file: "… du 13 décembre 2015").
