@@ -119,7 +119,7 @@ Useful as **verification** only (compare our counts with theirs), never displaye
 
 ---
 
-## 1bis. Historical depth and proposed cut-off (for JM to validate)
+## 1bis. Historical depth and cut-off (validated by JM, 5 Nov 2026)
 
 Parliamentary data runs by **legislature / Senate term**, not by calendar year: counts are always given per term with
 start and end dates, never per year (no "partial year" problem, but partial *terms*: see breaks).
@@ -306,18 +306,31 @@ List page `/parlementaires`: 4 deputies by circonscription + 2 senators, alphabe
 
 ---
 
-## 6. Open questions for JM
-- **Q1 — Cross-domain person** (§2.4): `person_links` table (recommended) or one shared id?
-- **Q2 — Vote rule V1** (§3.4): V1 (628 votes on the XVIIth) or V1-strict (overseas part limited to whole-text and
-  article votes)? Keyword list to validate. Show *all* public votes as a downloadable list in addition (complete, not curated)?
-- **Q3 — Activity counts**: show them on the card (with caveat) in sprint 2, or only the lists (amendments, questions)
-  without totals?
-- **Q4 — Senate votes**: no official open dataset. Options: (a) state it as missing; (b) parse senat.fr scrutin pages
-  (official, HTML, needs a scraper and a check of reuse terms); (c) secondary source (ODbL). Recommended: (a) now, (b) later.
-- **Q5 — Cut-off** (§1bis): full card from the XIVth legislature (2012) for deputies and from the 2011 Senate term,
-  identity-only before (AN 2002–2012, Sénat 1946–2011); current terms first, previous terms in a later sprint?
-- **Q6 — Photos**: official AN/Sénat portraits (credited, takedown on request) like the mayors' photos?
-- **Q7 — HATVP**: link + metadata only (recommended), or also show the declared list of other activities (DI contents)?
-- **Q8 — Suppléants**: show the suppléant(e) on the deputy card (official fact in AMO30)?
-- **Q9 — Kréyòl labels** for this domain (`messages/gcf/parlement.json`): which labels?
-- **Q10 — Refresh**: AN files change daily; rebuild weekly (cron/CI) or on demand before each show?
+## 6. Decisions (JM, 5 Nov 2026)
+
+| # | Topic | Decision |
+|---|---|---|
+| Q1 | Cross-domain person | **`person_links` table** (§2.4 option A). Core table: proposed as a separate PR to `dev` (§5). |
+| Q2 | Vote rule | **V1** (§3.4; 628 votes on the XVIIth), keyword list as written in §3.4. |
+| Q3 | Activity counts | **Shown on the card, with caveats** (§3.3: first-signatory amendments only, co-signatures listed without total). |
+| Q4 | Senate votes | **(a) now**: stated as missing on the card ("votes du Sénat non publiés en open data"). **(b) later**: senat.fr scrutin pages, see §7. |
+| Q5 | Cut-off | **Accepted as proposed** (§1bis): deputies full card from the XIVth (Jun 2012), identity-only 2002–2012; senators full card from the Oct 2011 term, identity-only before. Current terms first; earlier terms: see §7. |
+| Q6 | Photos | **Official AN/Sénat portraits**, credited, removable on request (same rule as mayors). |
+| Q7 | HATVP | **Link + declaration dates only** (no contents). |
+| Q8 | Suppléants | **Shown on the deputy card** (AMO30). |
+| Q9 | Kréyòl | **Later**: French only for this domain for now. |
+| Q10 | Refresh | **Weekly rebuild.** Scheduling (cron / CI workflow) touches `.github/**`: separate PR to `dev` (§5). |
+
+Still open:
+- **Q2 bis**: also publish *all* public votes as a complete downloadable list (not curated), next to the V1 selection?
+
+---
+
+## 7. When the "later" items happen (proposal)
+
+No date is fixed now: each item has a **decision point** with a measurable trigger, reviewed by JM.
+
+| Item | Prerequisite (done in sprint 2) | Decision point | Then |
+|---|---|---|---|
+| Earlier terms (AN XIV–XVI, Sénat 2011/2017) | Current-term cards live on preview; a 1-day check of the XIV/XV archive formats (paths, schema vs XVIIth) with an effort estimate written in `docs/branches/B2.md` | **Sprint 2 review** with JM | Sprint 3 if the archive formats match (loader reused); otherwise scheduled with the estimate |
+| Senate votes (Q4 b) | Check of senat.fr reuse terms (mentions légales) and of the scrutin page format | **Same review** | If reuse is allowed: scraper job in `scripts/parlement/sources.py` (sprint 3 or 4); if not: stays "(a) missing" and the card says so |
