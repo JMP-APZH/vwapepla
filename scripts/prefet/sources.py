@@ -357,3 +357,42 @@ if piste_keys():
 else:
     print("prefet: PISTE_CLIENT_ID / PISTE_CLIENT_SECRET not in .env.local: JORF jobs skipped "
           "(see scripts/prefet/README.md)")
+
+
+# --- Recueils des actes administratifs (RAA) of the préfecture: list of acts, from each bulletin's Sommaire -----------
+RAA_FROM = 2016  # cut-off validated with JM: postings covered from Dec 2015, acts from 2016
+
+
+def raa_fetcher(year):
+    def fetcher(dest):
+        import raa  # scripts/prefet/raa.py
+        root = pathlib.Path(__file__).resolve().parents[2]
+        folders = raa.year_folders()
+        if year not in folders:
+            raise SystemExit(f"RAA {year}: no folder on {raa.SITE}{raa.ROOT_PATH}")
+        acts, bulletins, problems = raa.index_year(year, folders[year], root / "data" / "raw" / "prefet" / "raa" / "cache",
+                                                   fetch)
+        fields = ["act_id", "act_date", "service", "title", "pages", "page", "bulletin", "published", "pdf_url",
+                  "listing_page"]
+        with open(dest.with_suffix(".part"), "w", encoding="utf-8", newline="") as out:
+            w = csv.DictWriter(out, fieldnames=fields, delimiter=";")
+            w.writeheader()
+            w.writerows(acts)
+        dest.with_suffix(".part").replace(dest)
+        print(f"     {len(bulletins)} bulletins, {len(acts)} acts" + (f", {len(problems)} problems:" if problems else ""))
+        for p in problems:
+            print(f"       {p}")
+    return fetcher
+
+
+JOBS += [
+    {**file_job("raa", f"raa-{y}", f"https://www.martinique.gouv.fr/Publications/Recueils-des-actes-administratifs-publies",
+                f"Recueils des actes administratifs de la préfecture de la Martinique — {y}",
+                "https://www.martinique.gouv.fr/Publications/Recueils-des-actes-administratifs-publies",
+                "Préfecture de la Martinique, recueils des actes administratifs",
+                f"Acts published in {y} (number, date, service, title, page), read from the Sommaire of each bulletin. "
+                "The bulletins stay on the préfecture's site; each act links to its PDF.",
+                licence="Actes administratifs publiés (documents administratifs, réutilisation libre — art. L321-1 CRPA)"),
+     "encoding": "utf-8", "fetcher": raa_fetcher(y)}
+    for y in range(RAA_FROM, __import__("datetime").date.today().year + 1)
+]

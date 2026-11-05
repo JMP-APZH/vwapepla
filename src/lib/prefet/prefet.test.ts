@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { lastExecutedYear, topMissions, totalsByYear as dptByYear, type DptCredit } from "./credits";
 import { beneficiaryLabel, byBeneficiary, totalsByYear, type Grant } from "./grants";
+import { actUrl, countTable, THEMES } from "./acts";
 import { crimeLines, stateSplit, unemploymentRows, type ContextFigure, type CrimeStat } from "./context";
 import { distributions, overallStatus as stateOverall, parseStateAnswers } from "./votes";
 import { coverage, currentHolder, gaps, postLabel, postingYears, seatTimeline, toPostings, type MandateRow } from "./postings";
@@ -170,5 +171,21 @@ describe("security and social context", () => {
     expect(lines.find((l) => l.key === "securite")?.cp).toBe(331);
     expect(lines.find((l) => l.key === "autres")?.missions).toEqual(["Culture"]);
     expect(lines.reduce((a, l) => a + l.share, 0)).toBeCloseTo(1);
+  });
+});
+
+describe("acts of the préfecture (RAA)", () => {
+  it("links an act to its page in the bulletin", () => {
+    expect(actUrl({ pdf_url: "https://www.martinique.gouv.fr/x.pdf", page: 3 })).toBe("https://www.martinique.gouv.fr/x.pdf#page=3");
+  });
+
+  it("builds the year x theme table with zeros for missing cells and a total per year", () => {
+    const t = countTable([{ year: 2025, theme: "eau", acts: "4" }, { year: 2025, theme: "autre", acts: 96 },
+      { year: 2024, theme: "risques", acts: 7 }]);
+    expect(t.years).toEqual([2024, 2025]);
+    expect(t.get(2025, "eau")).toBe(4);
+    expect(t.get(2024, "eau")).toBe(0);
+    expect(t.total(2025)).toBe(100);
+    expect(THEMES.at(-1)?.key).toBe("autre");
   });
 });

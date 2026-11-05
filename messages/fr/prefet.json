@@ -109,5 +109,13 @@
   "splitTitle": "Crédits de l'État par grand domaine, exécuté en",
   "splitIntro": "Les crédits de l'État en Martinique regroupés par domaine, à partir des missions du budget de l'État. Total exécuté :",
   "splitMapping": "Regroupement des missions utilisé (choix de Vwapepla)",
-  "splitCaveat": "Regroupement fait par Vwapepla pour la lecture : chaque mission budgétaire figure en entier dans un seul domaine. La mission Outre-mer mêle aides économiques (exonérations de cotisations) et conditions de vie (logement) : elle est affichée à part. Les crédits incluent les salaires des agents de l'État (policiers, gendarmes, enseignants…)."
+  "splitCaveat": "Regroupement fait par Vwapepla pour la lecture : chaque mission budgétaire figure en entier dans un seul domaine. La mission Outre-mer mêle aides économiques (exonérations de cotisations) et conditions de vie (logement) : elle est affichée à part. Les crédits incluent les salaires des agents de l'État (policiers, gendarmes, enseignants…).",
+  "actsTitle": "Actes publiés par la préfecture",
+  "actsIntro": "Les arrêtés et décisions publiés au recueil des actes administratifs de la préfecture, classés par thème d'après leur titre. Chaque acte renvoie à sa page dans le recueil.",
+  "actsTotal": "Total",
+  "actsLatest": "Derniers actes par thème",
+  "actsBulletin": "recueil",
+  "actsRules": "Règles de classement par thème (d'après le titre de l'acte)",
+  "actsCaveat": "Le classement par thème repose uniquement sur des mots du titre : un acte peut relever d'un thème sans le mentionner dans son titre (il est alors classé dans « Autres actes »). Le nombre d'actes ne mesure ni l'importance ni l'efficacité de l'action de l'État. Liste établie à partir du sommaire de chaque recueil publié depuis 2016.",
+  "missingActs": "Actes de la préfecture : liste en cours d'import (recueils des actes administratifs depuis 2016)."
 }

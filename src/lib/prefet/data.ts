@@ -5,6 +5,7 @@ import type { DptCredit } from "./credits";
 import type { Grant } from "./grants";
 import type { CareerStep, MandateRow, PostingEvent } from "./postings";
 import type { ContextFigure, CrimeStat } from "./context";
+import { THEMES, type Act, type ActCount } from "./acts";
 import { distributions, type Distribution, type SummaryRow, type VoteCriterion } from "./votes";
 
 // Préfet domain (B4): typed, cached reads of the pref_* tables. Data changes a few times a year (DGCL release, new DPT
@@ -151,4 +152,24 @@ export async function getContextFigures(): Promise<ContextFigure[]> {
       .select("id,indicator,geo,group_label,period,value,unit,note,quote,source_id,source_url").order("id"),
     "pref_context_figures",
   ) as ContextFigure[];
+}
+
+/** Number of RAA acts per year and theme (view pref_acts_by_year). */
+export async function getActCounts(): Promise<ActCount[]> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("data");
+  return check(await supabase.from("pref_acts_by_year").select("year,theme,acts").limit(1000), "pref_acts_by_year") as ActCount[];
+}
+
+/** The latest `n` acts of each theme (« autre » excepted). */
+export async function getLatestActs(n = 6): Promise<Act[]> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("data");
+  const cols = "id,act_id,act_date,published,bulletin,service,title,pages,page,pdf_url,theme,source_id";
+  const parts = await Promise.all(THEMES.filter((t) => t.key !== "autre").map(async (t) =>
+    check(await supabase.from("pref_acts").select(cols).eq("theme", t.key)
+      .order("act_date", { ascending: false }).order("id").limit(n), "pref_acts") as Act[]));
+  return parts.flat();
 }
