@@ -224,7 +224,7 @@ for s in scr_list:
     if d and dref not in texts:
         texts[dref] = {"id": dref, "chamber": "AN", "title": d["titreDossier.titre"],
                        "procedure": d["procedureParlementaire.libelle"] or None,
-                       "url": f"{AN_URL}/dyn/17/dossiers/{d['titreDossier.titreChemin']}" if d["titreDossier.titreChemin"] else None,
+                       "url": f"{AN_URL}/dyn/{d['legislature'] or 17}/dossiers/{d['titreDossier.titreChemin'] or dref}",
                        "source_id": "an-dossiers-17"}
     parts = votes.select(s, d)
     for p in parts:
@@ -241,6 +241,25 @@ for s in scr_list:
                      "selected_by": [f"{votes.RULE}:{p}" for p in parts],
                      "url": f"{AN_URL}/dyn/17/scrutins/{s['numero']}", "source_id": "an-scrutins-17-liste"})
 scr_ids = {s["id"] for s in scrutins}
+MAP_POSITIONS = {"pours": "pour", "pour": "pour", "contres": "contre", "contre": "contre", "abstentions": "abstention",
+                 "nonVotants": "nonVotant", "nonVotantsVolontaires": "nonVotantVolontaire"}
+
+
+def own_correction(raw_json, uid):
+    """The deputy's own « mise au point » (position they say they meant), from the scrutin's correction object."""
+    if not raw_json or uid not in raw_json:
+        return None
+    obj = json.loads(raw_json)
+    for key, val in obj.items():
+        if key == "dysfonctionnement" and isinstance(val, dict):
+            for k2, v2 in val.items():
+                if uid in json.dumps(v2):
+                    return f"dysfonctionnement:{MAP_POSITIONS.get(k2, k2)}"
+        elif uid in json.dumps(val):
+            return MAP_POSITIONS.get(key, key)
+    return None
+
+
 selected = {s["id"] for s in scrutins if s["selected_by"]}
 for v in raw("an-scrutins-17"):
     pid = f"parl-an:{v['acteurRef']}"
@@ -252,7 +271,7 @@ for v in raw("an-scrutins-17"):
     vote_rows.append({"scrutin_id": v["uid"], "person_id": pid, "position": v["position"],
                       "by_delegation": v["parDelegation"] == "true", "group_id": v["groupe_organeRef"] or None,
                       "group_position": v["groupe_positionMajoritaire"] or None,
-                      "cause": v["causePositionVote"] or None, "mise_au_point": v["miseAuPoint"] or None,
+                      "cause": v["causePositionVote"] or None, "mise_au_point": own_correction(v["miseAuPoint"], v["acteurRef"]),
                       "source_id": "an-scrutins-17"})
 for v in vote_rows:
     if v["group_id"] and v["group_id"] not in organes:
