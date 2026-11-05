@@ -250,7 +250,8 @@ offices (Sénat `ODSEN_MANDAT_LOCAL`, AN `mandats` of type conseil, RNE) → `ve
 6. **Interests (HATVP)**: link + type + publication date; "déclaration non encore publiée" stated when HATVP says so.
    Outside activities: copied **as declared** from the latest declaration of interests (no summary, no rewording, no
    € totals across items), with its date and a link to the original; an older declaration is never shown as current.
-   Asset declarations: link and dates only.
+   Only the member's own sections; spouse and assistants sections are not shown (link to HATVP). Asset declarations:
+   link and dates only.
 7. **Missing data is stated** (`MissingInfo`): Senate votes not in open data; Senate amendments pending (Ameli);
    committee participation at the Sénat not published; activity before 2012 (AN) / 2011 (Sénat) not available.
 8. **Right of reply** on every card; corrections logged.
@@ -319,7 +320,7 @@ List page `/parlementaires`: 4 deputies by circonscription + 2 senators, alphabe
 | Q4 | Senate votes | **(a) now**: stated as missing on the card ("votes du Sénat non publiés en open data"). **(b) later**: senat.fr scrutin pages, see §7. |
 | Q5 | Cut-off | **Accepted as proposed** (§1bis): deputies full card from the XIVth (Jun 2012), identity-only 2002–2012; senators full card from the Oct 2011 term, identity-only before. Current terms first; earlier terms: see §7. |
 | Q6 | Photos | **Official AN/Sénat portraits**, credited, removable on request (same rule as mayors). |
-| Q7 | HATVP | **Link + dates, and the declared outside activities** from the latest declaration of interests (§1.4, §3.6). Asset declarations: link and dates only. Sections shown: see Q7 bis. |
+| Q7 | HATVP | **Link + dates, and the declared outside activities** from the latest declaration of interests (§1.4, §3.6). Asset declarations: link and dates only. Own sections only (Q7 bis). |
 | Q8 | Suppléants | **Shown on the deputy card** (AMO30). |
 | Q9 | Kréyòl | **Later**: French only for this domain for now. |
 | Q10 | Refresh | **Weekly rebuild.** Scheduling (cron / CI workflow) touches `.github/**`: separate PR to `dev` (§5). |
@@ -328,10 +329,12 @@ Q2 bis (JM): **yes**, each deputy card also offers the **complete list of every 
 (CSV: date, scrutin n°, title, type, the deputy's position or "pas de vote enregistré", group majority position, result,
 link to the AN page), not filtered by V1. Source footnote: `an-scrutins-17`, `an-scrutins-17-liste`.
 
-Still open:
-- **Q7 bis**: the declaration of interests also has sections about **other people** (spouse's professional activity,
-  parliamentary assistants' other activities). Recommended: show only the member's own sections (professional and
-  consulting activities, boards, financial holdings, volunteer functions, other mandates) and link to HATVP for the rest.
+Q7 bis (JM, 5 Nov 2026): **only the member's own sections** of the declaration of interests are shown (professional
+and consulting activities, boards, financial holdings, volunteer functions, other mandates). Sections about other people
+(spouse's professional activity, parliamentary assistants' other activities) are **not shown**; the card links to the
+HATVP page for the full declaration.
+
+All questions of §6 are answered.
 
 ---
 
