@@ -9,6 +9,7 @@ const LEVEL_LABEL = [prefet.level1, prefet.level2, prefet.level3, prefet.level4,
 const pct = new Intl.NumberFormat("fr-FR", { style: "percent", maximumFractionDigits: 0 });
 const FACT_LABEL: Record<string, string> = {
   dpt_par_programme: prefet.creditsTitle.fr, subventions_etat: prefet.grantsTitle.fr,
+  delinquance_enregistree: prefet.crimeTitle.fr, contexte_social_insee: prefet.socialTitle.fr,
 };
 
 function Results({ d }: { d: Distribution }) {

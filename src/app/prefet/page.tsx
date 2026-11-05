@@ -7,11 +7,13 @@ import { PostingsOverview } from "@/components/prefet/PostingsOverview";
 import { StateCredits } from "@/components/prefet/StateCredits";
 import { StateGrants } from "@/components/prefet/StateGrants";
 import { StateVotes } from "@/components/prefet/StateVotes";
+import { CrimeBlock, SocialContext, StateSplit } from "@/components/prefet/SecurityContext";
 import { getSources } from "@/lib/core/data";
 import { date } from "@/lib/core/format";
 import { lastExecutedYear, topMissions, totalsByYear as creditsByYear } from "@/lib/prefet/credits";
-import { getCommuneNames, getDptCredits, getGrants, getMandates, getStateVoteSummary, getToday, getVoteCriteria } from "@/lib/prefet/data";
+import { getCommuneNames, getContextFigures, getCrimeStats, getDptCredits, getGrants, getMandates, getStateVoteSummary, getToday, getVoteCriteria } from "@/lib/prefet/data";
 import { byBeneficiary, totalsByYear as grantsByYear } from "@/lib/prefet/grants";
+import { crimeLines, stateSplit, unemploymentRows } from "@/lib/prefet/context";
 import { currentHolder, gaps, postLabel, SEAT_ORDER, toPostings } from "@/lib/prefet/postings";
 import { prefet } from "@/i18n";
 
@@ -29,10 +31,15 @@ async function Votes() {
 export default async function PrefetPage() {
   const [credits, grants, communes, sources, mandates, today] = await Promise.all([
     getDptCredits(), getGrants(), getCommuneNames(), getSources(), getMandates(), getToday()]);
+  const [crimeStats, contextFigures] = await Promise.all([getCrimeStats(), getContextFigures()]);
+  const crime = crimeLines(crimeStats);
+  const unemployment = unemploymentRows(contextFigures);
+  const poverty = contextFigures.filter((f) => f.indicator === "pauvrete_menages");
   const postings = toPostings(mandates);
   const prefetNow = currentHolder(postings, "prefet");
   const years = creditsByYear(credits);
   const topYear = lastExecutedYear(credits);
+  const split = topYear ? stateSplit(credits, topYear) : null;
   const firstExecuted = years.find((y) => y.execution)?.year;
   const src = (ids: string[]) => [...new Set(ids)].map((id) => sources.get(id)).filter((s) => s != null);
   const deduced = grants.filter((g) => g.mapping_note).length;
@@ -71,6 +78,18 @@ export default async function PrefetPage() {
                     sources={src(credits.filter((c) => c.level === "total").map((c) => c.source_id))} />
       <StateGrants years={grantsByYear(grants)} beneficiaries={byBeneficiary(grants, communes)}
                    sources={src(grants.map((g) => g.source_id))} />
+      <section className="space-y-6">
+        <div>
+          <h2 className="text-2xl font-semibold tracking-tight">{prefet.contextTitle.fr}</h2>
+          <p className="mt-1 text-sm text-slate-600">{prefet.contextIntro.fr}</p>
+        </div>
+        {topYear && split && (
+          <StateSplit year={topYear} total={split.total} lines={split.lines}
+                      sources={src(credits.filter((c) => c.level === "mission" && c.year === topYear).map((c) => c.source_id))} />
+        )}
+        {crime.years && <CrimeBlock years={crime.years} groups={crime.groups} sources={src(crimeStats.map((c) => c.source_id))} />}
+        {unemployment.length > 0 && <SocialContext rows={unemployment} poverty={poverty} sources={src(contextFigures.map((f) => f.source_id))} />}
+      </section>
       <OpinionBlock><Votes /></OpinionBlock>
     </CardShell>
   );

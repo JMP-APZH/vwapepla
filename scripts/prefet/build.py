@@ -10,6 +10,7 @@ import csv, json, pathlib, re, sys
 import yaml
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))  # our own code dir (python -I drops it)
+from crime import build_crime, build_unemployment  # noqa: E402
 from dpt import build_dpt  # noqa: E402
 from grants import build_grants  # noqa: E402
 from postings import build_postings  # noqa: E402
@@ -110,6 +111,28 @@ for i, c in enumerate(vc["criteria"], 1):
 if vc.get("min_votes") != 20:
     errors.append("vote criteria: min_votes must be 20 (CLAUDE.md principle 4)")
 
+# --- recorded crime (SSMSI) and social context (INSEE) ------------------------------------------------------------------
+crime, errs = build_crime(raw("ssmsi-delinquance-departements"), raw("ssmsi-delinquance-regions"))
+errors += errs
+for ind in ("Homicides", "Trafic de stupéfiants", "Violences physiques intrafamiliales"):
+    print("crime " + ind + ": " + ", ".join(f"{g} {r['rate_per_1000']:.2f}" for g in ("972", "971", "FR")
+                                               for r in crime if r["geo"] == g and r["indicator"] == ind and r["year"] == 2025))
+context = build_unemployment(raw("insee-chomage-bit-annuel"), "insee-chomage-bit-annuel")
+pub = yaml.safe_load((ROOT / "data" / "prefet" / "context" / "published_figures.yaml").read_text(encoding="utf-8"))
+for src in pub["sources"]:
+    sources.append({"id": src["id"], "title": src["title"], "url": src["url"], "dataset_page": src["url"],
+                    "licence": src["licence"], "credit": src["credit"], "retrieved": str(src["retrieved"]),
+                    "sha256": None, "rows": sum(f["source_id"] == src["id"] for f in pub["figures"]),
+                    "purpose": "Figures published in a study (hand-checked, quoted): data/prefet/context/published_figures.yaml",
+                    "domain": "prefet"})
+for f in pub["figures"]:
+    if not f.get("quote") or str(f["value"]) not in f["quote"].replace(",", "."):
+        errors.append(f"published figures: {f['id']}: the value must appear in the quote")
+    context.append({k: f[k] for k in ("id", "indicator", "geo", "group_label", "period", "value", "unit", "note",
+                                      "quote", "source_id", "source_url")})
+print("unemployment 2025: " + ", ".join(f"{c['geo']} {c['group_label']} {c['value']}" for c in context
+                                         if c["indicator"] == "chomage_bit" and c["period"] == "2025"))
+
 # --- State investment grants (DGCL) --------------------------------------------------------------------------------
 grant_files = {int(ds.rsplit("-", 1)[1]): raw(ds) for ds in MANIFEST if ds.startswith("dgcl-dotations-investissement-")}
 grants, report, errs = build_grants(grant_files, {y: f"dgcl-dotations-investissement-{y}" for y in grant_files})
@@ -134,6 +157,7 @@ for ds in sorted(d for d in MANIFEST if d.startswith("dpt-outre-mer-")):
 tables = {"sources": sources, "institutions": institutions, "bodies": bodies, "seats": seats, "persons": persons,
           "mandates": mandates, "pref_posting_events": events, "pref_career_steps": steps,
           "pref_person_facts": facts, "pref_vote_criteria": vote_criteria,
+          "pref_crime_stats": crime, "pref_context_figures": context,
           "pref_investment_grants": sorted(grants, key=lambda g: (g["year"], g["id"])),
           "pref_dpt_credits": sorted(dpt, key=lambda r: r["id"])}
 ids = {}

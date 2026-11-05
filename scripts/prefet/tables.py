@@ -18,6 +18,8 @@ TABLES = {
     "media": "id",
     "pref_vote_criteria": "key",  # visitor votes on the State's action (opinion layer): criteria only, never votes              # official portraits: scripts/core/media.py --domain prefet (core PR #24)
     # préfet domain
+    "pref_crime_stats": "id",        # SSMSI recorded crime (scripts/prefet/crime.py)
+    "pref_context_figures": "id",    # INSEE unemployment + published poverty figures
     "pref_investment_grants": "id",
     "pref_dpt_credits": "id",
 }

@@ -1,0 +1,59 @@
+# Figures published by INSEE in a study, not in a dataset that can be downloaded by script (hand-checked, quoted).
+# Same pattern as the communes' forecast YAML: figure + source URL + quote. Built into pref_context_figures.
+# Why: the INSEE time series (BDM) stop in 2015 for Martinique's poverty rate, and the national open dataset
+# « Taux de pauvreté » (data.gouv.fr) leaves Martinique blank.
+# Read on 5 Nov 2026.
+
+sources:
+  - id: insee-analyses-martinique-80
+    title: "Les revenus d'activité des ménages réduisent de plus de moitié le risque de pauvreté en Martinique — Insee Analyses Martinique n° 80"
+    url: https://www.insee.fr/fr/statistiques/8674292
+    credit: "Insee, Insee Analyses Martinique n° 80 (11 décembre 2025), d'après Filosofi 2021"
+    licence: Licence Ouverte 2.0
+    retrieved: 2026-11-05
+
+figures:
+  - id: pauvrete:972:menages:2021
+    indicator: pauvrete_menages
+    geo: "972"
+    group_label: Ensemble des ménages
+    period: "2021"
+    value: 30
+    unit: "%"
+    note: "Part des ménages sous le seuil de pauvreté (60 % du niveau de vie médian en France, 1 150 € par mois pour une personne seule en 2021). Ménages, pas personnes."
+    quote: "En Martinique, la part de ménages en situation de pauvreté monétaire s'élève à 30 %."
+    source_id: insee-analyses-martinique-80
+    source_url: https://www.insee.fr/fr/statistiques/8674292
+  - id: pauvrete:FH:menages:2021
+    indicator: pauvrete_menages
+    geo: FH
+    group_label: Ensemble des ménages
+    period: "2021"
+    value: 15
+    unit: "%"
+    note: "France hexagonale, même définition (tableau 2 de la publication)."
+    quote: "dans l'Hexagone, 15 % de l'ensemble des ménages sont considérés comme pauvres"
+    source_id: insee-analyses-martinique-80
+    source_url: https://www.insee.fr/fr/statistiques/8674292
+  - id: pauvrete:972:travailleurs:2021
+    indicator: pauvrete_menages
+    geo: "972"
+    group_label: Ménages de travailleurs
+    period: "2021"
+    value: 12
+    unit: "%"
+    note: "Ménages percevant principalement des revenus d'activité."
+    quote: "En 2021, 12 % des ménages percevant principalement des revenus d'activité vivent sous le seuil de pauvreté"
+    source_id: insee-analyses-martinique-80
+    source_url: https://www.insee.fr/fr/statistiques/8674292
+  - id: pauvrete:FH:travailleurs:2021
+    indicator: pauvrete_menages
+    geo: FH
+    group_label: Ménages de travailleurs
+    period: "2021"
+    value: 9
+    unit: "%"
+    note: "France hexagonale, même définition (tableau 2 de la publication)."
+    quote: "9 % d'entre eux vivent sous le seuil de pauvreté"
+    source_id: insee-analyses-martinique-80
+    source_url: https://www.insee.fr/fr/statistiques/8674292
