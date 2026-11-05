@@ -7,7 +7,8 @@ National files too big to keep whole (AN JSON zips, Sénat CSVs) are streamed to
 Martinique's members; the fetcher writes a ';' UTF-8 CSV so the engine can count rows and hash it. Columns are the
 source's own field names (dotted path for nested JSON); `record` keeps the raw JSON of the kept item when useful.
 """
-import csv, functools, io, json, pathlib, re, tempfile, zipfile
+import csv, functools, io, json, pathlib, re, tempfile, unicodedata, zipfile
+import xml.etree.ElementTree as ET
 
 from fetching import fetch, file_job  # scripts/core (put on sys.path by download_sources.py)
 
@@ -281,6 +282,75 @@ def fetch_senat_questions(dest):
     _write(dest, rows[0], (r for r in rows[1:] if r[i].strip() == "Martinique"))
 
 
+HATVP_XML = "https://www.hatvp.fr/livraison/merge/declarations.xml"
+
+
+def _norm(s):
+    s = unicodedata.normalize("NFKD", s or "").encode("ascii", "ignore").decode()
+    return re.sub(r"[^a-z]+", " ", s.lower()).strip()
+
+
+def _current_members():
+    """(last name, first name) normalised, of the 4 sitting deputies and 2 sitting senators of Martinique."""
+    out = set()
+    for a in _an_martinique_actors().values():
+        for m in _as_list(_dig_raw(a, "mandats.mandat")):
+            if (m.get("typeOrgane") == "ASSEMBLEE" and _dig(m, "election.lieu.numDepartement") == DEP_972
+                    and _dig(m, "legislature") == "17" and not _dig(m, "dateFin")):
+                out.add((_norm(_dig(a, "etatCivil.ident.nom")), _norm(_dig(a, "etatCivil.ident.prenom"))))
+    mats, rows = _senat_martinique_matricules()
+    h = rows[0]
+    for r in rows[1:]:
+        if r[0] in mats and r[h.index("État")].strip().upper() == "ACTIF":
+            out.add((_norm(r[h.index("Nom usuel")]), _norm(r[h.index("Prénom usuel")])))
+    return out
+
+
+def _leaves(el, path=""):
+    """(path, text) of every leaf element, path made of tag names joined by '/'. Repeated items keep their index."""
+    kids = list(el)
+    if not kids:
+        yield path, (el.text or "").strip()
+        return
+    seen = {}
+    for k in kids:
+        i = seen[k.tag] = seen.get(k.tag, -1) + 1
+        yield from _leaves(k, f"{path}/{k.tag}[{i}]" if path else f"{k.tag}[{i}]")
+
+
+# Whitelist (JM, 5 Nov 2026, Q7 bis): the member's own sections only. Never kept: address, birth date, e-mail, phone,
+# attached files, and the sections about other people (spouse: activProfConjointDto; assistants: activCollaborateursDto).
+HATVP_KEEP = ("uuid", "dateDepot", "declarationVersion", "complete", "general/typeDeclaration/", "general/dateDebutMandat",
+              "general/declarationModificative", "general/mandat/label", "general/qualiteMandat/labelTypeMandat",
+              "general/declarant/nom", "general/declarant/prenom", "general/declarant/civilite",
+              "activProfCinqDerniereDto/", "activConsultantDto/", "participationDirigeantDto/",
+              "participationFinanciereDto/", "fonctionBenevoleDto/", "mandatElectifDto/", "observationInteretDto/")
+
+
+def fetch_hatvp_declarations(dest):
+    """Declarations of interests (DIA, DIAM) of Martinique's sitting deputies and senators: whitelisted fields as
+    published (one row per leaf: declaration uuid, path, value). National file streamed, never kept."""
+    members = _current_members()
+    if len(members) != 6:
+        raise SystemExit(f"expected 6 sitting members, found {len(members)}: {sorted(members)}")
+    def rows():
+        kept = 0
+        for _, el in ET.iterparse(_get(HATVP_XML), events=("end",)):
+            if el.tag != "declaration":
+                continue
+            kind = (el.findtext("general/typeDeclaration/id") or "").strip().upper()
+            who = (_norm(el.findtext("general/declarant/nom")), _norm(el.findtext("general/declarant/prenom")))
+            if kind.startswith("DI") and who in members:
+                kept += 1
+                did = (el.findtext("uuid") or "").strip()
+                for path, value in _leaves(el):
+                    if value and re.sub(r"\[\d+\]", "", path).startswith(HATVP_KEEP):
+                        yield [did, path, value]
+            el.clear()
+        print(f"     {kept} declarations of interests")
+    _write(dest, ["declaration", "path", "value"], rows())
+
+
 def _job(folder, ds, url, title, page, credit, purpose, fetcher):
     return {**file_job(folder, ds, url, title, page, credit, purpose, encoding="utf-8"), "fetcher": fetcher}
 
@@ -353,4 +423,9 @@ JOBS = [
              "HATVP — liste des déclarations publiées et appréciations", "https://www.hatvp.fr/open-data/",
              "Haute Autorité pour la transparence de la vie publique",
              "Declarations of interests/assets: type, dates, link, open-data XML name. National; filtered at import."),
+    _job("hatvp", "hatvp-declarations-972", HATVP_XML,
+         "HATVP — déclarations publiées (fichier complet, XML)", "https://www.hatvp.fr/open-data/",
+         "Haute Autorité pour la transparence de la vie publique",
+         "Declarations of interests of the 6 sitting members, fields as published (outside activities on the card).",
+         fetch_hatvp_declarations),
 ]
