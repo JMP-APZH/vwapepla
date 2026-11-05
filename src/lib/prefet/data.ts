@@ -4,6 +4,7 @@ import { supabase } from "@/lib/core/supabase";
 import type { DptCredit } from "./credits";
 import type { Grant } from "./grants";
 import type { CareerStep, MandateRow, PostingEvent } from "./postings";
+import type { ContextFigure, CrimeStat } from "./context";
 import { distributions, type Distribution, type SummaryRow, type VoteCriterion } from "./votes";
 
 // Préfet domain (B4): typed, cached reads of the pref_* tables. Data changes a few times a year (DGCL release, new DPT
@@ -126,4 +127,28 @@ export async function getStateVoteSummary(keys: string[]): Promise<Distribution[
   cacheTag("votes-etat");
   const rows = check(await supabase.rpc("pref_state_vote_summary"), "pref_state_vote_summary") as SummaryRow[];
   return distributions(rows, keys);
+}
+
+/** Recorded crime (SSMSI): Martinique, Guadeloupe and France (sum of the regions). */
+export async function getCrimeStats(): Promise<CrimeStat[]> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("data");
+  return check(
+    await supabase.from("pref_crime_stats")
+      .select("geo,year,indicator,unit,count,rate_per_1000,computed,source_id").order("id").limit(5000),
+    "pref_crime_stats",
+  ) as CrimeStat[];
+}
+
+/** Social context (INSEE): unemployment series and published poverty figures. */
+export async function getContextFigures(): Promise<ContextFigure[]> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("data");
+  return check(
+    await supabase.from("pref_context_figures")
+      .select("id,indicator,geo,group_label,period,value,unit,note,quote,source_id,source_url").order("id"),
+    "pref_context_figures",
+  ) as ContextFigure[];
 }

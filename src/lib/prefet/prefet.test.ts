@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { lastExecutedYear, topMissions, totalsByYear as dptByYear, type DptCredit } from "./credits";
 import { beneficiaryLabel, byBeneficiary, totalsByYear, type Grant } from "./grants";
+import { crimeLines, stateSplit, unemploymentRows, type ContextFigure, type CrimeStat } from "./context";
 import { distributions, overallStatus as stateOverall, parseStateAnswers } from "./votes";
 import { coverage, currentHolder, gaps, postLabel, postingYears, seatTimeline, toPostings, type MandateRow } from "./postings";
 
@@ -131,5 +132,43 @@ describe("visitor votes on the State's action", () => {
     expect(parseStateAnswers(f({ vie_chere: "6" }), keys)).toBeNull();
     expect(stateOverall(["already_voted", "ok"])).toBe("ok");
     expect(stateOverall(["already_voted", "rate_limited"])).toBe("rate_limited");
+  });
+});
+
+describe("security and social context", () => {
+  const s = (geo: CrimeStat["geo"], year: number, indicator: string, rate: number): CrimeStat => ({
+    geo, year, indicator, unit: "Victime", count: rate * 100, rate_per_1000: rate, computed: geo === "FR", source_id: "ssmsi",
+  });
+
+  it("shows Martinique first and last year next to Guadeloupe and France the last year", () => {
+    const { years, groups } = crimeLines([
+      s("972", 2016, "Homicides", 0.05), s("972", 2025, "Homicides", 0.11), s("971", 2025, "Homicides", 0.12),
+      s("FR", 2025, "Homicides", 0.01), s("972", 2025, "Usage de stupéfiants (AFD)", 3.7),
+    ]);
+    expect(years).toEqual([2016, 2025]);
+    const line = groups[0].lines[0];
+    expect([line.first?.rate_per_1000, line.last?.rate_per_1000, line.guadeloupe?.rate_per_1000, line.france?.rate_per_1000])
+      .toEqual([0.05, 0.11, 0.12, 0.01]);
+    expect(groups.flatMap((g) => g.lines.map((l) => l.indicator))).not.toContain("Usage de stupéfiants (AFD)");
+  });
+
+  it("puts unemployment of Martinique next to France métropolitaine, from Martinique's first year", () => {
+    const f = (geo: string, group: string, period: string, value: number): ContextFigure => ({
+      id: `${geo}${group}${period}`, indicator: "chomage_bit", geo, group_label: group, period, value, unit: "%",
+      note: null, quote: null, source_id: "insee", source_url: "https://www.insee.fr",
+    });
+    expect(unemploymentRows([f("972", "Ensemble", "2025", 13.4), f("FM", "Ensemble", "2025", 7.5),
+      f("FM", "Ensemble", "2013", 8.6), f("972", "15-24 ans", "2025", 45)]))
+      .toEqual([{ year: "2025", mq: 13.4, fm: 7.5, mqYouth: 45, fmYouth: null }]);
+  });
+
+  it("groups whole missions by policy area, everything else in « Autres », shares summing to 1", () => {
+    const m = (mission: string, cp: number) => ({ ...c(2027, "mission", mission, "execution", cp), mission });
+    const { total, lines } = stateSplit([m("Sécurités", 213), m("Justice", 118), m("Solidarité, insertion et égalité des chances", 216),
+      m("Culture", 9), c(2027, "total", "Total général", "execution", 556)], 2025);
+    expect(total).toBe(556);
+    expect(lines.find((l) => l.key === "securite")?.cp).toBe(331);
+    expect(lines.find((l) => l.key === "autres")?.missions).toEqual(["Culture"]);
+    expect(lines.reduce((a, l) => a + l.share, 0)).toBeCloseTo(1);
   });
 });

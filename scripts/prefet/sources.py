@@ -59,7 +59,40 @@ def filtered(url, keep, gz=False):
                         writer.writerow(row)
                         kept += 1
             dest.with_suffix(".part").replace(dest)
-            print(f"     {kept} Martinique rows kept")
+            print(f"     {kept} rows kept")
+    return fetcher
+
+
+INSEE_BDM = "https://bdm.insee.fr/series/sdmx/data/SERIES_BDM/"
+INSEE_SERIES = ["001787729", "001787732", "001787711", "001787714"]  # Martinique all / 15-24, France métro all / 15-24
+
+
+def insee_fetcher(idbanks):
+    """INSEE BDM (SDMX, no key needed) -> one CSV row per observation, values as published."""
+    def fetcher(dest):
+        import xml.etree.ElementTree as ET
+        with tempfile.TemporaryDirectory() as tmp:
+            src = pathlib.Path(tmp) / "bdm.xml"
+            fetch(INSEE_BDM + "+".join(idbanks), src)
+            root = ET.parse(src).getroot()
+        n = 0
+        with open(dest.with_suffix(".part"), "w", encoding="utf-8", newline="") as out:
+            w = csv.writer(out, delimiter=";")
+            w.writerow(["idbank", "title_fr", "ref_area", "age", "period", "value", "obs_status", "last_update"])
+            for series in root.iter():
+                if not series.tag.endswith("Series"):
+                    continue
+                a = series.attrib
+                for obs in series:
+                    o = obs.attrib
+                    if "OBS_VALUE" in o:
+                        w.writerow([a["IDBANK"], a["TITLE_FR"], a["REF_AREA"], a.get("AGE", ""), o["TIME_PERIOD"],
+                                    o["OBS_VALUE"], o.get("OBS_STATUS", ""), a.get("LAST_UPDATE", "")])
+                        n += 1
+        if n == 0:
+            raise SystemExit("INSEE BDM: no observation returned")
+        dest.with_suffix(".part").replace(dest)
+        print(f"     {n} observations")
     return fetcher
 
 
@@ -76,18 +109,19 @@ def is_972_dep(header, row):
     return row[col(header, "Code_departement")] == "972"
 
 
-def is_02_region(header, row):
-    return row[col(header, "Code_region")] == "02"
+def every_region(header, row):
+    """All regions: Martinique (02) and the comparisons (other overseas regions, France = sum of the regions)."""
+    return True
 
 
 def is_972_beneficiary(header, row):
     return row[col(header, "beneficiaire_dep")].lstrip("0") == "972"
 
 
-def job(folder, ds, resource, keep, title, page, credit, purpose, gz=False):
+def job(folder, ds, resource, keep, title, page, credit, purpose, gz=False, scope="_972"):
     url = DATAGOUV_R + resource
     return {**file_job(folder, ds, url, title, page, credit, purpose),
-            "scope": "_972", "encoding": "utf-8", "fetcher": filtered(url, keep, gz)}
+            "scope": scope, "encoding": "utf-8", "fetcher": filtered(url, keep, gz)}
 
 
 JOBS = [
@@ -100,9 +134,17 @@ JOBS = [
     job("ssmsi", "ssmsi-delinquance-departements", "2b27a675-e3bf-41ef-a852-5fb9ab483967", is_972_dep,
         "Base statistique départementale de la délinquance enregistrée par la police et la gendarmerie nationales",
         SSMSI_PAGE, SSMSI_CREDIT, "Recorded crime, département 972, by year since 2016 (incl. homicides, fraud)."),
-    job("ssmsi", "ssmsi-delinquance-regions", "75753852-aca0-4c53-bfd4-a29513358d2f", is_02_region,
+    job("ssmsi", "ssmsi-delinquance-regions", "75753852-aca0-4c53-bfd4-a29513358d2f", every_region,
         "Base statistique régionale de la délinquance enregistrée par la police et la gendarmerie nationales",
-        SSMSI_PAGE, SSMSI_CREDIT, "Recorded crime, région 02 (Martinique), by year since 2016."),
+        SSMSI_PAGE, SSMSI_CREDIT, "Recorded crime, every region, by year since 2016: Martinique (02) and comparisons "
+        "(Guadeloupe; France = sum of the regions, computed in scripts/prefet/crime.py).", scope=""),
+    # --- Unemployment (INSEE, ILO definition, annual average): Martinique and France métropolitaine ---
+    {**file_job("insee", "insee-chomage-bit-annuel", INSEE_BDM + "+".join(INSEE_SERIES),
+                "Taux de chômage au sens du BIT (moyenne annuelle) — Martinique et France métropolitaine",
+                "https://www.insee.fr/fr/statistiques/series/102760732", "Insee, enquête Emploi",
+                "Annual ILO unemployment rate, all ages and 15-24, Martinique and France métropolitaine "
+                "(INSEE BDM series " + ", ".join(INSEE_SERIES) + ")."),
+     "encoding": "utf-8", "fetcher": insee_fetcher(INSEE_SERIES)},
     # --- State investment grants to local authorities (decided by the préfet: DETR, DSIL, DSID, DPV...) ---
     *[job("dgcl", f"dgcl-dotations-investissement-{y}", res, is_972_beneficiary,
           f"Projets financés par les dotations de soutien à l'investissement des collectivités territoriales — {y}",
