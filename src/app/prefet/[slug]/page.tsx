@@ -6,10 +6,10 @@ import { Portrait } from "@/components/card/Portrait";
 import { CareerPath, PostingDecrees } from "@/components/prefet/PostingBlocks";
 import { StateCredits } from "@/components/prefet/StateCredits";
 import { StateGrants } from "@/components/prefet/StateGrants";
-import { getSources } from "@/lib/core/data";
+import { getMedia, getSources } from "@/lib/core/data";
 import { date } from "@/lib/core/format";
 import { totalsByYear as creditsByYear } from "@/lib/prefet/credits";
-import { getCareerSteps, getCommuneNames, getDptCredits, getGrants, getMandates, getPostingEvents, getToday } from "@/lib/prefet/data";
+import { getCareerSteps, getCommuneNames, getDptCredits, getGrants, getMandates, getPersonFacts, getPostingEvents, getToday } from "@/lib/prefet/data";
 import { byBeneficiary, totalsByYear as grantsByYear } from "@/lib/prefet/grants";
 import { FULL_FROM, PARTIAL_FROM, postingYears, postLabel, toPostings } from "@/lib/prefet/postings";
 import { prefet } from "@/i18n";
@@ -33,8 +33,11 @@ export async function generateMetadata({ params }: PageProps<"/prefet/[slug]">):
 export default async function PostingPage({ params }: PageProps<"/prefet/[slug]">) {
   const p = await find((await params).slug);
   if (!p) notFound();
-  const [allEvents, steps, sources, today] = await Promise.all([
-    getPostingEvents(), getCareerSteps(p.personId), getSources(), getToday()]);
+  const [allEvents, steps, sources, today, media, facts] = await Promise.all([
+    getPostingEvents(), getCareerSteps(p.personId), getSources(), getToday(), getMedia("prefecture-972"),
+    getPersonFacts(p.personId)]);
+  const photo = media.find((m) => m.person_id === p.personId);
+  const birthplace = facts.find((x) => x.fact === "birthplace");
   const events = allEvents.filter((e) => p.seats.some((s) => e.id.startsWith(`${p.personId}:${s}:`)) && e.event_date >= p.start)
     .filter((e, i, a) => a.findIndex((x) => x.kind === e.kind && x.event_date === e.event_date) === i);
   const src = (ids: string[]) => [...new Set(ids)].map((id) => sources.get(id)).filter((s) => s != null);
@@ -51,7 +54,8 @@ export default async function PostingPage({ params }: PageProps<"/prefet/[slug]"
   const yGrants = grants.filter((g) => years.includes(g.year));
 
   const missing = [
-    prefet.missingPhoto.fr,
+    ...(photo ? [] : [prefet.missingPhoto.fr]),
+    ...(!birthplace && !p.end ? [prefet.missingBirthplace.fr] : []),
     ...(p.functionStart ? [] : [prefet.missingTakingOffice.fr]),
     ...(p.end && !events.some((e) => e.kind === "end") ? [prefet.endDeduced.fr] : []),
     ...(p.coverage === "identity" ? [prefet.coverageIdentity.fr.replace("{date}", date(PARTIAL_FROM))] : []),
@@ -62,12 +66,15 @@ export default async function PostingPage({ params }: PageProps<"/prefet/[slug]"
     <CardShell
       header={
         <CardHeader
-          portrait={<Portrait name={name} removalSubject={`${name} (${label})`} />}
+          portrait={<Portrait name={name} photo={photo} removalSubject={`${name} (${label})`} />}
           title={<>{name}<span className="block text-base font-normal text-slate-400">{label}</span></>}
           facts={[
             { label: (f ? prefet.appointedOnF : prefet.appointedOn).fr, value: <a href={p.sourceUrl ?? undefined} className="underline" target="_blank" rel="noopener noreferrer">{date(p.start)}</a> },
             { label: prefet.inPost.fr, value: p.end ? `${prefet.until.fr} ${date(p.end)}` : prefet.currentlyInPost.fr },
             { label: prefet.appointedBy.fr, value: prefet.appointedByValue.fr },
+            ...(birthplace ? [{ label: (f ? prefet.birthplaceF : prefet.birthplace).fr, value: <>{birthplace.value}{" "}
+              <a href={birthplace.source_page_url} className="text-xs font-normal underline" target="_blank" rel="noopener noreferrer">
+                ({prefet.officialBio.fr})</a></> }] : []),
             { label: prefet.status.fr, value: <>{(f ? prefet.appointedNotElectedF : prefet.appointedNotElected).fr}{prefet.appointedNotElected.kr && <> ({prefet.appointedNotElected.kr})</>}</> },
           ]}
           note={<Link href="/prefet" className="underline">{prefet.backToCard.fr}</Link>}

@@ -5,7 +5,9 @@ Deterministic and idempotent: same raw files -> same output. Run: python -I scri
 Checks (exit 1 on failure): DPT gate (programmes = mission, missions = total, every edition); every grant mapped to a
 beneficiary; row counts equal to the manifest.
 """
-import csv, json, pathlib, sys
+import csv, json, pathlib, re, sys
+
+import yaml
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))  # our own code dir (python -I drops it)
 from dpt import build_dpt  # noqa: E402
@@ -72,6 +74,28 @@ if "jorf-nominations-972" in MANIFEST and "jorf-parcours" in MANIFEST:
 else:
     print("postings: JORF files not downloaded (PISTE keys missing), postings skipped")
 
+# --- official biographies: place of birth only where stated (data/prefet/biographies.yaml) -----------------------------
+facts = []
+bio = yaml.safe_load((ROOT / "data" / "prefet" / "biographies.yaml").read_text(encoding="utf-8"))
+person_ids = {p["id"] for p in persons}
+if bio.get("facts"):
+    sources.append({"id": "prefet-biographies", "title": bio["source"]["title"], "url": bio["source"]["url"],
+                    "dataset_page": bio["source"]["url"], "licence": "Site public de l'État (citation courte)",
+                    "credit": bio["source"]["credit"], "retrieved": str(bio["retrieved"]), "sha256": None,
+                    "rows": len(bio["facts"]), "purpose": "Places of birth stated in official biographies (hand-checked YAML).",
+                    "domain": "prefet"})
+for f in bio.get("facts") or []:
+    fid = f"{f['person_id']}:{f['fact']}"
+    if f["person_id"] not in person_ids:
+        errors.append(f"biographies: {f['person_id']} not in persons")
+    if f["value"] not in f["quote"]:
+        errors.append(f"biographies: {fid}: value not in quote")
+    if re.search(r"\d", f["quote"]):  # data minimisation: no birth date, not even the year
+        errors.append(f"biographies: {fid}: quote contains digits (birth date must be cut)")
+    facts.append({"id": fid, "person_id": f["person_id"], "fact": f["fact"], "value": f["value"], "quote": f["quote"],
+                  "source_id": "prefet-biographies", "source_page_url": f["source_page_url"],
+                  "retrieved": str(bio["retrieved"])})
+
 # --- State investment grants (DGCL) --------------------------------------------------------------------------------
 grant_files = {int(ds.rsplit("-", 1)[1]): raw(ds) for ds in MANIFEST if ds.startswith("dgcl-dotations-investissement-")}
 grants, report, errs = build_grants(grant_files, {y: f"dgcl-dotations-investissement-{y}" for y in grant_files})
@@ -95,6 +119,7 @@ for ds in sorted(d for d in MANIFEST if d.startswith("dpt-outre-mer-")):
 # --- write -----------------------------------------------------------------------------------------------------------
 tables = {"sources": sources, "institutions": institutions, "bodies": bodies, "seats": seats, "persons": persons,
           "mandates": mandates, "pref_posting_events": events, "pref_career_steps": steps,
+          "pref_person_facts": facts,
           "pref_investment_grants": sorted(grants, key=lambda g: (g["year"], g["id"])),
           "pref_dpt_credits": sorted(dpt, key=lambda r: r["id"])}
 ids = {}

@@ -1,0 +1,20 @@
+# Places of birth — ONLY where stated in the official biography published by the préfecture (JM's decision, 3 and
+# 5 Nov 2026). Public-interest basis (GDPR art. 85), to be checked in the pre-launch legal review.
+# Data minimisation: the place only, never the birth date — the date is cut from the quote and marked « [date non reprise] ».
+# No other personal fact (no ethnicity or origin field, no inference from photos or names).
+# Checked on 5 Nov 2026 for the six current holders: only the préfet's biography states a place of birth.
+#   No place stated: Aurélien ADAM, Philémon PERROT, Virginie AVEROUS, Véronique MOREAU, David URSULET.
+# Built into pref_person_facts by scripts/prefet/build.py.
+
+retrieved: 2026-11-05
+source:
+  title: Biographies officielles du corps préfectoral (site de la préfecture de la Martinique)
+  url: https://www.martinique.gouv.fr/Services-de-l-Etat/Prefecture-et-sous-prefectures/Prefecture-de-la-Martinique/Le-corps-prefectoral-et-les-directeurs-de-services
+  credit: Préfecture de la Martinique, biographie officielle
+
+facts:
+  - person_id: "pref:DESPLANQUES:Etienne"
+    fact: birthplace
+    value: Vannes (Morbihan)
+    quote: "Né le [date non reprise] à Vannes (Morbihan)"
+    source_page_url: https://www.martinique.gouv.fr/Services-de-l-Etat/Prefecture-et-sous-prefectures/Prefecture-de-la-Martinique/Le-corps-prefectoral-et-les-directeurs-de-services/Le-Prefet-de-la-Martinique

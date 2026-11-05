@@ -1,4 +1,5 @@
-# Visitor votes on the State's action in Martinique — criteria (DRAFT, to be validated by JM before any build).
+# Visitor votes on the State's action in Martinique — criteria VALIDATED by JM on 5 Nov 2026 (all 8; criterion 8 keeps
+# its own opening « l'écoute et le dialogue de l'État »). Build only after the CLAUDE.md amendment (PR #23) is merged.
 #
 # Opinion layer (CLAUDE.md principle 4), same safeguards as the communes' website votes:
 #   - anonymous; voter id = sha256(ip | user agent | daily secret salt), no IP stored (src/lib/communes/votes.ts pattern);
