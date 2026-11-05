@@ -10,7 +10,7 @@ export type Source = {
   retrieved: string;
 };
 export type Media = {
-  id: string; institution_id: string | null; person_id: string | null; kind: "mayor_portrait" | "council_photo";
+  id: string; institution_id: string | null; person_id: string | null; kind: "mayor_portrait" | "council_photo" | "official_portrait";
   storage_path: string; source_page_url: string; credit: string; retrieved: string;
 };
 
