@@ -246,15 +246,17 @@ next to a ';' CSV, sha256 in `<file>.source.json`):
 | Cantonales 2004, 2008, 2011 ("Elus" sheet) | 23, 22, 23 elected councillors (canton, name, score) = one half of the Conseil général each time |
 | Territoriales 2015, round 2 ("Elus" sheet) | **51 elected councillors of the first CTM assembly**, with section, list and nuance |
 | Territoriales 2015, candidatures rounds 1 and 2; results rounds 1 and 2 | Lists and votes |
-| Régionales 2021, candidatures round 1; results rounds 1 and 2 (territory level, code 02) | Lists, votes, seats per list. **No "Elus" sheet and no round-2 candidates** on data.gouv.fr: for 2021, "élu(e) sur la liste X" comes from matching RNE names to the round-1 lists, and round-2 mergers are flagged as MissingInfo. Licence not specified on data.gouv.fr (manifest still writes Licence Ouverte, see Shared changes) |
-| HATVP list | 66 rows with Martinique (all mandates); CTM rows have `type_mandat` "ctsp" |
+| Régionales 2021, candidatures round 1; results rounds 1 and 2 (territory level, code 02) | Lists, votes, seats per list. **No "Elus" sheet and no round-2 candidates** on data.gouv.fr: for 2021, "élu(e) sur la liste X" comes from matching RNE names to the round-1 lists, and round-2 mergers are flagged as MissingInfo. Licence not specified on data.gouv.fr: the manifest records "aucune licence indiquée" |
+| HATVP list | 73 rows with Martinique (all mandates), 17 with `type_mandat` "ctsp" (CTM): President and 8 executive councillors, Assemblée President and VPs |
+| Conseil exécutif arrêtés délibérés index | 4,304 acts (2013, 2020–2026); 342 titles without an act number, to check |
+| CRC report 2026 (PDF, `crc-ctm-2026-rapport-observations-definitives`) | Archived as published, 1,161,915 bytes |
 
 Still missing: who was elected **president** (Conseil régional, Conseil général, first CTM Assemblée and Exécutif).
 These are elected by the assembly, so they are not in the election files.
 
-**HATVP for the current Exécutif:** it lists the "Conseiller(e) exécutif(ve) de Martinique" who filed (at least 7 seen in a partial read), with declaration dates
+**HATVP for the current Exécutif:** it lists the "Conseiller(e) exécutif(ve) de Martinique" who filed: **all 8 executive councillors** (Casimirius, Di Geronimo, Mérine, Monrose, Odonnat, René-Corail, Termon, Thaly-Bardol) plus the President (Letchimy), with declaration dates
 (including Odonnat, 2025-05-29), which RNE lacks. It can corroborate the composition from the délibérations (Q1).
-The check was a one-off read; the file has to go into JOBS before any use.
+Now a job (`hatvp-liste-declarations`); the first download on 5 Nov was truncated by hatvp.fr (10,718 of 13,673 rows) and was redone with the fixed core `fetch`.
 
 ---
 

@@ -10,7 +10,9 @@ Who is who (checked on the portals, 3 Nov 2026):
 """
 import csv, html, pathlib, re, time, urllib.parse, urllib.request
 
-from fetching import fetch, file_job, portal_job  # scripts/core (put on sys.path by download_sources.py)
+from fetching import LICENCE, fetch, file_job, portal_job  # scripts/core (put on sys.path by download_sources.py)
+
+NO_LICENCE = "aucune licence indiquée"  # what the source states; never assume Licence Ouverte
 
 OFGL = "https://data.ofgl.fr/api/explore/v2.1/catalog/datasets"
 DGFIP = "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets"
@@ -285,9 +287,19 @@ JOBS = [portal_job(folder, ds, base, params, credit, purpose) for folder, ds, ba
 JOBS += [file_job(folder, ds, url, title, page, credit, purpose) for folder, ds, url, title, page, credit, purpose in FILES]
 JOBS += [{"folder": "actes", "id": ds, "url": f"{SITE}{path}", "title": (lambda t=title: t), "page": f"{SITE}{path}",
           "credit": "Collectivité Territoriale de Martinique", "purpose": purpose, "scope": "", "encoding": "utf-8",
-          "fetcher": listing_fetcher(path)}
+          "fetcher": listing_fetcher(path), "licence": NO_LICENCE}
          for ds, (path, title, purpose) in LISTINGS.items()]
 JOBS += [{"folder": folder, "id": ds, "url": url or f"{DG}/{ds}/", "title": (lambda t=title: t), "page": f"{DG}/{ds}/",
           "credit": "Ministère de l'Intérieur", "purpose": purpose, "scope": "", "encoding": "utf-8",
-          "fetcher": ministry_fetcher(ds, url)}
+          "fetcher": ministry_fetcher(ds, url),
+          "licence": NO_LICENCE if "2021" in ds else LICENCE}  # 2021 datasets: licence "non spécifiée" on data.gouv.fr
          for folder, ds, url, title, purpose in ELECTIONS]
+
+# --- Documents archived as published (PDF) ---------------------------------------------------------------------------
+JOBS += [file_job("crc", "crc-ctm-2026-rapport-observations-definitives",
+                  "https://www.ccomptes.fr/sites/default/files/2026-09/RAN2026-0326A.pdf",
+                  "Chambre régionale des comptes Martinique — Collectivité territoriale de Martinique, rapport "
+                  "d'observations définitives, exercices 2021 et suivants (délibéré le 10 juin 2026)",
+                  "https://www.ccomptes.fr/", "Chambre régionale des comptes",
+                  "Benchmark for the reconciliation (CAF brute, debt, fiscalité ultramarine 734, satellites).",
+                  licence=NO_LICENCE, ext="pdf")]
