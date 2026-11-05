@@ -7,7 +7,7 @@ National files too big to keep whole (AN JSON zips, Sénat CSVs) are streamed to
 Martinique's members; the fetcher writes a ';' UTF-8 CSV so the engine can count rows and hash it. Columns are the
 source's own field names (dotted path for nested JSON); `record` keeps the raw JSON of the kept item when useful.
 """
-import csv, functools, io, json, pathlib, re, tempfile, unicodedata, zipfile
+import collections, csv, functools, io, json, pathlib, re, tempfile, unicodedata, zipfile
 import xml.etree.ElementTree as ET
 
 from fetching import fetch, file_job  # scripts/core (put on sys.path by download_sources.py)
@@ -282,6 +282,110 @@ def fetch_senat_questions(dest):
     _write(dest, rows[0], (r for r in rows[1:] if r[i].strip() == "Martinique"))
 
 
+# --- Sénat PostgreSQL dumps (Questions since 1978, Ameli since 2001): streamed, only the COPY blocks needed ---------
+PG_ENCODINGS = {"UTF8": "utf-8", "LATIN1": "latin-1", "LATIN9": "iso8859-15", "WIN1252": "cp1252", "SQL_ASCII": "cp1252"}
+_PG_ESC = re.compile(r"\\(.)")
+_PG_CHR = {"t": "\t", "n": "\n", "r": "\r", "b": "\b", "f": "\f", "v": "\v", "\\": "\\"}
+
+
+def _pg_value(v):
+    return None if v == r"\N" else _PG_ESC.sub(lambda m: _PG_CHR.get(m.group(1), m.group(1)), v)
+
+
+def _pg_rows(url, tables):
+    """Yield (table, row dict) for the COPY blocks of `tables` in a zipped pg_dump (text format), in dump order."""
+    with zipfile.ZipFile(_get(url)) as zf:
+        name = max(zf.infolist(), key=lambda i: i.file_size).filename
+        with zf.open(name) as f:
+            enc, table, cols = "utf-8", None, None
+            for raw in f:
+                if table is None:
+                    line = raw.decode("ascii", "replace")
+                    if m := re.match(r"SET client_encoding = '(\w+)'", line):
+                        enc = PG_ENCODINGS.get(m.group(1).upper(), "utf-8")
+                    elif m := re.match(r"COPY (?:public\.)?(\w+) \((.*)\) FROM stdin;", line):
+                        if m.group(1) in tables:
+                            table, cols = m.group(1), [c.strip().strip('"') for c in m.group(2).split(",")]
+                        else:
+                            table, cols = "", None  # skip this block
+                    continue
+                if raw.startswith(b"\\."):
+                    table = None
+                    continue
+                if table:
+                    yield table, dict(zip(cols, map(_pg_value, raw.decode(enc).rstrip("\r\n").split("\t"))))
+
+
+QUESTIONS_DUMP = f"{SEN}/questions/questions.zip"
+SEN_QUESTION_COLS = ["id", "matricule", "natquecod", "natquelib", "legislature", "numero", "reference", "titre",
+                     "rubrique", "datejodepot", "mindepotlib", "datejotran", "mintranlib", "sorquecod", "sorquelib",
+                     "etaquecod", "etaquelib", "datecloture", "caduque_redeposee"]
+
+
+def fetch_senat_questions_all(dest):
+    """Every question asked by a senator of Martinique (all since 1946 elected; base since 1978), with the first answer
+    (date, ministry, URL). Texts of questions and answers stay on senat.fr."""
+    mats = _senat_martinique_matricules()[0]
+    lib = {"naturequestion": {}, "sortquestion": {}, "etatquestion": {}}
+    kept, answers = {}, {}
+    for t, r in _pg_rows(QUESTIONS_DUMP, set(lib) | {"tam_questions", "tam_reponses"}):
+        if t in lib:
+            key = {"naturequestion": "natquecod", "sortquestion": "sorquecod", "etatquestion": "etaquecod"}[t]
+            lib[t][r[key]] = r[key.replace("cod", "lib")]
+        elif t == "tam_questions" and r["matricule"] in mats:
+            kept[r["id"]] = {**r, "natquelib": lib["naturequestion"].get(r["natquecod"]),
+                             "sorquelib": lib["sortquestion"].get(r["sorquecod"]),
+                             "etaquelib": lib["etatquestion"].get(r["etaquecod"])}
+        elif t == "tam_reponses" and r["idque"] in kept:
+            if r["idque"] not in answers or (r["datejorep"] or "") < (answers[r["idque"]]["datejorep"] or "~"):
+                answers[r["idque"]] = r
+    def rows():
+        for qid, q in sorted(kept.items(), key=lambda kv: (kv[1]["datejodepot"] or "", kv[0])):
+            a = answers.get(qid, {})
+            yield [q.get(c) for c in SEN_QUESTION_COLS] + [a.get("datejorep"), a.get("minreplib"), a.get("urlrep")]
+    _write(dest, SEN_QUESTION_COLS + ["reponse.datejorep", "reponse.minreplib", "reponse.urlrep"], rows())
+
+
+AMELI_DUMP = f"{SEN}/ameli/ameli.zip"
+AMELI_COLS = ["id", "num", "rev", "typ", "datdep", "txtid", "sorid"]
+AMELI_TXT_COLS = ["num", "int", "inl", "datdep", "doslegsignet", "natid", "sesinsid"]
+
+
+def fetch_senat_amendements(dest):
+    """Amendments (séance since Oct 2001, commission since Oct 2010) signed by a senator of Martinique: one row per
+    amendment x senator, with rank (0/1 = first signatory, as published), text, session and outcome. Contents
+    (dispositif, objet) stay on senat.fr."""
+    mats = _senat_martinique_matricules()[0]
+    # Three streamed passes (the dump lists amd, then amdsen, then sen_ameli): memory stays small.
+    sens, txt, sor, ses, nat = {}, {}, {}, {}, {}
+    for t, r in _pg_rows(AMELI_DUMP, {"sen_ameli", "txt_ameli", "sor", "ses", "nat"}):  # 1: who, lookups
+        if t == "sen_ameli" and r["mat"] in mats:
+            sens[r["entid"]] = r["mat"]
+        elif t == "txt_ameli":
+            txt[r["id"]] = {c: r[c] for c in AMELI_TXT_COLS}
+        elif t == "sor":
+            sor[r["id"]] = r["lib"]
+        elif t == "ses":
+            ses[r["id"]] = r["ann"]
+        elif t == "nat":
+            nat[r["id"]] = r["libcourt"]
+    mine, n_sign = {}, collections.Counter()
+    for _, r in _pg_rows(AMELI_DUMP, {"amdsen"}):  # 2: which amendments, number of signatories
+        n_sign[r["amdid"]] += 1
+        if r["senid"] in sens:
+            mine.setdefault(r["amdid"], []).append(r)
+    out = []
+    for _, r in _pg_rows(AMELI_DUMP, {"amd"}):  # 3: the amendments themselves
+        for s in mine.get(r["id"], []):
+            x = txt.get(r["txtid"], {})
+            out.append([r[c] for c in AMELI_COLS] + [sor.get(r["sorid"]), sens[s["senid"]], s["rng"], s["qua"],
+                        n_sign[r["id"]]] + [x.get(c) for c in AMELI_TXT_COLS]
+                       + [nat.get(x.get("natid")), ses.get(x.get("sesinsid"))])
+    out.sort(key=lambda r: (r[4] or "", r[0]))
+    _write(dest, [f"amd.{c}" for c in AMELI_COLS] + ["sor.lib", "matricule", "amdsen.rng", "amdsen.qua", "signataires"]
+           + [f"txt.{c}" for c in AMELI_TXT_COLS] + ["nat.libcourt", "ses.ann"], out)
+
+
 HATVP_XML = "https://www.hatvp.fr/livraison/merge/declarations.xml"
 
 
@@ -412,6 +516,14 @@ JOBS = [
          "Questions écrites et orales publiées depuis un an", "https://data.senat.fr/la-base-questions/", SEN_CREDIT,
          "Questions of the last 12 months by Martinique's senators (full history = PostgreSQL dump, not loaded yet).",
          fetch_senat_questions),
+    _job("senat", "senat-questions-972", QUESTIONS_DUMP, "Base Questions (dump PostgreSQL, depuis 1978)",
+         "https://data.senat.fr/la-base-questions/", SEN_CREDIT,
+         "Every question of Martinique's senators, with first answer date and ministry (texts stay on senat.fr).",
+         fetch_senat_questions_all),
+    _job("senat", "senat-amendements-972", AMELI_DUMP, "Ameli — amendements (dump PostgreSQL)",
+         "https://data.senat.fr/ameli/", SEN_CREDIT,
+         "Amendments signed by Martinique's senators (séance since 2001, commission since 2010), rank and outcome.",
+         fetch_senat_amendements),
     # National files, small enough to keep whole (filtered at import), like the communes RNE files.
     file_job("rne", "rne-deputes", "https://www.data.gouv.fr/datasets/r/1ac42ff4-1336-44f8-a221-832039dbc142",
              "Répertoire national des élus — députés", "https://www.data.gouv.fr/datasets/repertoire-national-des-elus-1/",
