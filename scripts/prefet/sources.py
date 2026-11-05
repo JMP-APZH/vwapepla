@@ -11,9 +11,9 @@ docs/branches/B4-DISCOVERY.md and wait for the proposed engine change (non-CSV f
 National files are streamed and filtered on Martinique (département 972, région 02) so that data/raw/prefet/ only holds
 Martinique rows, written with the same columns and ';' separator as published.
 """
-import csv, gzip, io, pathlib, sys, tempfile, time, urllib.request
+import csv, gzip, io, pathlib, sys, tempfile
 
-from fetching import file_job  # scripts/core (put on sys.path by download_sources.py)
+from fetching import fetch, file_job  # scripts/core, on sys.path via download_sources.py; fetch checks completeness
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))  # legifrance.py (python -I drops the script dir)
 
@@ -40,39 +40,12 @@ DGCL_YEARS = {
 }
 
 
-def fetch_complete(url, dest, tries=10):
-    """Like fetching.fetch, but checks the byte count against Content-Length: a dropped connection can end the stream
-    early without an error (seen on the 40 MB SSMSI file on 3 Nov 2026), which would silently truncate the data.
-    A short read is resumed with an HTTP Range request from the last byte received."""
-    with urllib.request.urlopen(url, timeout=900) as r, open(dest, "wb") as f:
-        final_url, expected = r.geturl(), r.headers.get("Content-Length")
-        while chunk := r.read(1 << 20):
-            f.write(chunk)
-    if expected is None:
-        return
-    expected = int(expected)
-    for i in range(tries):
-        got = dest.stat().st_size
-        if got == expected:
-            return
-        print(f"   resume {i + 1}: got {got} of {expected} bytes")
-        time.sleep(2 * (i + 1))
-        req = urllib.request.Request(final_url, headers={"Range": f"bytes={got}-"})
-        with urllib.request.urlopen(req, timeout=900) as r, open(dest, "ab") as f:
-            if r.status != 206:
-                raise SystemExit(f"{url}: server does not resume (HTTP {r.status})")
-            while chunk := r.read(1 << 20):
-                f.write(chunk)
-    if dest.stat().st_size != expected:
-        raise SystemExit(f"{url}: incomplete download after {tries} resumes")
-
-
 def filtered(url, keep, gz=False):
     """Fetcher: download `url` to a temporary file, keep the rows where keep(header, row) is true, write `dest`."""
     def fetcher(dest):
         with tempfile.TemporaryDirectory() as tmp:
             src = pathlib.Path(tmp) / "src"
-            fetch_complete(url, src)
+            fetch(url, src)
             raw = gzip.open(src, "rb") if gz else open(src, "rb")
             kept = 0
             with raw, io.TextIOWrapper(raw, encoding="utf-8-sig", newline="") as f, \
@@ -221,7 +194,7 @@ def dpt_fetcher(edition, url):
     def fetcher(dest):
         with tempfile.TemporaryDirectory() as tmp:
             pdf = pathlib.Path(tmp) / "dpt.pdf"
-            fetch_complete(url, pdf)
+            fetch(url, pdf)
             rows = dpt_rows(dpt_lines(pdf), edition)
         with open(dest.with_suffix(".part"), "w", encoding="utf-8", newline="") as out:
             w = csv.writer(out, delimiter=";")
