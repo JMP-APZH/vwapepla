@@ -204,7 +204,41 @@ obtain. Martinique Transport also publishes GTFS on data.gouv.fr (Licence Ouvert
 - End of term **March 2028**: loi n° 2021-191 du 22 février 2021, art. 1 (mandate of the assemblies of Guyane and
   Martinique elected in 2021 runs until March 2028). The exact date waits for the convocation decree. The Légifrance
   link goes into `sources` before the date reaches a card.
-- Previous term: Dec 2015 – Jul 2021 (first CTM assembly). Dates to source the same way if we show it.
+- Previous term: Dec 2015 – Jul 2021 (first CTM assembly). Dates to source the same way if we show it. See §1.8 for the terms before the CTM.
+
+### 1.8 Before the CTM: Région + Département, and HATVP (checked 5 Nov 2026, read-only API calls)
+
+The CTM has had two terms: **2015–2021** (first assembly, elected Dec 2015, CTM from 1 Jan 2016) and **2021–2028**.
+Before 2016 there were two separate bodies: the **Conseil régional** (Région Martinique, SIREN 239720014) and the
+**Conseil général** (Département de la Martinique, SIREN 229720016).
+
+**Accounts, how far back:**
+
+| Years | Source | Scope | Note |
+|---|---|---|---|
+| 2012–2025 | OFGL consolidated bases (already in JOBS) | Main + annex budgets | Primary |
+| 2008–2011 | DGFiP "Comptes individuels des régions / des départements (fichier global)" on data.economie.gouv.fr (`…-regions-fichier-global-2008`, `-2009`, `-2010`, `-2011-2012`; same for `…-departements-…`) | **Main budget only**, DGFiP summary lines and ratios (`lbudg` "REG MARTINIQUE", "DEP MARTINIQUE" present every year) | Series break at 2012 (main budget vs consolidated). 2012 is in both: used to check the overlap |
+| 2012–2025 | DGFiP nature-fonction balances (already in JOBS) | Account level | Functional detail |
+
+Nomenclatures differ: Région M71, Département M52, CTM M57 (from 2016). Before 2008, nothing found on the open-data
+portals.
+
+**Elections (Ministère de l'Intérieur, data.gouv.fr, Licence Ouverte):** results files exist for the régionales 2004
+and 2010, the cantonales 2004, 2008 and 2011 (the Conseil général was renewed by halves), the territoriales 2015
+("Elections régionales 2015 et des assemblées de Corse, de Guyane et de Martinique", rounds 1 and 2) and 2021
+(régionales 2021, rounds 1 and 2). They give lists or candidates, votes and seats, not group membership. The 2021 file
+is the source for "élu(e) sur la liste X (2021)".
+
+**Presidents and executives of past terms:** no open dataset found. RNE holds only current mandates. The HATVP open
+list (`hatvp.fr/livraison/opendata/liste.csv`) has the current CTM officeholders who filed declarations (type
+`ctsp`: Président du Conseil exécutif, Conseillers exécutifs, Président and VPs of the Assemblée, with filing dates),
+but not the 2015–2021 term or the former Région/Département. Past presidents need a document per election:
+installation délibérations (not online before 2022), the prefecture's Recueil des actes administratifs, or the
+archives. Until then, past terms show accounts and election results, and the officeholders as MissingInfo.
+
+**HATVP for the current Exécutif:** it lists 8 "Conseiller(e) exécutif(ve) de Martinique" with declaration dates
+(including Odonnat, 2025-05-29), which RNE lacks. It can corroborate the composition from the délibérations (Q1).
+The check was a one-off read; the file has to go into JOBS before any use.
 
 ---
 
@@ -223,6 +257,9 @@ seats         ctm-assemblee:president                 role='president'
               ctm-conseil-executif:conseiller-1..8    role='conseiller-executif', rank=n (order of the elected list)
 persons       ctm:NOM:Prénom          (no birth date, no CSP)
 terms         ctm-2015-2021, ctm-2021-2028   body_kind='assemblee'; first/last_full_year = 2016–2020, 2022–2027
+              before 2016 (history, two institutions): institutions `region-972` (239720014) and `departement-972`
+              (229720016); terms `reg972-2004-2010`, `reg972-2010-2015`; the Conseil général by renewal
+              (`dep972-2008`, `dep972-2011`), because half the councillors were elected at each renewal
 mandates      councillor: acquired='direct_election', start_date = mandate start (RNE)
               president / VP / Exécutif: acquired='indirect_election', function_start = date of the electing délibération
 ```
@@ -398,6 +435,13 @@ Person pages (`/ctm/elus/[id]`), if you want them: the seat history only, no fig
 - **Q5 octroi de mer:** confirmed. one block "Fiscalité ultramarine" = M57 account 734, which reconciles with
   the CRC (R4), split by account, with "octroi de mer régional" always meaning 73432 only. The CTM's role in the
   communes' octroi de mer (rates, FRDE) is a later sprint.
+- **Q6–Q12 (JM, 5 Nov 2026): the suggestions are adopted.** Q6: the card starts in 2016, with a separate "Avant la
+  CTM" section showing the Région and the Département side by side, never summed, as far back as §1.8 allows (2008).
+  Q7: the CRC list of 19 satellites is the reference, OFGL figures where they exist, short list with links on the card,
+  never added to the CTM. Q8: recorded votes later, budget votes first. Q9: PDF job type (shared PR), then Supabase
+  Storage, only for cited PDFs. Q10: JM or a Kréyòl speaker picks the labels from a short proposed list. Q11: Guyane
+  and Corse later, separate page, per inhabitant, with a caveat. Q12: same rule as the mayors, link to the CTM's PDF
+  where possible, both in the pre-launch legal review.
 - **Q3 groups:** show "élu(e) sur la liste X (2021)" from the Ministère de l'Intérieur results, labelled as the
   electoral list. A group is shown only once a CTM document sources it; ask the CTM for the group declarations in
   parallel. Sources checked below.
