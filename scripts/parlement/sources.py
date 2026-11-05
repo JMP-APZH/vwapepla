@@ -1,13 +1,13 @@
 """Open-data sources of the parlement domain (B2), downloaded by scripts/core/download_sources.py --domain parlement.
 
 JOBS: one dict per dataset (fields: scripts/core/fetching.py). Files land in data/raw/parlement/<folder>/ and are listed
-in data/raw/parlement/manifest.json. Official sources only (all Licence Ouverte 2.0, the licence the engine records).
+in data/raw/parlement/manifest.json. Official sources only (all Licence Ouverte 2.0, the file_job default).
 
 National files too big to keep whole (AN JSON zips, Sénat CSVs) are streamed to a temp dir and filtered here on
 Martinique's members; the fetcher writes a ';' UTF-8 CSV so the engine can count rows and hash it. Columns are the
 source's own field names (dotted path for nested JSON); `record` keeps the raw JSON of the kept item when useful.
 """
-import csv, functools, http.client, io, json, pathlib, re, shutil, subprocess, tempfile, time, urllib.request, zipfile
+import csv, functools, io, json, pathlib, re, tempfile, zipfile
 
 from fetching import fetch, file_job  # scripts/core (put on sys.path by download_sources.py)
 
@@ -22,54 +22,9 @@ _tmp = tempfile.TemporaryDirectory(ignore_cleanup_errors=True)
 def _get(url):
     if url not in _cache:
         p = pathlib.Path(_tmp.name) / f"{len(_cache)}{pathlib.Path(url).suffix}"
-        _fetch_complete(url, p)
+        fetch(url, p)  # length-checked, resumed, curl fallback (scripts/core/fetching.py)
         _cache[url] = p
     return _cache[url]
-
-
-def _fetch_complete(url, dest, stalls=3, tries=10):
-    """Download checked against Content-Length, resuming with Range requests. data.assemblee-nationale.fr and hatvp.fr
-    drop long transfers (hatvp.fr: every ~100 kB), and scripts/core/fetching.fetch() then keeps a truncated file
-    without error. Keeps resuming while bytes arrive (at most `tries` requests, `stalls` in a row without progress),
-    then falls back to the system curl."""
-    part, size, stalled = dest.with_suffix(".part"), None, 0
-    part.unlink(missing_ok=True)
-    for _ in range(tries):
-        if stalled >= stalls:
-            break
-        have = part.stat().st_size if part.exists() else 0
-        req = urllib.request.Request(url, headers={"Range": f"bytes={have}-"} if have else {})
-        try:
-            with urllib.request.urlopen(req, timeout=300) as r:
-                if have and r.status != 206:  # server ignored Range: start again
-                    have = 0
-                total = r.headers.get("Content-Range", "").rpartition("/")[2] or r.headers.get("Content-Length")
-                if not have:
-                    size = int(total) if total and total.isdigit() else None
-                with open(part, "ab" if have else "wb") as f:
-                    while chunk := r.read(1 << 20):
-                        f.write(chunk)
-        except (OSError, http.client.HTTPException) as e:
-            print(f"     interrupted ({e}), resuming")
-        now = part.stat().st_size if part.exists() else 0
-        if part.exists() and (size is None or now == size):
-            part.replace(dest)  # complete (or no length announced: accept what the server sent)
-            return
-        stalled = stalled + 1 if now <= have else 0
-        time.sleep(2 ** stalled)
-    # hatvp.fr ends up refusing Python's client while serving curl normally: same URL, fetched by the system curl.
-    if (curl := shutil.which("curl")) and size is not None:
-        print("     falling back to curl")
-        subprocess.run([curl, "-sSfL", "--retry", "5", "-o", str(part), url], check=True)
-        if part.stat().st_size == size:
-            part.replace(dest)
-            return
-    raise SystemExit(f"{url}: incomplete ({now} of {size} bytes)")
-
-
-def _whole(folder, ds, url, *rest):
-    """file_job() whose download is length-checked."""
-    return {**file_job(folder, ds, url, *rest), "fetcher": lambda dest: _fetch_complete(url, dest)}
 
 
 def _json_items(url):
@@ -388,14 +343,14 @@ JOBS = [
          "Questions of the last 12 months by Martinique's senators (full history = PostgreSQL dump, not loaded yet).",
          fetch_senat_questions),
     # National files, small enough to keep whole (filtered at import), like the communes RNE files.
-    _whole("rne", "rne-deputes", "https://www.data.gouv.fr/datasets/r/1ac42ff4-1336-44f8-a221-832039dbc142",
+    file_job("rne", "rne-deputes", "https://www.data.gouv.fr/datasets/r/1ac42ff4-1336-44f8-a221-832039dbc142",
              "Répertoire national des élus — députés", "https://www.data.gouv.fr/datasets/repertoire-national-des-elus-1/",
              "Ministère de l'Intérieur, RNE", "Cross-check of current deputies (name, circonscription, start)."),
-    _whole("rne", "rne-senateurs", "https://www.data.gouv.fr/datasets/r/b78f8945-509f-4609-a4a7-3048b8370479",
+    file_job("rne", "rne-senateurs", "https://www.data.gouv.fr/datasets/r/b78f8945-509f-4609-a4a7-3048b8370479",
              "Répertoire national des élus — sénateurs", "https://www.data.gouv.fr/datasets/repertoire-national-des-elus-1/",
              "Ministère de l'Intérieur, RNE", "Cross-check of current senators."),
-    _whole("hatvp", "hatvp-liste", "https://www.hatvp.fr/livraison/opendata/liste.csv",
+    file_job("hatvp", "hatvp-liste", "https://www.hatvp.fr/livraison/opendata/liste.csv",
              "HATVP — liste des déclarations publiées et appréciations", "https://www.hatvp.fr/open-data/",
              "Haute Autorité pour la transparence de la vie publique",
-             "Declarations of interests/assets: type, dates, link (contents stay on hatvp.fr). National; filtered at import."),
+             "Declarations of interests/assets: type, dates, link, open-data XML name. National; filtered at import."),
 ]

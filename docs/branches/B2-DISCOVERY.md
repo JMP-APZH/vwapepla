@@ -115,7 +115,7 @@ final law (JORF NOR) on vote rows via the DILA LEGI/JORF open data if JM wants "
 ### 1.6 Secondary (clearly labelled, *not downloaded*)
 | Source | URL | Licence | Why not now |
 |---|---|---|---|
-| NosDéputés.fr (Regards Citoyens) | `https://www.nosdeputes.fr/deputes/enmandat/json`, `/synthese/data/json`, `/{slug}/json` | **ODbL** (data), CC-BY-SA (content) | ODbL share-alike would apply to our derived database; the shared engine stamps every file "Licence Ouverte 2.0" (would be a false source claim). Their "activity" synthesis (weeks of presence, interventions) is a *derived* metric: neutrality caveat. |
+| NosDéputés.fr (Regards Citoyens) | `https://www.nosdeputes.fr/deputes/enmandat/json`, `/synthese/data/json`, `/{slug}/json` | **ODbL** (data), CC-BY-SA (content) | ODbL share-alike would apply to our derived database; recordable since PR #19 (per-job licence), not used. Their "activity" synthesis (weeks of presence, interventions) is a *derived* metric: neutrality caveat. |
 | NosSénateurs.fr | `https://www.nossenateurs.fr/…/json` | ODbL | same |
 Useful as **verification** only (compare our counts with theirs), never displayed as primary.
 
@@ -295,18 +295,17 @@ List page `/parlementaires`: 4 deputies by circonscription + 2 senators, alphabe
 ---
 
 ## 5. Proposed shared changes (separate small PRs to `dev`, not in this branch)
-1. **`scripts/core/fetching.py` — truncated downloads.** `fetch()` does not check `Content-Length`: data.assemblee-nationale.fr
-   and hatvp.fr close long transfers early and the file is kept truncated without error (seen today: AMO30 zip and
-   HATVP `liste.csv`, 101 kB of 3.3 MB). Fix: compare size with `Content-Length`, resume with `Range`, fall back to the system `curl`
-   (hatvp.fr refuses Python after a few requests). B2 works around it in `scripts/parlement/sources.py`
-   (`_fetch_complete`), to be moved to core. **May also affect B1** (large OFGL/DGFiP files: worth re-checking).
-   Also: the 352 MB amendments zip is best run on its own (`--only an-amendements-17`): a full background run was
-   stopped by the OS for low memory on 3 Nov 2026.
-2. **Per-job licence** in `file_job()/portal_job()` (default Licence Ouverte 2.0) so an ODbL source can be recorded
-   truthfully (needed before any NosDéputés/NosSénateurs download).
-3. **`person_links`** core table (if Q1 = A) — core migration.
-4. `bodies.kind` / `terms.body_kind` values `legislature`, `senat`: free text today, no change needed; document them.
-5. `messages/*/common.json`: nothing needed now (nav label "Parlementaires" already exists).
+1. ~~Truncated downloads in `scripts/core/fetching.py`~~ **done: PR #19, merged 5 Nov 2026** (size check against
+   `Content-Length`, `Range` resume, curl fallback, `IncompleteDownload`). B2's own workaround is removed; the HATVP,
+   RNE and AMO30 jobs were re-run through the core `fetch()` on 5 Nov 2026 and came back whole (same row counts; HATVP
+   via the curl fallback). Still true: run the 352 MB amendments zip on its own (`--only an-amendements-17`), a full
+   background run was stopped by the OS for low memory on 3 Nov 2026.
+2. ~~Per-job licence~~ **done: PR #19** (`file_job(..., licence=...)`, `portal_job(..., licence=...)`): an ODbL source
+   can now be recorded truthfully if NosDéputés/NosSénateurs are ever used.
+3. **`person_links`** core table (Q1 = A, decided) — core migration, separate PR to `dev`.
+4. **Weekly rebuild** (Q10): scheduled workflow in `.github/**`, separate PR to `dev`.
+5. `bodies.kind` / `terms.body_kind` values `legislature`, `senat`: free text today, no change needed; document them.
+6. `messages/*/common.json`: nothing needed now (nav label "Parlementaires" already exists).
 
 ---
 
