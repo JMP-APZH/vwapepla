@@ -5,7 +5,7 @@
 2. Screenshots in `data/raw/communes/channels-evidence/` (gitignored) for now.
 3. Pre-fill from the official websites: done from the 2 Nov website crawl (no request to any social network): only
    accounts linked from the home page or from at least half of the pages (site-wide header/footer), so links to a
-   restaurant or an association on one inner page are left out. 19 of the 26 sites link at least one account.
+   restaurant or an association on one inner page are left out. 19 of the 25 listed sites link at least one account.
    Communes without a listed website have no file yet (Macouba lists a Facebook page in the Service-Public directory:
    to be added by an observer with `official_basis: town_hall_confirmed` or after checking).
 4. Reviewer: JM only (`REVIEWERS = {"JM"}` in `build_channels.py`).
