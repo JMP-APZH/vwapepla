@@ -1,8 +1,9 @@
 import type { Officeholder } from "@/lib/communes/data";
 import { perHab } from "@/lib/core/format";
 import { debtYears, pctDec } from "@/lib/communes/format";
-import { TERM_ROWS, type TermSummary } from "@/lib/communes/terms";
+import { TERM_ROWS, termChange, type TermSummary } from "@/lib/communes/terms";
 import { mayorsOfTerm } from "@/lib/communes/council";
+import { communes } from "@/i18n";
 
 /** Side-by-side table of terms (also the accessible table view of the trend charts). */
 export function TermsComparison({ summaries, pastMayors }: { summaries: TermSummary[]; pastMayors: Officeholder[] }) {
@@ -44,11 +45,19 @@ export function TermsComparison({ summaries, pastMayors }: { summaries: TermSumm
           {TERM_ROWS.map((r) => (
             <tr key={r.key}>
               <th scope="row" className="sticky left-0 z-10 bg-white py-1.5 pr-3 text-left font-normal text-slate-700">{r.label}</th>
-              {summaries.map((s) => (
-                <td key={s.term.id} className="py-1.5 pr-3 tabular-nums">
-                  {r.unit === "years" ? debtYears(s.values[r.key]) : r.unit === "pct" ? pctDec(s.values[r.key]) : perHab(s.values[r.key])}
-                </td>
-              ))}
+              {summaries.map((s, i) => {
+                const change = i > 0 ? termChange(r.unit, s.values[r.key], summaries[i - 1].values[r.key]) : null;
+                return (
+                  <td key={s.term.id} className="py-1.5 pr-3 tabular-nums">
+                    {r.unit === "years" ? debtYears(s.values[r.key]) : r.unit === "pct" ? pctDec(s.values[r.key]) : perHab(s.values[r.key])}
+                    {change && (
+                      <span className="block text-[11px] text-slate-500">
+                        <span className="sr-only">{communes.evolution.fr} : </span>{change}
+                      </span>
+                    )}
+                  </td>
+                );
+              })}
             </tr>
           ))}
         </tbody>

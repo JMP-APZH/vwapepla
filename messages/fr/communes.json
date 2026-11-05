@@ -46,5 +46,17 @@
   "votes_invalid": "Choisissez au moins une note avant d'envoyer.",
   "votes_error": "Votre avis n'a pas pu être enregistré. Réessayez plus tard.",
   "sectionTitle": "Communes",
-  "sectionIntro": "Les 34 communes de Martinique : budget, conseil municipal et site internet de la mairie."
+  "sectionIntro": "Les 34 communes de Martinique : budget, conseil municipal et site internet de la mairie.",
+  "nationalLine": "France, {stratum}, moyenne nationale : {avg} — cette commune sur la même base : {mine}",
+  "nationalBasis": "Comptes individuels DGFiP, budget principal seul : ces chiffres ne se comparent qu'entre eux, pas avec le chiffre ci-dessus (budgets annexes inclus).",
+  "spreadIntro": "Position parmi les communes du même groupe (sans classement).",
+  "evolution": "Évolution",
+  "evolutionHelp": "Écart avec le mandat précédent.",
+  "debtCeiling": "Plafond national de référence : 12 ans",
+  "debtCeilingNote": "Plafond national de référence de 12 ans pour les communes, fixé par la loi de programmation des finances publiques 2018-2022 (loi n° 2018-32, art. 29) ; il servait de repère pour les contrats avec l'État, il n'est pas une interdiction.",
+  "structureTitle": "Structure du budget",
+  "structureIntro": "Trois parts des recettes de fonctionnement, pour comprendre de quoi dépend le budget de la commune.",
+  "structureStaffHelp": "Part des recettes courantes consacrée aux salaires et charges des agents.",
+  "structureStateHelp": "Part des recettes courantes qui vient de l'État (DGF, autres dotations, compensations).",
+  "structureOctroiHelp": "Part des recettes courantes qui vient de l'octroi de mer (taxe propre aux outre-mer : pas de comparaison nationale)."
 }

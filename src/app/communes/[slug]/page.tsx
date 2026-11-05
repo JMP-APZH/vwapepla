@@ -10,7 +10,10 @@ import { SiteChecklist } from "@/components/communes/SiteChecklist";
 import { SiteVotes } from "@/components/communes/SiteVotes";
 import { TermsChart, type ChartPoint } from "@/components/communes/TermsChart";
 import { TermsComparison } from "@/components/communes/TermsComparison";
-import { DATA_NOTES, FIRST_YEAR, HERO, PROVISIONAL_YEARS, REFERENCE_YEAR, TERM } from "@/lib/communes/config";
+import {
+  DATA_NOTES, FIRST_YEAR, HERO, PROVISIONAL_YEARS, REFERENCE_YEAR, STRUCTURE, TERM, DEBT_CEILING_YEARS, DEBT_CEILING_SOURCE,
+} from "@/lib/communes/config";
+import { dgfipStratum, nationalLine, type NationalLine } from "@/lib/communes/national";
 import {
   getCommuneActuals, getCommuneBySlug, getCommunes, getCommuneYears, getCouncil, getMayor, getMetrics, getPastMayors,
   getAuditCriteria, getSiteAudit, getTerms, getVoteSummary, getYearActuals,
@@ -39,7 +42,7 @@ export default async function CommunePage({ params }: PageProps<"/communes/[slug
   if (!commune) notFound();
 
   const year = REFERENCE_YEAR;
-  const keys = heroKeys(HERO);
+  const keys = heroKeys([...HERO, ...STRUCTURE]);
   const [years, rows, mayor, sources, council, media, terms, pastMayors, history, metrics, allYears] = await Promise.all([
     getCommuneYears(year), getYearActuals(year, keys), getMayor(commune.code), getSources(), getCouncil(commune.code),
     getMedia(`commune-${commune.code}`), getTerms(), getPastMayors(commune.code), getCommuneActuals(commune.code), getMetrics(),
@@ -69,8 +72,17 @@ export default async function CommunePage({ params }: PageProps<"/communes/[slug
   const me = years.find((y) => y.commune_code === commune.code);
   const stratumOf = new Map(years.map((y) => [y.commune_code, y.stratum]));
   const hero = computeHero(HERO, commune.code, rows, stratumOf);
-  const usedSources = [...new Set(hero.flatMap((v) => v.sourceIds))]
-    .map((id) => sources.get(id)).filter((s) => s != null);
+  const structure = computeHero(STRUCTURE, commune.code, rows, stratumOf);
+  // National stratum averages, DGFiP main budget (Option A): the commune's own rows of the year.
+  const natRows = historyByYear.get(year);
+  const national: Record<string, NationalLine | null> = Object.fromEntries(
+    [...HERO, ...STRUCTURE, { key: "encours_dette" }].map((f) => [f.key, nationalLine(f.key, natRows)]),
+  );
+  const natStratum = dgfipStratum(me?.population);
+  const natSources = (fig: { key: string }[]) => fig.map((f) => national[f.key]?.sourceId).filter((s): s is string => !!s);
+  const toSources = (ids: string[]) => [...new Set(ids)].map((id) => sources.get(id)).filter((s) => s != null);
+  const usedSources = toSources([...hero.flatMap((v) => v.sourceIds), ...natSources(HERO)]);
+  const structureSources = toSources([...structure.flatMap((v) => v.sourceIds), ...natSources(STRUCTURE)]);
   const mayorSource = mayor ? sources.get(mayor.source_id) : undefined;
 
   // Budget blocks: every year from FIRST_YEAR, pre-rendered (the year switcher is client-side, no fetch).
@@ -85,8 +97,12 @@ export default async function CommunePage({ params }: PageProps<"/communes/[slug
       provisional: history.some((a) => a.year === y && a.provisional),
       blocks: lines.map((b) => {
         const { values, reference } = blockValues(b.lines, commune.code, yearRows[i], strata);
-        const ids = [...new Set(values.map((v) => v.sourceId).filter((s): s is string => !!s))];
-        return { id: b.id, title: b.title, values, reference, sources: ids.map((id) => sources.get(id)).filter((s) => s != null) };
+        // Debt: the national stratum average of that year (DGFiP, main budget), next to the commune on the same basis.
+        const nat = b.id === "savings_debt" ? [nationalLine("encours_dette", historyByYear.get(y))].filter((n) => n != null) : [];
+        const ids = [...new Set([...values.map((v) => v.sourceId), ...nat.map((n) => n.sourceId)].filter((s): s is string => !!s))];
+        const pop = allYears.find((r) => r.year === y && r.commune_code === commune.code)?.population;
+        return { id: b.id, title: b.title, values, reference, sources: ids.map((id) => sources.get(id)).filter((s) => s != null),
+                 national: nat, nationalStratum: dgfipStratum(pop) };
       }),
     };
   });
@@ -163,9 +179,20 @@ export default async function CommunePage({ params }: PageProps<"/communes/[slug
           <p className="mt-1 text-sm text-slate-600">
             {`${communes.heroIntro.fr} Exercice ${year}${PROVISIONAL_YEARS.includes(year) ? ` (${common.provisional.fr})` : ""}.`}
           </p>
-          <Hero values={hero} stratum={me?.stratum ?? null} />
+          <p className="mt-2 text-xs text-slate-500">{communes.spreadIntro.fr}</p>
+          <Hero values={hero} stratum={me?.stratum ?? null} national={national} nationalStratum={natStratum} />
+          {HERO.some((f) => national[f.key]) && <p className="mt-2 text-xs leading-snug text-slate-500">{communes.nationalBasis.fr}</p>}
         </FactBlock>
       </div>
+
+      {/* Structure of the budget: shares of operating revenue (consolidated), Martinique band, national line if any */}
+      <FactBlock title={communes.structureTitle.fr} sources={structureSources} year={year}>
+        <p className="mt-1 text-sm text-slate-600">{communes.structureIntro.fr}</p>
+        <Hero values={structure} stratum={me?.stratum ?? null} national={national} nationalStratum={natStratum}
+              help={{ part_personnel: communes.structureStaffHelp.fr, part_etat: communes.structureStateHelp.fr,
+                      part_octroi: communes.structureOctroiHelp.fr }} />
+        {STRUCTURE.some((f) => national[f.key]) && <p className="mt-2 text-xs leading-snug text-slate-500">{communes.nationalBasis.fr}</p>}
+      </FactBlock>
 
       <BudgetBreakdown data={budget} defaultYear={budgetYears.includes(year) ? year : budgetYears.at(-1)!} heroYear={year} />
       <p className="-mt-3 text-sm">
@@ -184,16 +211,23 @@ export default async function CommunePage({ params }: PageProps<"/communes/[slug
         </p>
         <div className="mt-3 rounded-xl border border-slate-200 bg-white p-4">
           <TermsComparison summaries={summaries} pastMayors={pastMayors} />
+          <p className="mt-2 text-xs text-slate-500">{communes.evolutionHelp.fr}</p>
         </div>
         <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
           <TermsChart title="Taux d'épargne brute" points={pointsOf("taux_epargne_brute")} bands={bands} unit="pct" />
-          <TermsChart title="Capacité de désendettement" points={pointsOf("capacite_desendettement")} bands={bands} unit="years" />
+          <TermsChart title="Capacité de désendettement" points={pointsOf("capacite_desendettement")} bands={bands} unit="years"
+                      reference={{ value: DEBT_CEILING_YEARS, label: communes.debtCeiling.fr }} />
           <TermsChart title="Dépenses d'équipement" points={pointsOf("depenses_equipement")} bands={bands} />
           <TermsChart title="Dette" points={pointsOf("encours_dette")} bands={bands} />
         </div>
         <p className="mt-2 flex items-center gap-2 text-xs text-slate-600">
           <span aria-hidden className="inline-block h-3 w-4 rounded-sm border border-dashed border-amber-700 bg-amber-200/60" />
           Année d&apos;élection municipale : budget partagé entre l&apos;équipe sortante et la nouvelle équipe.
+        </p>
+        <p className="mt-1 text-xs leading-snug text-slate-600">
+          <span aria-hidden className="mr-2 inline-block w-4 border-t-2 border-dashed border-slate-500 align-middle" />
+          {communes.debtCeilingNote.fr}{" "}
+          <a href={DEBT_CEILING_SOURCE} className="underline" target="_blank" rel="noopener noreferrer">Légifrance</a>
         </p>
       </FactBlock>
 

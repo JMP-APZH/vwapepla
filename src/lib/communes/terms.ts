@@ -57,3 +57,18 @@ export function summarizeTerms(terms: Term[], actuals: Actual[], rows = TERM_ROW
     })
     .filter((s) => s.years.length > 0);
 }
+
+const signed1 = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 1, minimumFractionDigits: 1, signDisplay: "exceptZero" });
+const signed0 = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0, signDisplay: "exceptZero" });
+
+/**
+ * Change against the previous term, in neutral words (Step 3, B1-COMPARISONS.md §3): rates in points, years in years,
+ * € / hab. in euros and %. Null when either value is missing (never "0").
+ */
+export function termChange(unit: TermRow["unit"], cur: number | null | undefined, prev: number | null | undefined): string | null {
+  if (cur == null || prev == null) return null;
+  if (unit === "pct") return `${signed1.format((cur - prev) * 100)} pt`;
+  if (unit === "years") return `${Math.abs(cur - prev) >= 10 ? signed0.format(cur - prev) : signed1.format(cur - prev)} an${Math.abs(cur - prev) >= 2 ? "s" : ""}`;
+  const pctPart = prev > 0 ? ` (${signed0.format(((cur - prev) / prev) * 100)} %)` : "";
+  return `${signed0.format(cur - prev)} € / hab.${pctPart}`;
+}

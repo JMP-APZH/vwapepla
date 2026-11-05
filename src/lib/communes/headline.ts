@@ -8,9 +8,24 @@ export type HeroValue = {
   figure: HeroFigure;
   value: number | null; // share (0..1), years, or € / hab.
   median: number | null; // of the reference group
+  spread: Spread | null; // of the reference group (no names, no rank)
   reference: Reference;
   sourceIds: string[];
 };
+
+/** Where the group's values lie: quartiles P25-P75 and range. Never a rank. */
+export type Spread = { p25: number; p75: number; min: number; max: number; n: number };
+
+/** Quartiles by linear interpolation (same method as a spreadsheet's QUARTILE.INC). Null below 3 values. */
+export function spread(values: number[]): Spread | null {
+  const v = values.filter((x) => Number.isFinite(x)).sort((a, b) => a - b);
+  if (v.length < 3) return null;
+  const q = (p: number) => {
+    const i = (v.length - 1) * p, lo = Math.floor(i);
+    return v[lo] + (v[Math.min(lo + 1, v.length - 1)] - v[lo]) * (i - lo);
+  };
+  return { p25: q(0.25), p75: q(0.75), min: v[0], max: v.at(-1)!, n: v.length };
+}
 
 /** Metric keys the hero needs. */
 export function heroKeys(figures: HeroFigure[]): string[] {
@@ -45,11 +60,15 @@ export function computeHero(
   const group = peers.length >= MIN_STRATUM_SIZE ? peers : [...byCommune.keys()];
   const reference: Reference = { kind: group === peers ? "stratum" : "martinique", size: group.length };
   const mine = byCommune.get(code);
-  return figures.map((f) => ({
-    figure: f,
-    value: heroValue(f, mine),
-    median: median(group.map((c) => heroValue(f, byCommune.get(c))).filter((v): v is number => v != null)),
-    reference,
-    sourceIds: heroKeys([f]).map((k) => mine?.get(k)?.source_id).filter((s): s is string => !!s),
-  }));
+  return figures.map((f) => {
+    const values = group.map((c) => heroValue(f, byCommune.get(c))).filter((v): v is number => v != null);
+    return {
+      figure: f,
+      value: heroValue(f, mine),
+      median: median(values),
+      spread: spread(values),
+      reference,
+      sourceIds: heroKeys([f]).map((k) => mine?.get(k)?.source_id).filter((s): s is string => !!s),
+    };
+  });
 }

@@ -3,6 +3,9 @@ import { STRATA, VERY_LONG_DEBT_YEARS } from "@/lib/communes/config";
 import { debtYears, pctDec } from "@/lib/communes/format";
 import { eur } from "@/lib/core/format";
 import { communes } from "@/i18n";
+import type { NationalLine } from "@/lib/communes/national";
+import { NationalCompare } from "./NationalCompare";
+import { SpreadStrip } from "./SpreadStrip";
 
 const HELP: Record<HeroValue["figure"]["kind"], string> = {
   ratio: communes.heroRateHelp.fr, years: communes.heroDebtYearsHelp.fr, per_hab: communes.heroEquipmentHelp.fr,
@@ -20,7 +23,10 @@ export function medianLabel(h: Pick<HeroValue, "reference">, stratum: string | n
 }
 
 /** "Bidjé-a an 3 chif": the hero trio — the commune's value, what it means, and one median. No score, no rank. */
-export function Hero({ values, stratum }: { values: HeroValue[]; stratum: string | null }) {
+export function Hero({ values, stratum, national, nationalStratum, help = {} }: {
+  values: HeroValue[]; stratum: string | null; help?: Record<string, string>; // help text by figure key (default: by kind)
+  national: Record<string, NationalLine | null>; nationalStratum: string | null; // DGFiP, main budget (Option A)
+}) {
   return (
     <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3">
       {values.map((h) => {
@@ -36,11 +42,16 @@ export function Hero({ values, stratum }: { values: HeroValue[]; stratum: string
               <p className="mt-1 text-xs leading-snug text-slate-700">{communes.heroDebtYearsNa.fr}</p>
             )}
             {veryLong && <p className="mt-1 text-xs leading-snug text-red-900">{communes.heroDebtYearsVeryLong.fr}</p>}
-            <p className="mt-1 text-xs leading-snug text-slate-500">{HELP[h.figure.kind]}</p>
+            <p className="mt-1 text-xs leading-snug text-slate-500">{help[h.figure.key] ?? HELP[h.figure.kind]}</p>
             <p className="mt-2 text-xs text-slate-600 tabular-nums">
               {medianLabel(h, stratum)} : <span className="font-medium">{show(h, h.median)}</span>
               {h.figure.kind === "per_hab" && h.median != null && " / hab."}
             </p>
+            {h.spread && (
+              <SpreadStrip spread={h.spread} median={h.median} value={h.value} groupLabel={medianLabel(h, stratum)}
+                           format={(v) => show(h, v) + (h.figure.kind === "per_hab" ? " / hab." : "")} />
+            )}
+            {national[h.figure.key] && <NationalCompare line={national[h.figure.key]!} stratum={nationalStratum} />}
           </section>
         );
       })}
