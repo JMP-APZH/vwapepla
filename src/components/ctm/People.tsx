@@ -23,8 +23,7 @@ export function MemberItem({ m, showList = true }: { m: Member; showList?: boole
         {showList && m.list && (
           <>
             {" · "}
-            {ctm.listLabel.fr} « {m.list.label} » ({m.list.year})
-            {m.list.match === "deduit" && <span> · {ctm.listDeduced.fr}</span>}
+            {m.sex === "F" ? ctm.listLabelF.fr : ctm.listLabelM.fr} « {m.list.label} » ({m.list.year})
             {m.list.match === "a_verifier" && <span className="text-amber-800"> · {ctm.listToVerify.fr}</span>}
             {m.list.note && <span className="text-amber-800"> · {m.list.note}</span>}
           </>

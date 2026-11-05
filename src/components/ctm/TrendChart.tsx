@@ -31,7 +31,7 @@ export function TrendChart({ title, points, unit = "meur" }: { title: string; po
               formatter={(v) => [u.tip(Number(v)), title]}
               labelFormatter={(y) => `${y}${points.find((p) => p.year === Number(y))?.provisional ? " (provisoire)" : ""}`}
             />
-            <Line type="monotone" dataKey="value" stroke={INK} strokeWidth={2} connectNulls={false} isAnimationActive={false}
+            <Line type="linear" dataKey="value" stroke={INK} strokeWidth={2} connectNulls={false} isAnimationActive={false}
                   activeDot={{ r: 5 }}
                   dot={(p: { cx?: number; cy?: number; index?: number }) => p.cx == null || p.cy == null
                     ? <g key={p.index} />

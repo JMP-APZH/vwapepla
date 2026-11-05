@@ -83,7 +83,7 @@ export default async function CtmPage() {
                       sources={src(sourceIds(invest))} />
       <SavingsDebt savings={savings} debt={debt} capacity={capacity} range={range} provisionalYear={provisional}
                    crcUrl={sources.get(CRC)?.url ?? null}
-                   sources={src([...sourceIds(rows.filter((r) => r.entity_siren === CTM && ["epargne_brute", "encours_dette"].includes(r.metric_key))), CRC])} />
+                   sources={src([...sourceIds(rows.filter((r) => r.entity_siren === CTM && ["epargne_brute", "encours_dette"].includes(r.metric_key)))])} />
       <FiscaliteUltramarine rows={fumRows} labels={FUM.map((key) => ({ key, label: label(key) }))}
                             range={`${fumRows[0]?.year}-${fumRows.at(-1)?.year}`} sources={src(fumSources)} />
       <BeforeCtm tables={before} sources={src(beforeSources)} />
