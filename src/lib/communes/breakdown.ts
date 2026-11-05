@@ -14,6 +14,9 @@ export const SUBSET_OF: Record<string, string> = {
   encours_dette_depots: "encours_dette",
 };
 
+/** Lines whose canonical place is the hero trio (docs/branches/B1-KPI.md): not repeated in the blocks. */
+export const SHOWN_IN_HERO_ONLY = new Set(["capacite_desendettement"]);
+
 export type BlockId = "income_operating" | "spending_operating" | "income_investment" | "spending_investment" | "savings_debt";
 
 export const BLOCKS: { id: BlockId; title: string }[] = [
@@ -32,7 +35,7 @@ export type LineDef = {
 
 /** Shown lines of one block, depth-first in display order. */
 export function blockLines(metrics: Map<string, Metric>, block: BlockId): LineDef[] {
-  const shown = [...metrics.values()].filter((m) => m.block === block && m.on_card);
+  const shown = [...metrics.values()].filter((m) => m.block === block && m.on_card && !SHOWN_IN_HERO_ONLY.has(m.key));
   const shownKeys = new Set(shown.map((m) => m.key));
   const parentOf = (key: string): string | null => {
     let p: string | null = SUBSET_OF[key] ?? metrics.get(key)?.parent_key ?? null;
