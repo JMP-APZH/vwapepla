@@ -36,10 +36,11 @@ The three bodies are never summed. 2025 is provisional.
 
 Build check: `rf_total` and `df_total` equal the sum of their parts (within 0.5 %), every body and year.
 
-## B. Fiscalité ultramarine: DGFiP balances, budget principal, net credit, 2016–2025
+## B. Fiscalité ultramarine: DGFiP balances, budget principal, net credit, 2018–2025
 
-Sources: `balances-comptables-des-departements` (2019–2025) and the nature-fonction yearly files (2016–2018; 2019 is in
-both and identical). "Octroi de mer" on the card always means account 73432 only.
+Sources: `balances-comptables-des-departements` (2019–2025) and the nature-fonction file 2018 (2019 is in both and
+identical). **2016–2017 are not loaded**: the CTM's accounts then follow the M57 chart before its 2018 renumbering
+(no account 73432; the octroi de mer appears to be in 7372, not validated). Stated as missing on the card. "Octroi de mer" on the card always means account 73432 only.
 
 | Metric key | Accounts | 2024 |
 |---|---|---|
