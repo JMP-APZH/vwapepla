@@ -12,6 +12,8 @@ HERE = pathlib.Path(__file__).resolve().parent
 for d in (HERE, HERE.parent, HERE.parents[1] / "core"):  # python -I drops the script dir; sources.py imports fetching
     sys.path.insert(0, str(d))
 from metrics import CI, FUM, METRICS  # noqa: E402
+from functions import FIRST_YEAR as FUNC_FROM, area_sums, labels as area_labels  # noqa: E402
+from acts import build_acts  # noqa: E402
 from sources import NATURE_FONCTION  # noqa: E402  (yearly nature-fonction dataset ids)
 
 sys.stdout.reconfigure(encoding="utf-8")
@@ -334,6 +336,29 @@ for pid in sorted({m["person_id"] for m in mandates if m["term_id"] == T2021}):
                          "source_id": sid(C2021)})
 print(f"2021 lists: {len(list_members) - 51} matched (2 passes), {len(unmatched)} not matched: {unmatched}")
 
+# --- spending by area (M57 functional presentation), 2018-2025 --------------------------------------------------------
+AREA_LABELS = area_labels(records("ofgl-fonctions-m57-libelles"))
+if sorted(AREA_LABELS) != [str(i) for i in range(9)]:
+    errors.append(f"M57 area labels: expected codes 0-8, got {sorted(AREA_LABELS)}")
+functional = []
+for year in range(FUNC_FROM, PROVISIONAL_YEAR + 1):
+    ds = NATURE_FONCTION[year]
+    pop = population.get((CTM, year))
+    for (section, area), v in sorted(area_sums(records(ds), CTM).items()):
+        functional.append({"year": year, "section": section, "fonction": area,
+                           "label": AREA_LABELS.get(area, "Non ventilé par domaine"), "amount": round(v, 2),
+                           "eur_per_hab": round(v / pop, 2) if pop else None, "provisional": year == PROVISIONAL_YEAR,
+                           "source_id": sid(ds)})
+
+# --- acts of the Assemblée and the Conseil exécutif (index of the CTM's website) -------------------------------------
+acts = []
+for ds in ("ctm-deliberations-assemblee", "ctm-arretes-deliberes-ce"):
+    acts += build_acts(ds, records(ds), sid(ds))
+if len({a["id"] for a in acts}) != len(acts):
+    errors.append("ctm_acts: duplicate ids")
+print(f"acts: {sum(a['body'] == 'assemblee' for a in acts)} délibérations, "
+      f"{sum(a['body'] == 'conseil_executif' for a in acts)} arrêtés délibérés, {sum(a['number'] is None for a in acts)} without number")
+
 # --- report and write ------------------------------------------------------------------------------------------------
 print("2012 overlap (DGFiP comptes individuels vs OFGL budget principal):")
 for o in overlap:
@@ -352,6 +377,7 @@ out = {"sources": sources, "institutions": institutions, "bodies": bodies, "seat
        "ctm_electoral_lists": sorted(lists, key=lambda l: l["id"]),
        "ctm_list_members": sorted(list_members, key=lambda l: l["id"]),
        "ctm_section_members": sorted(section_members, key=lambda s: (s["term_id"], s["person_id"])),
+       "ctm_functional_actuals": functional, "ctm_acts": sorted(acts, key=lambda a: a["id"]),
        "ctm_overlap_2012": overlap, "ctm_fum_overlap_2019": [{"metric_key": k, "balances": a, "nature_fonction": b}
                                                              for k, (a, b) in fum_overlap.items()]}
 if errors:

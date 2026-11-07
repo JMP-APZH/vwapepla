@@ -143,5 +143,20 @@ for year in range(2019, 2026):
     print(f"   {year}: {ok} aggregates match, {diff} differ")
 failed += r5_fail
 
+# --- R9 / R10: spending by area (DGFiP nature-fonction) vs OFGL budget principal ---------------------------------------
+functional = json.loads((BUILD / "ctm_functional_actuals.json").read_text(encoding="utf-8"))
+by_year = {}
+for f in functional:
+    by_year[(f["year"], f["section"])] = by_year.get((f["year"], f["section"]), 0.0) + f["amount"]
+lines = []
+for year in sorted({f["year"] for f in functional}):
+    check(f"R9 Fonctionnement par domaine {year} (= dépenses de fonctionnement bp)", by_year.get((year, "fonctionnement")),
+          v(year, "df_total", "amount_bp"))
+    equipment = (v(year, "depenses_equipement", "amount_bp") or 0) + (v(year, "subv_equipement", "amount_bp") or 0)
+    check(f"R10 Investissement par domaine {year} (= équipement + subventions d'équipement bp)",
+          by_year.get((year, "investissement")), equipment)
+print("\nR9 / R10 Spending by area (areas + not broken down) vs OFGL budget principal")
+print("\n".join(lines))
+
 print(f"\n{'All checks passed.' if not failed else f'{failed} check(s) FAILED.'}")
 sys.exit(1 if failed else 0)
