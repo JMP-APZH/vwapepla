@@ -53,7 +53,8 @@ export default async function Methodologie() {
           <li>
             « Fiscalité spécifique ultramarine » = compte 734 de la nomenclature M57 (ce que la Chambre régionale des comptes
             appelle « produits liés à l&apos;octroi de mer »). « Octroi de mer » désigne uniquement l&apos;octroi de mer régional
-            (compte 73432). Série à partir de 2018 : la nomenclature M57 a été renumérotée cette année-là.
+            (compte 73432). Pour 2016-2017, avant la renumérotation de la nomenclature M57 en 2018, chaque ligne est rattachée
+            à l&apos;ancien compte de même libellé (octroi de mer régional = compte 7374 « Taxe additionnelle à l&apos;octroi de mer »).
           </li>
           <li>
             Élus : l&apos;Assemblée d&apos;après le Répertoire national des élus (RNE). Le RNE ne liste qu&apos;une partie du Conseil
