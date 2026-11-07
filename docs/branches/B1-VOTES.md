@@ -11,7 +11,7 @@ already in production (B4, `pref_state_votes`), adapted to 34 communes.
    (B1) and the State votes (B4).
 4. Turnstile as a shared helper for all votes (separate shared PR); JM creates the Turnstile widget in Cloudflare and
    adds the keys in Vercel.
-5. Criteria: JM validates the 12 one by one (pending).
+5. Criteria: the 12 criteria in `data/communes/audit/vote_criteria.yaml` validated by JM as proposed (wording, competence tags and `commune_role_fr`), 7 Nov 2026. The competence statements stay `ref_status: to_confirm` until checked against the CGCT and the CACEM / CAESM / CAP Nord statutes; any correction goes back to JM.
 6. Voter hash erased after 60 days; votes closed during official pre-election periods.
 Build starts once the 12 criteria are validated and #34 is merged.
 

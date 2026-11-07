@@ -1,6 +1,7 @@
-# Visitor votes on the commune's action, by criterion — PROPOSITION (B1 Step 5, 5 Nov 2026), NOT VALIDATED BY JM.
-# Not loaded, not built. Design: docs/branches/B1-VOTES.md. Build only after JM's written decision and the CLAUDE.md
-# amendment (shared PR) are merged.
+# Visitor votes on the commune's action, by criterion (B1 Step 5). The 12 criteria (wording and competence) were
+# VALIDATED BY JM AS PROPOSED on 7 Nov 2026, in writing. Design and decisions: docs/branches/B1-VOTES.md.
+# Build only after the CLAUDE.md amendment (shared PR #34) is merged. ref_status stays to_confirm until each
+# competence statement is checked against the law; any correction goes back to JM before going live.
 #
 # Question stem, identical for every criterion: « Comment évaluez-vous l'action de la commune sur … ? »
 # Never about a named person; never about the budget (CLAUDE.md principle 2).
