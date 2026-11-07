@@ -194,5 +194,17 @@ for year in sorted({k[0] for k in ca}):
 print("\nR6 Comptes administratifs (budget principal, as voted) vs DGFiP gross amounts and OFGL budget principal")
 print("\n".join(lines))
 
+# --- F1: forecast layer, consistency only (never compared with actuals as a check) ------------------------------------
+docs = json.loads((BUILD / "ctm_forecast_documents.json").read_text(encoding="utf-8"))
+figs = json.loads((BUILD / "ctm_forecast_figures.json").read_text(encoding="utf-8"))
+lines = []
+for d in (d for d in docs if d["doc_type"] == "BP"):
+    f = {x["line_key"]: x["amount"] for x in figs if x["document_id"] == d["id"]}
+    check(f"F1 {d['id']}: 9 lignes lues", len(f), 9, unit="n", tol=0, abs_tol=0)
+    check(f"F1 {d['id']}: investissement total ≈ chap. 90 + chap. 923 (dépenses)", f.get("inv_depenses_reelles"),
+          (f.get("inv_ventile") or 0) + (f.get("inv_dette_depenses") or 0))
+print("\nF1 Forecast layer (budgets primitifs): consistency")
+print("\n".join(lines))
+
 print(f"\n{'All checks passed.' if not failed else f'{failed} check(s) FAILED.'}")
 sys.exit(1 if failed else 0)

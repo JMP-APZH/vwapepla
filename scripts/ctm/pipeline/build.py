@@ -15,7 +15,8 @@ from metrics import CI, FUM, METRICS  # noqa: E402
 from functions import FIRST_YEAR as FUNC_FROM, area_sums, labels as area_labels  # noqa: E402
 from acts import build_acts  # noqa: E402
 from ca import LINES as CA_LINES, read_ca  # noqa: E402
-from sources import CA as CA_DOCS  # noqa: E402
+from sources import CA as CA_DOCS, FORECAST as FORECAST_DOCS  # noqa: E402
+from bp import LINES as BP_LINES, read_bp  # noqa: E402
 from sources import NATURE_FONCTION  # noqa: E402  (yearly nature-fonction dataset ids)
 
 sys.stdout.reconfigure(encoding="utf-8")
@@ -376,6 +377,22 @@ for year, delib, _wpdm, _slug in CA_DOCS:
                          "amount": round(value, 2), "page": page, "deliberation": delib, "source_id": sid(ds)})
 print(f"comptes administratifs: {len(ca_lines)} lines for {sorted({c['year'] for c in ca_lines})}")
 
+# --- forecast layer (« Prévisionnel »): budgets primitifs read from pages D1 / D2; orientation reports linked only ----
+forecast_docs, forecast_figures = [], []
+for year, kind, delib, _wpdm, _slug in FORECAST_DOCS:
+    ds = f"ctm-{kind.lower()}-{year}"
+    if ds not in MANIFEST:
+        errors.append(f"{ds}: not downloaded")
+        continue
+    doc_id = f"ctm-{year}-{kind}"
+    forecast_docs.append({"id": doc_id, "fiscal_year": year, "doc_type": kind, "deliberation": delib,
+                          "title": MANIFEST[ds]["title"], "source_id": sid(ds)})
+    if kind == "BP":
+        for key, (value, page) in read_bp(pymupdf.open(ROOT / MANIFEST[ds]["file"])).items():
+            forecast_figures.append({"document_id": doc_id, "line_key": key, "label": BP_LINES[key],
+                                     "amount": round(value, 2), "page": page, "quote": None})
+print(f"forecast: {len(forecast_docs)} documents, {len(forecast_figures)} figures (budgets primitifs)")
+
 # --- report and write ------------------------------------------------------------------------------------------------
 print("2012 overlap (DGFiP comptes individuels vs OFGL budget principal):")
 for o in overlap:
@@ -396,6 +413,8 @@ out = {"sources": sources, "institutions": institutions, "bodies": bodies, "seat
        "ctm_section_members": sorted(section_members, key=lambda s: (s["term_id"], s["person_id"])),
        "ctm_functional_actuals": functional, "ctm_acts": sorted(acts, key=lambda a: a["id"]),
        "ctm_ca_lines": sorted(ca_lines, key=lambda c: (c["year"], c["line_key"])),
+       "ctm_forecast_documents": sorted(forecast_docs, key=lambda d: d["id"]),
+       "ctm_forecast_figures": sorted(forecast_figures, key=lambda f: (f["document_id"], f["line_key"])),
        "ctm_overlap_2012": overlap, "ctm_fum_overlap_2019": [{"metric_key": k, "balances": a, "nature_fonction": b}
                                                              for k, (a, b) in fum_overlap.items()]}
 if errors:

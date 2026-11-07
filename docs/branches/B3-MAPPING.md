@@ -131,3 +131,25 @@ from 2024 it is shown on its own line.
 
 2025: OFGL / DGFiP balances are provisional. The CA has €7.3M more operating spending than the provisional balances
 (balance €32.2M against €39.5M). Reported, not failing, until the final balances are published.
+
+## H. Forecast layer: budgets primitifs and orientation reports (sprint 5, 7 Nov 2026)
+
+« Prévisionnel », never mixed with actuals (CLAUDE.md). Main budget only.
+
+| Year | Budget primitif | Orientation report (ROB) |
+|---|---|---|
+| 2024 | délib. 24-49-1 | délib. 24-02-1 |
+| 2025 | délib. 24-322-1 | délib. 24-253-1 (mostly a scan) |
+| 2026 | délib. 25-376-1 | délib. 25-315-1 |
+
+- **Budgets primitifs** (`scripts/ctm/pipeline/bp.py`): standard M57 pages **D1** (équilibre financier du budget –
+  investissement) and **D2** (– fonctionnement), real operations, "RAR N-1 + vote de l'exercice". Same lines as the CA
+  (§G). The planned operating balance is computed as income − spending, since the BP prints no balance. Each figure
+  keeps its page.
+- **Orientation reports:** narrative documents, linked only. Their explicit figures differ from year to year (2024 p. 94:
+  "une CAF brute de 125 M€ et un emprunt de 150 M€, l'investissement 2024 devrait s'élever à 393 M€"; 2026: no figure
+  for the year; 2025: scanned), so no figure is extracted.
+- **Check F1 (`reconcile.py`, consistency only):** 9 lines read per BP; the investment total = chapter 90 + chapter 923
+  spending (2026: +€0.4M, within tolerance).
+- Planned vs realised is shown side by side on the card (BP vs CA), never as one series. The BP is amended during the
+  year by the budget supplémentaire and the decisions modificatives, so a gap is not an error in itself.
