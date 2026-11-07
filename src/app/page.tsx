@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { common, communes, ctm, parlement, prefet } from "@/i18n";
 
-// Home: the four domains. Only "Communes" is published; the others are reserved for teams B2-B4.
+// Home: the four domains; "ready" marks the published ones (the others are reserved for their teams).
 const SECTIONS = [
   { href: "/communes", ns: communes, ready: true },
   { href: "/parlementaires", ns: parlement, ready: false },
-  { href: "/ctm", ns: ctm, ready: false },
+  { href: "/ctm", ns: ctm, ready: true },
   { href: "/prefet", ns: prefet, ready: false },
 ] as const;
 
