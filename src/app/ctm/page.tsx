@@ -57,12 +57,12 @@ export default async function CtmPage() {
       header={
         <CardHeader
           portrait={<Portrait name="CTM" removalSubject="Collectivité Territoriale de Martinique" />}
-          title={ctm.cardTitle.fr}
+          title={<>{ctm.cardTitle.fr}{ctm.cardTitle.kr && <span className="block text-base font-normal text-slate-400">{ctm.cardTitle.kr}</span>}</>}
           facts={[
             { label: <>{ctm.headerPopulation.fr} {year}</>, value: int(population) },
             { label: ctm.headerTerm.fr, value: ctm.headerTermValue.fr.replace("{date}", date(TERM_START)) },
-            { label: ctm.headerAssemblee.fr, value: <Link href="/ctm/assemblee" className="underline">{ctm.headerAssembleeValue.fr}</Link> },
-            { label: ctm.headerExecutif.fr, value: <Link href="/ctm/conseil-executif" className="underline">{ctm.headerExecutifValue.fr}</Link> },
+            { label: <>{ctm.headerAssemblee.fr}{ctm.headerAssemblee.kr && <> · {ctm.headerAssemblee.kr}</>}</>, value: <Link href="/ctm/assemblee" className="underline">{ctm.headerAssembleeValue.fr}</Link> },
+            { label: <>{ctm.headerExecutif.fr}{ctm.headerExecutif.kr && <> · {ctm.headerExecutif.kr}</>}</>, value: <Link href="/ctm/conseil-executif" className="underline">{ctm.headerExecutifValue.fr}</Link> },
           ]}
           note={ctm.headerNote.fr}
         />
@@ -75,6 +75,9 @@ export default async function CtmPage() {
         <Link href="/ctm/conseil-executif" className="rounded-xl border border-slate-200 bg-white p-4 text-sm font-medium hover:border-slate-400">{ctm.tileExecutif.fr} →</Link>
       </nav>
       <MissingInfo items={[ctm.missingEndOfTerm.fr, ctm.missingCa.fr, ctm.missingCompetences.fr]} />
+      <h2 className="border-t border-slate-200 pt-4 text-sm font-semibold uppercase tracking-wide text-slate-500">
+        {ctm.budgetTitle.fr}{ctm.budgetTitle.kr && <span className="font-normal normal-case"> · {ctm.budgetTitle.kr}</span>}
+      </h2>
       <BreakdownBlock title={ctm.incomeTitle.fr} year={year} total={income.total} parts={income.parts}
                       sources={src(sourceIds([income.total, ...income.parts]))} />
       <BreakdownBlock title={ctm.spendingTitle.fr} year={year} total={spending.total} parts={spending.parts}

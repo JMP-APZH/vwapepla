@@ -34,7 +34,7 @@ export default async function ExecutifPage() {
       header={
         <CardHeader
           portrait={<Portrait name="Conseil exécutif" removalSubject="Conseil exécutif de Martinique" />}
-          title={ctm.executifTitle.fr}
+          title={<>{ctm.executifTitle.fr}{ctm.headerExecutif.kr && <span className="block text-base font-normal text-slate-400">{ctm.headerExecutif.kr}</span>}</>}
           facts={[
             { label: ctm.executifPresident.fr, value: president
               ? <>{president.name}{president.functionStart && <span className="font-normal text-slate-400"> · {date(president.functionStart)}</span>}</> : "—" },
