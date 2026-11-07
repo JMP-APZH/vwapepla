@@ -19,4 +19,6 @@ TABLES = {
     "ctm_electoral_lists": "id",
     "ctm_list_members": "id",
     "ctm_section_members": "person_id,term_id",
+    "ctm_functional_actuals": "year,section,fonction",  # migration <ts>_ctm_functions_acts.sql
+    "ctm_acts": "id",
 }

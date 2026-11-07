@@ -79,3 +79,28 @@ the comptes individuels match exactly. The remaining differences (+0.1 % and −
 - R5 Every OFGL aggregate published for the CTM budget principal, 2019–2025 (65–67 per year), recomputed from the DGFiP
   balance accounts with OFGL's formula file: all match (tolerance 1 % or €50,000).
 - Join checks: 2012 comptes individuels / OFGL bp; 2019 balances / nature-fonction.
+
+## E. Spending by area of responsibility (sprint 3, 7 Nov 2026)
+
+Source: DGFiP nature-fonction balances, CTM budget principal, definitive balance, 2018–2025 (`scripts/ctm/pipeline/functions.py`).
+Area labels: OFGL, M57 functional nomenclature (`ofgl-fonctions-m57-libelles`, codes 0–8; 9 is « fonction en réserve »).
+
+- `fonction` = functional chapter + area code: `93x…` operating spending of area x, `90x…` investment of area x;
+  `94…` / `92…` not broken down by area (stored as `nv`, e.g. `943` interest).
+- Operating spending: real accounts of class 6 (without 68, 675, 676), net debit.
+- Investment: OFGL's definition of « Dépenses d'équipement » + « Subventions d'équipement versées »: debits on 20, 21, 23
+  minus credits on 236, 237, 238.
+- Area 4 « Santé et action sociale »: OFGL's label adds « (hors APA, RSA…) » because OFGL splits them out; in the M57
+  chart, APA (43) and RSA (44) are sub-areas of 4, and they are included here.
+- Starts in 2018: the M57 chart was renumbered that year.
+
+Reconciliation (`reconcile.py`): R9 operating spending, all areas + `nv` = OFGL « Dépenses de fonctionnement » bp;
+R10 investment, all areas = OFGL « Dépenses d'équipement » + « Subventions d'équipement versées » bp. Both match to the
+euro, 2018–2025.
+
+## F. Acts (sprint 3)
+
+Indexes of the CTM's website: 1,809 délibérations of the Assemblée, 4,304 arrêtés délibérés of the Conseil exécutif
+(344 without number). Stored title: the published title without its act number, with the **names of private
+individuals masked** (after Monsieur / Madame / M. / Mme / Mlle; 987 titles). The full act stays on the CTM's page.
+No session date, vote or topic: not in the index.

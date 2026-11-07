@@ -10,7 +10,7 @@ Who is who (checked on the portals, 3 Nov 2026):
 """
 import csv, html, pathlib, re, time, urllib.parse, urllib.request
 
-from fetching import LICENCE, fetch, file_job, portal_job  # scripts/core (put on sys.path by download_sources.py)
+from fetching import LICENCE, fetch, file_job, portal_job, portal_title  # scripts/core (put on sys.path by download_sources.py)
 
 NO_LICENCE = "aucune licence indiquée"  # what the source states; never assume Licence Ouverte
 
@@ -297,6 +297,17 @@ JOBS += [{"folder": folder, "id": ds, "url": url or f"{DG}/{ds}/", "title": (lam
           "fetcher": ministry_fetcher(ds, url),
           "licence": NO_LICENCE if "2021" in ds else LICENCE}  # 2021 datasets: licence "non spécifiée" on data.gouv.fr
          for folder, ds, url, title, purpose in ELECTIONS]
+
+# M57 functional nomenclature (area codes and official labels), as published by OFGL in its functional base of the
+# départements (the CTM is not in that base; only the labels are taken). Used for spending by area.
+_FONC = "ofgl-base-departements-fonctionnelle"
+JOBS += [{"folder": "ofgl", "id": "ofgl-fonctions-m57-libelles",
+          "url": f"{OFGL}/{_FONC}/exports/csv?" + urllib.parse.urlencode(
+              {"select": "fonction,nom_fonction", "group_by": "fonction,nom_fonction", "where": 'nomen like "M57"',
+               "delimiter": ";"}),
+          "title": lambda: portal_title(OFGL, _FONC), "page": "https://data.ofgl.fr/explore/dataset/" + _FONC + "/",
+          "credit": "OFGL", "purpose": "Codes and labels of the M57 functional nomenclature (spending by area).",
+          "scope": "", "encoding": "utf-8-sig", "fetcher": None}]
 
 # --- Documents archived as published (PDF) ---------------------------------------------------------------------------
 JOBS += [file_job("crc", "crc-ctm-2026-rapport-observations-definitives",
