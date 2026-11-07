@@ -36,16 +36,16 @@ async function Results({ searchParams }: Pick<PageProps<"/ctm/actes">, "searchPa
   const src = [...new Set(acts.map((a) => a.source_id))].map((id) => sources.get(id)).filter((s) => s != null);
   return (
     <>
-      <form method="get" action="/ctm/actes" className="grid gap-2 rounded-xl border border-slate-200 bg-white p-3 sm:grid-cols-[1fr_auto_auto_auto]">
+      <form method="get" action="/ctm/actes" className="grid gap-2 rounded-xl border border-slate-200 bg-white p-3 sm:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,auto)_minmax(0,auto)_auto]">
         <label className="sr-only" htmlFor="q">{ctm.actsSearch.fr}</label>
         <input id="q" name="q" defaultValue={query.q} placeholder={ctm.actsSearchPlaceholder.fr}
-               className="rounded-md border border-slate-300 px-3 py-2 text-sm" />
-        <select name="organe" defaultValue={query.body ?? ""} aria-label="Organe" className="rounded-md border border-slate-300 px-2 py-2 text-sm">
+               className="min-w-0 rounded-md border border-slate-300 px-3 py-2 text-sm" />
+        <select name="organe" defaultValue={query.body ?? ""} aria-label="Organe" className="min-w-0 rounded-md border border-slate-300 px-2 py-2 text-sm">
           <option value="">{ctm.actsBodyAll.fr}</option>
           <option value="assemblee">{ctm.actsBodyAssemblee.fr}</option>
           <option value="conseil_executif">{ctm.actsBodyExecutif.fr}</option>
         </select>
-        <select name="annee" defaultValue={query.year ?? ""} aria-label="Année" className="rounded-md border border-slate-300 px-2 py-2 text-sm">
+        <select name="annee" defaultValue={query.year ?? ""} aria-label="Année" className="min-w-0 rounded-md border border-slate-300 px-2 py-2 text-sm">
           <option value="">{ctm.actsYearAll.fr}</option>
           {years.map((y) => <option key={y} value={y}>{y}</option>)}
         </select>

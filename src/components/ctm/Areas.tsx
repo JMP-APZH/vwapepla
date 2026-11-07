@@ -36,7 +36,7 @@ export function AreaSpending({ year, lines, rows, sources }: {
                 </td>
                 <td className="py-1.5 pr-2 text-right tabular-nums">{meur(l.operating)}</td>
                 <td className="py-1.5 pr-2 text-right tabular-nums">{meur(l.investment)}</td>
-                <td className="py-1.5 pr-2 text-right tabular-nums">{perHab(l.perHab)}</td>
+                <td className="py-1.5 pr-2 text-right tabular-nums whitespace-nowrap">{perHab(l.perHab)}</td>
                 <td className="py-1.5 text-right tabular-nums text-slate-600">{pct(l.share)}</td>
               </tr>
             ))}
