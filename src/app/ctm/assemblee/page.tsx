@@ -5,7 +5,8 @@ import { Portrait } from "@/components/card/Portrait";
 import { Results, SectionLists } from "@/components/ctm/People";
 import { getSources } from "@/lib/core/data";
 import { date } from "@/lib/core/format";
-import { getListMembers, getLists, getMandates, getSections } from "@/lib/ctm/data";
+import { getActs, getListMembers, getLists, getMandates, getSections } from "@/lib/ctm/data";
+import { ActsSummary } from "@/components/ctm/Acts";
 import { ASSEMBLEE, bySection, inBothBodies, members, roundTwo, T2015, T2021 } from "@/lib/ctm/people";
 import { ctm } from "@/i18n";
 
@@ -14,8 +15,8 @@ export const metadata: Metadata = { title: ctm.assembleeTitle.fr };
 // Assemblée de Martinique: who sits where (RNE), the list each member was elected on (Ministry results), the 2021 and
 // 2015 results in list-number order. Group membership is not shown: no official group declaration is published.
 export default async function AssembleePage() {
-  const [mandates, sections, listMembers, lists, sources] = await Promise.all([
-    getMandates(), getSections(), getListMembers(), getLists(), getSources()]);
+  const [mandates, sections, listMembers, lists, sources, acts] = await Promise.all([
+    getMandates(), getSections(), getListMembers(), getLists(), getSources(), getActs()]);
   const now = members(mandates, sections, listMembers, lists, T2021, ASSEMBLEE);
   const first = members(mandates, sections, listMembers, lists, T2015, ASSEMBLEE);
   const president = now.find((m) => m.role === "president");
@@ -62,6 +63,8 @@ export default async function AssembleePage() {
         <SectionLists title="" groups={bySection(first)} year="2015-2021" sources={src(first.map((m) => m.sourceId))} />
         {r2015.length > 0 && <Results title={ctm.results2015Title.fr} lists={r2015} year={2015} sources={src(r2015.map((l) => l.source_id))} />}
       </details>
+      <ActsSummary title={ctm.actsAssembleeTitle.fr} body="assemblee" acts={acts}
+                   sources={src(acts.filter((a) => a.body === "assemblee").map((a) => a.source_id))} />
     </CardShell>
   );
 }

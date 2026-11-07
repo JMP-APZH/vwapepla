@@ -1,7 +1,9 @@
 import { cacheLife, cacheTag } from "next/cache";
 import { check } from "@/lib/core/data";
 import { supabase } from "@/lib/core/supabase";
+import type { Act } from "./acts";
 import type { Actual, MetricDef } from "./budget";
+import type { FunctionalRow } from "./functions";
 import type { ElectoralList, ListMember, MandateRow, SectionRow } from "./people";
 
 // CTM domain (B3): typed, cached reads of the ctm_* tables and the CTM's core rows. Data changes a few times a year
@@ -67,4 +69,35 @@ export async function getLists(): Promise<ElectoralList[]> {
       .select("id,election_year,round,number,label_short,label,nuance,head,votes,pct_exprimes,seats,source_id").limit(200),
     "ctm_electoral_lists",
   ) as ElectoralList[];
+}
+
+const PAGE = 1000; // PostgREST returns at most 1,000 rows per request
+
+/** Spending by area of responsibility, CTM main budget, 2018 onwards (160 rows). */
+export async function getFunctional(): Promise<FunctionalRow[]> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("data");
+  return check(
+    await supabase.from("ctm_functional_actuals")
+      .select("year,section,fonction,label,amount,eur_per_hab,provisional,source_id").order("year").limit(PAGE),
+    "ctm_functional_actuals",
+  ) as FunctionalRow[];
+}
+
+/** Acts of both bodies as indexed from the CTM's website (about 6,100 rows: paged). */
+export async function getActs(): Promise<Act[]> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("data");
+  const out: Act[] = [];
+  for (let from = 0; ; from += PAGE) {
+    const rows = check(
+      await supabase.from("ctm_acts").select("id,body,number,year,title,page_url,source_id").order("id")
+        .range(from, from + PAGE - 1),
+      "ctm_acts",
+    ) as Act[];
+    out.push(...rows);
+    if (rows.length < PAGE) return out;
+  }
 }
