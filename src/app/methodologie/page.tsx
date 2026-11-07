@@ -49,6 +49,8 @@ export default async function Methodologie() {
             sont comparés au rapport de la Chambre régionale des comptes (2026). Tolérance : 1 %, ou 50 000 € pour les petits
             montants. Le texte de ce rapport (p. 56) donne une dette 2021 différente de son propre tableau en annexe (p. 80) ;
             la fiche affiche les montants de l&apos;annexe, identiques à l&apos;OFGL, et le signale.
+            Les chiffres sont aussi comparés aux comptes administratifs votés par l&apos;Assemblée (2022-2025, budget principal) :
+            mêmes montants que la DGFiP, l&apos;écart avec l&apos;OFGL venant de montants comptés bruts par le compte administratif.
           </li>
           <li>
             « Fiscalité spécifique ultramarine » = compte 734 de la nomenclature M57 (ce que la Chambre régionale des comptes
