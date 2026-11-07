@@ -59,7 +59,7 @@ async function Results({ searchParams }: Pick<PageProps<"/ctm/actes">, "searchPa
       <ul className="divide-y divide-slate-100 rounded-xl border border-slate-200 bg-white px-3">
         {found.slice(0, MAX).map((a) => <ActRow key={a.id} a={a} showBody={query.body == null} />)}
       </ul>
-      <SourceNote sources={src} year="2022-2026" />
+      <SourceNote sources={src} year={years.length ? `${years.at(-1)}-${years[0]}` : ""} />
     </>
   );
 }
