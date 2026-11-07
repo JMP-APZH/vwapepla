@@ -3,6 +3,7 @@ import { check } from "@/lib/core/data";
 import { supabase } from "@/lib/core/supabase";
 import type { Act } from "./acts";
 import type { Actual, MetricDef } from "./budget";
+import type { CaLine } from "./ca";
 import type { FunctionalRow } from "./functions";
 import type { ElectoralList, ListMember, MandateRow, SectionRow } from "./people";
 
@@ -100,4 +101,15 @@ export async function getActs(): Promise<Act[]> {
     out.push(...rows);
     if (rows.length < PAGE) return out;
   }
+}
+
+/** Headline figures of the comptes administratifs voted by the Assemblée (main budget, 9 lines per year). */
+export async function getCaLines(): Promise<CaLine[]> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("data");
+  return check(
+    await supabase.from("ctm_ca_lines").select("year,budget,line_key,label,amount,page,deliberation,source_id").order("year").limit(PAGE),
+    "ctm_ca_lines",
+  ) as CaLine[];
 }
