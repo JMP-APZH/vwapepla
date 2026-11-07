@@ -18,4 +18,4 @@ python -I scripts/core/load_supabase.py --domain parlement                    # 
   tables, current terms only. Exit 1 if: row counts differ from the manifest; not exactly 4 sitting deputies
   (circonscriptions 1–4) and 2 senators matching the RNE; a row points to an unknown person, scrutin or organe.
 - `votes.py`: the published vote rule V1 (`selected_by` on every scrutin), also shown on `/parlementaires/methode`.
-- `tables.py`: load order and upsert keys (migration `supabase/migrations/20261105170000_parl_init.sql`).
+- `tables.py`: load order and upsert keys (migration `supabase/migrations/20261107120000_parl_init.sql`).

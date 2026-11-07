@@ -7,6 +7,10 @@ a change of rule is a new version, published on the Méthodologie page, never ap
      overseas list below;
   d. every motion de censure.
 
+Sénat (same rule, applied to the Dosleg public votes): (a) is not applicable, Dosleg does not flag solemn votes;
+(b) and (c) apply to the vote's own object (« sur l'ensemble du projet de loi… ») and the legislative file's title;
+(d) does not exist in the Sénat. Stated on the Méthodologie page.
+
 Not implemented from the written rule: « or the dossier is examined by the Délégation aux outre-mer » (the dossier
 files we load do not say which delegation examined them). Stated on the Méthodologie page.
 """
@@ -18,6 +22,7 @@ OVERSEAS = ["outre-mer", "ultramarin", "Martinique", "Antilles", "Guadeloupe", "
             "octroi de mer", "DROM", "collectivités territoriales de Guyane et de Martinique"]
 _KW = re.compile(r"(?<!\w)(" + "|".join(re.escape(k) for k in OVERSEAS) + r")", re.I)
 _WHOLE = re.compile(r"^l'ensemble (du projet|de la proposition|du texte)", re.I)
+_WHOLE_SEN = re.compile(r"\bl['’]ensemble (du projet|de la proposition|du texte)", re.I)
 
 
 def select(scrutin, dossier):
@@ -34,4 +39,15 @@ def select(scrutin, dossier):
         parts.append("c")
     if kind == "MOC" or "motion de censure" in f"{title} {obj}".lower():
         parts.append("d")
+    return parts
+
+
+def select_senat(scrutin):
+    """Parts of V1 that select a Sénat public vote (Dosleg row of senat-scrutins): only (b) and (c) can apply."""
+    obj = scrutin["scrint"] or ""
+    parts = []
+    if _WHOLE_SEN.search(obj):
+        parts.append("b")
+    if _KW.search(" ".join([obj, scrutin["loi.loient"] or "", scrutin["loi.loitit"] or "", scrutin["loi.loiint"] or ""])):
+        parts.append("c")
     return parts

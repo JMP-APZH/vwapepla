@@ -1,4 +1,4 @@
--- Parlement domain (B2): deputies and senators of Martinique, current terms (docs/branches/B2-DISCOVERY.md §2).
+-- Parlement domain (B2): deputies and senators of Martinique (docs/branches/B2-DISCOVERY.md §2).
 -- Additive only (keeps `main` working). Core rows (institutions, bodies, seats, persons, mandates, sources) are loaded by
 -- scripts/parlement/build.py into the existing core tables; this migration adds the parl_* tables.
 -- Every row carries source_id. Facts only: no score, no ranking, no derived rate is stored (neutrality charter §3).
@@ -50,38 +50,41 @@ create table public.parl_texts (
   source_id  text not null references public.sources(id)
 );
 
--- Every public vote of the legislature (the full list is offered as a download); selected_by = parts of the published
--- rule that select it for the card (e.g. {'V1:a','V1:b'}), empty when not selected.
+-- Every public vote (AN: per legislature; Sénat: Dosleg, per session), the full list is offered as a download;
+-- selected_by = parts of the published rule that select it for the card (e.g. {'V1:a','V1:b'}), empty when not selected.
 create table public.parl_scrutins (
-  id           text primary key,                                   -- 'VTANR5L17V…'
+  id           text primary key,                                   -- AN 'VTANR5L17V…' / Sénat 'sen:<session>-<n>'
+  chamber      text not null check (chamber in ('AN', 'SEN')),
+  legislature  text not null,                                      -- AN '17', '16'… / Sénat session year '2025' (2025-2026)
   number       integer not null,
   date         date not null,
-  type_code    text not null,                                      -- SPO, SPS, MOC
+  type_code    text not null,                                      -- AN SPO, SPS, MOC / Sénat SPO
   type_label   text not null,
   title        text not null,
   object       text,
   text_id      text references public.parl_texts(id),
   result_code  text,
   result_label text,
-  voters       integer not null,
+  voters       integer,
   pour         integer not null,
   contre       integer not null,
-  abstentions  integer not null,
-  non_votants  integer not null,
+  abstentions  integer,                                            -- Sénat: votants - suffrages exprimés
+  non_votants  integer,                                            -- not published by the Sénat
+  text_signet  text,                                               -- Sénat: dossier législatif signet (senat.fr)
   selected_by  text[] not null default '{}',
   url          text not null,
   source_id    text not null references public.sources(id)
 );
-create index on public.parl_scrutins (date);
+create index on public.parl_scrutins (chamber, date);
 
 create table public.parl_votes (
   scrutin_id      text not null references public.parl_scrutins(id),
   person_id       text not null references public.persons(id),
-  position        text not null check (position in ('pour', 'contre', 'abstention', 'nonVotant')),
+  position        text not null check (position in ('pour', 'contre', 'abstention', 'nonVotant', 'nonVotantVolontaire')),
   by_delegation   boolean not null,
   group_id        text references public.parl_organes(id),
   group_position  text,                                            -- majority position of the group, as published
-  cause           text,
+  cause           text,                                            -- AN cause / Sénat published status (congé, déport…)
   mise_au_point   text,                                            -- the member's own published correction, if any
   source_id       text not null references public.sources(id),
   primary key (scrutin_id, person_id)
@@ -92,6 +95,7 @@ create table public.parl_amendments (
   id             text primary key,                                 -- '<amendment id>:<person id>'
   amendment_id   text not null,
   chamber        text not null check (chamber in ('AN', 'SEN')),
+  legislature    text not null,                                    -- AN '17'… / Sénat session year
   person_id      text not null references public.persons(id),
   role           text not null check (role in ('premier_signataire', 'cosignataire')),
   as_rapporteur  boolean not null,
@@ -113,6 +117,7 @@ create index on public.parl_amendments (person_id, role);
 create table public.parl_questions (
   id         text primary key,
   chamber    text not null check (chamber in ('AN', 'SEN')),
+  legislature text not null,                                       -- AN '17'… / Sénat legislature of the question base
   person_id  text not null references public.persons(id),
   kind       text not null,                                        -- QE, QOSD, QG
   number     text,
@@ -158,12 +163,29 @@ create table public.parl_interest_items (
 );
 create index on public.parl_interest_items (person_id);
 
+-- What the official open data does not give (absent or partial), checked by the pipeline and dated: shown on the cards
+-- and on the method page, never hidden. person_id null = the whole chamber / period.
+create table public.parl_data_gaps (
+  id           text primary key,
+  chamber      text not null check (chamber in ('AN', 'SEN')),
+  person_id    text references public.persons(id),
+  period       text not null,                                      -- 'XVIIe législature', 'depuis 2006'…
+  topic        text not null,                                      -- votes, amendements, questions, presence, declarations…
+  status       text not null check (status in ('absent', 'partiel')),
+  label_fr     text not null,
+  detail_fr    text not null,
+  checked_url  text,
+  checked_on   date not null,
+  source_id    text references public.sources(id)
+);
+create index on public.parl_data_gaps (person_id);
+
 do $$
 declare t text;
 begin
   foreach t in array array['parl_mandate_details', 'parl_organes', 'parl_memberships', 'parl_texts', 'parl_scrutins',
                            'parl_votes', 'parl_amendments', 'parl_questions', 'parl_interest_declarations',
-                           'parl_interest_items'] loop
+                           'parl_interest_items', 'parl_data_gaps'] loop
     execute format('alter table public.%I enable row level security', t);
     execute format('create policy "public read" on public.%I for select to anon, authenticated using (true)', t);
     execute format('revoke insert, update, delete, truncate on public.%I from anon, authenticated', t);
