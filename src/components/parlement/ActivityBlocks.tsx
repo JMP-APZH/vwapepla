@@ -2,34 +2,37 @@ import Link from "next/link";
 import { Caveat, FactBlock } from "@/components/card/Card";
 import type { Source } from "@/lib/core/data";
 import { date, int } from "@/lib/core/format";
-import { otherOutcomes, outcomeCounts, questionCounts, recorded, RULE_PARTS, type Amendment, type Question, type VoteLine } from "@/lib/parlement/activity";
+import { otherOutcomes, outcomeCounts, partsUsed, questionCounts, recorded, type Amendment, type Question, type VoteLine } from "@/lib/parlement/activity";
 import type { Member } from "@/lib/parlement/members";
 import { fill } from "@/lib/parlement/text";
 import { parlement } from "@/i18n";
 import { VoteList, type VoteItem } from "./VoteList";
 
-/** Public votes selected by the published rule V1, with the deputy's position, the group's majority and the result. */
-export function VotesBlock({ member, lines, sources }: { member: Member; lines: VoteLine[]; sources: Source[] }) {
+/** Public votes selected by the published rule V1, with the member's position, the group's majority (AN) or the
+ *  published status (Sénat), and the result. */
+export function VotesBlock({ member, lines, sources, period }: { member: Member; lines: VoteLine[]; sources: Source[]; period: string }) {
+  const an = member.chamber === "AN";
   const items: VoteItem[] = lines.map((l) => ({
     id: l.scrutin.id, number: l.scrutin.number, dateLabel: date(l.scrutin.date), title: l.scrutin.title, url: l.scrutin.url,
     parts: l.scrutin.selected_by, position: l.position, groupPosition: l.groupPosition,
-    result: l.scrutin.result_label, byDelegation: l.byDelegation, correction: l.correction,
+    result: l.scrutin.result_label, byDelegation: l.byDelegation, correction: l.correction, status: l.status,
   }));
   return (
-    <FactBlock title={parlement.votesTitle.fr} sources={sources} year="XVIIe législature">
+    <FactBlock title={parlement.votesTitle.fr} sources={sources} year={period}>
       <p className="mt-1 text-sm text-slate-600">
-        {fill(parlement.votesIntro.fr, { rule: "V1" })}{" "}
+        {fill((an ? parlement.votesIntro : parlement.votesIntroSEN).fr, { rule: "V1" })}{" "}
         <Link href="/parlementaires/methode" className="underline">{parlement.votesRuleLink.fr}</Link>
       </p>
       <p className="mt-2 text-sm font-medium">{fill(parlement.votesRecorded.fr, { n: int(recorded(lines)), total: int(lines.length) })}</p>
       <p className="mt-1 text-sm">
-        <a href={`/parlementaires/${member.slug}/votes.csv`} className="underline">{parlement.votesDownload.fr}</a>
+        <a href={`/parlementaires/${member.slug}/votes.csv`} className="underline">{(an ? parlement.votesDownload : parlement.votesDownloadSEN).fr}</a>
       </p>
-      <VoteList items={items} parts={RULE_PARTS.map((p) => ({ key: p.key, label: p.label }))}
+      <VoteList items={items} parts={partsUsed(lines.map((l) => l.scrutin)).map((p) => ({ key: p.key, label: p.label }))}
                 labels={{ all: parlement.votesAll.fr, more: parlement.votesShowMore.fr, position: parlement.votesPosition.fr,
                           group: parlement.votesGroup.fr, result: parlement.votesResult.fr,
-                          delegation: parlement.votesDelegation.fr, correction: parlement.votesCorrection.fr }} />
-      <div className="mt-3"><Caveat>{parlement.votesCaveat.fr}</Caveat></div>
+                          delegation: parlement.votesDelegation.fr, correction: parlement.votesCorrection.fr,
+                          status: parlement.votesStatus.fr }} />
+      <div className="mt-3"><Caveat>{(an ? parlement.votesCaveat : parlement.votesCaveatSEN).fr}</Caveat></div>
     </FactBlock>
   );
 }
