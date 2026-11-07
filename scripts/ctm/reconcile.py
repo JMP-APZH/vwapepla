@@ -17,6 +17,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 BUILD, RAW = ROOT / "data" / "build" / "ctm", ROOT / "data" / "raw" / "ctm"
 MANIFEST = json.loads((RAW / "manifest.json").read_text(encoding="utf-8"))
 CTM, TOL, ABS_TOL = "200055507", 0.01, 50_000
+PROVISIONAL_YEAR = 2025  # OFGL / DGFiP balances not final yet
 
 # CRC figures (euros unless stated), with their place in the report.
 CRC_CAF_BRUTE_BP = {2021: 83_382_291, 2022: 128_172_823, 2023: 93_274_038, 2024: 48_568_574}   # p. 49, tableau n° 17
@@ -156,6 +157,41 @@ for year in sorted({f["year"] for f in functional}):
     check(f"R10 Investissement par domaine {year} (= équipement + subventions d'équipement bp)",
           by_year.get((year, "investissement")), equipment)
 print("\nR9 / R10 Spending by area (areas + not broken down) vs OFGL budget principal")
+print("\n".join(lines))
+
+# --- R6: comptes administratifs voted by the Assemblée (pages C1 / C2) vs DGFiP and OFGL (B3-MAPPING.md §G) -------------
+# The CA counts gross amounts: real operating spending = debits on real class-6 accounts + debits on class 7 (atténuations
+# de produits, 739); real operating income = credits on real class-7 accounts + credits on class 6 (atténuations de
+# charges). OFGL nets both, so the CA's totals are higher by the same amount on each side and the balance is the same.
+# 2022-2023: the CA's chapter 923 income also includes account 1068 (capitalised surplus), shown apart from 2024.
+# OFGL 2025 is provisional (final DGFiP balances at year end): 2025 is reported, never failing.
+ca = {(c["year"], c["line_key"]): c for c in json.loads((BUILD / "ctm_ca_lines.json").read_text(encoding="utf-8"))}
+gross = {}
+for r in balances:
+    year, acc = int(r["exer"][:4]), r["compte"]
+    d, c = n(r["obnetdeb"]), n(r["obnetcre"])
+    real6 = acc.startswith("6") and not acc.startswith(("68", "675", "676"))
+    real7 = acc.startswith("7") and not acc.startswith(("775", "776", "777", "78"))
+    g = gross.setdefault(year, {"dep": 0.0, "rec": 0.0, "c1068": 0.0})
+    g["dep"] += (d if real6 else 0) + (d if real7 else 0)
+    g["rec"] += (c if real7 else 0) + (c if real6 else 0)
+    g["c1068"] += c if acc.startswith("1068") else 0
+lines = []
+for year in sorted({k[0] for k in ca}):
+    final = year != PROVISIONAL_YEAR
+    page = lambda key: ca[(year, key)]["page"]  # noqa: E731
+    a = lambda key: ca[(year, key)]["amount"]  # noqa: E731
+    g = gross.get(year, {})
+    check(f"R6 {year} CA fonct. dépenses réelles (p. {page('fonc_depenses_reelles')}) = DGFiP brut", a("fonc_depenses_reelles"), g.get("dep"), fail=final)
+    check(f"R6 {year} CA fonct. recettes réelles (p. {page('fonc_recettes_reelles')}) = DGFiP brut", a("fonc_recettes_reelles"), g.get("rec"), fail=final)
+    check(f"R6 {year} CA solde réel de fonct. (p. {page('fonc_solde_reel')}) = OFGL épargne brute bp", a("fonc_solde_reel"), v(year, "epargne_brute", "amount_bp"), fail=final)
+    check(f"R6 {year} CA invest. réel hors chap. 923 (p. {page('inv_depenses_reelles')}) = OFGL invest. hors remb. bp",
+          a("inv_depenses_reelles") - a("inv_dette_depenses"), v(year, "di_hors_remb", "amount_bp"), fail=final)
+    check(f"R6 {year} CA chap. 923 mandats (p. {page('inv_dette_depenses')}) = OFGL remboursements bp", a("inv_dette_depenses"), v(year, "remboursements", "amount_bp"), fail=final)
+    loans = (v(year, "emprunts", "amount_bp") or 0) + (g.get("c1068", 0) if year in (2022, 2023) else 0)
+    check(f"R6 {year} CA chap. 923 titres (p. {page('inv_dette_recettes')}) = OFGL emprunts bp{' + 1068' if year in (2022, 2023) else ''}",
+          a("inv_dette_recettes"), loans, fail=final)
+print("\nR6 Comptes administratifs (budget principal, as voted) vs DGFiP gross amounts and OFGL budget principal")
 print("\n".join(lines))
 
 print(f"\n{'All checks passed.' if not failed else f'{failed} check(s) FAILED.'}")

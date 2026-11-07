@@ -318,6 +318,18 @@ JOBS += [file_job("crc", "crc-ctm-2026-rapport-observations-definitives",
                   "Benchmark for the reconciliation (CAF brute, debt, fiscalité ultramarine 734, satellites).",
                   licence=NO_LICENCE, ext="pdf")]
 
+# Comptes administratifs of the main budget, as voted by the Assemblée (PDF as published on the CTM's website).
+# (year, délibération, WordPress Download Manager id, download page). Used for check R6 (CA vs OFGL).
+CA = [(2022, "23-418-1", 26834, "delib-n23-418-1-adoption-du-compte-administratif-exercice-2022"),
+      (2023, "24-97-1", 15152, "delib-n24-97-1-compte-administratif-2023-budget-principal-2"),
+      (2024, "25-148-1", 24021, "delib-n25-148-1-compte-administratif-de-la-ctm-annee-2024"),
+      (2025, "26-147-1", 31906, "delib-n26-147-1-compte-administratif-2025-budget-principal")]
+JOBS += [file_job("ca", f"ctm-ca-{year}", f"{SITE}/?wpdmdl={wpdm}",
+                  f"Délibération n° {delib} — compte administratif {year}, budget principal de la CTM",
+                  f"{SITE}/download/{slug}/", "Collectivité Territoriale de Martinique",
+                  f"Compte administratif {year} (budget principal) voted by the Assemblée: check R6 against OFGL.",
+                  licence=NO_LICENCE, ext="pdf") for year, delib, wpdm, slug in CA]
+
 # Not archived (5 Nov 2026): the convocation decrees 2015-939 and 2021-483 and the loi 2021-191 (end of the 2021 term,
 # March 2028). Their copies on prefecture sites answer HTTP 401 to scripted downloads; to add from Légifrance.
 # Election dates come from the Ministry datasets (description of the 2015 round-2 file: "… du 13 décembre 2015").
