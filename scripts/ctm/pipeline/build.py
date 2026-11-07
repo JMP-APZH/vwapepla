@@ -14,6 +14,8 @@ for d in (HERE, HERE.parent, HERE.parents[1] / "core"):  # python -I drops the s
 from metrics import CI, FUM, METRICS  # noqa: E402
 from functions import FIRST_YEAR as FUNC_FROM, area_sums, labels as area_labels  # noqa: E402
 from acts import build_acts  # noqa: E402
+from ca import LINES as CA_LINES, read_ca  # noqa: E402
+from sources import CA as CA_DOCS  # noqa: E402
 from sources import NATURE_FONCTION  # noqa: E402  (yearly nature-fonction dataset ids)
 
 sys.stdout.reconfigure(encoding="utf-8")
@@ -359,6 +361,21 @@ if len({a["id"] for a in acts}) != len(acts):
 print(f"acts: {sum(a['body'] == 'assemblee' for a in acts)} délibérations, "
       f"{sum(a['body'] == 'conseil_executif' for a in acts)} arrêtés délibérés, {sum(a['number'] is None for a in acts)} without number")
 
+# --- comptes administratifs of the main budget, as voted (PDF text layer, pages C1 / C2) ------------------------------
+import pymupdf  # noqa: E402
+
+pymupdf.TOOLS.mupdf_display_errors(False)
+ca_lines = []
+for year, delib, _wpdm, _slug in CA_DOCS:
+    ds = f"ctm-ca-{year}"
+    if ds not in MANIFEST:
+        errors.append(f"{ds}: not downloaded")
+        continue
+    for key, (value, page) in read_ca(pymupdf.open(ROOT / MANIFEST[ds]["file"])).items():
+        ca_lines.append({"year": year, "budget": "principal", "line_key": key, "label": CA_LINES[key],
+                         "amount": round(value, 2), "page": page, "deliberation": delib, "source_id": sid(ds)})
+print(f"comptes administratifs: {len(ca_lines)} lines for {sorted({c['year'] for c in ca_lines})}")
+
 # --- report and write ------------------------------------------------------------------------------------------------
 print("2012 overlap (DGFiP comptes individuels vs OFGL budget principal):")
 for o in overlap:
@@ -378,6 +395,7 @@ out = {"sources": sources, "institutions": institutions, "bodies": bodies, "seat
        "ctm_list_members": sorted(list_members, key=lambda l: l["id"]),
        "ctm_section_members": sorted(section_members, key=lambda s: (s["term_id"], s["person_id"])),
        "ctm_functional_actuals": functional, "ctm_acts": sorted(acts, key=lambda a: a["id"]),
+       "ctm_ca_lines": sorted(ca_lines, key=lambda c: (c["year"], c["line_key"])),
        "ctm_overlap_2012": overlap, "ctm_fum_overlap_2019": [{"metric_key": k, "balances": a, "nature_fonction": b}
                                                              for k, (a, b) in fum_overlap.items()]}
 if errors:

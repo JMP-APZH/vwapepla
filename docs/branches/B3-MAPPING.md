@@ -104,3 +104,30 @@ Indexes of the CTM's website: 1,809 délibérations of the Assemblée, 4,304 arr
 (344 without number). Stored title: the published title without its act number, with the **names of private
 individuals masked** (after Monsieur / Madame / M. / Mme / Mlle; 987 titles). The full act stays on the CTM's page.
 No session date, vote or topic: not in the index.
+
+## G. Comptes administratifs voted by the Assemblée (sprint 4, 7 Nov 2026)
+
+Sources: the main-budget CAs as published by the CTM (PDF with a text layer, archived by the downloader):
+2022 délib. 23-418-1, 2023 délib. 24-97-1, 2024 délib. 25-148-1, 2025 délib. 26-147-1. Read by
+`scripts/ctm/pipeline/ca.py` from the standard M57 pages **C1** (équilibre financier – investissement) and **C2**
+(équilibre financier – fonctionnement), real and mixed operations. Each figure keeps its PDF page. C2 check: income −
+spending = the printed balance.
+
+Check R6 (`reconcile.py`), tolerance 1 % or €50,000:
+
+| CA line | Compared with | Result |
+|---|---|---|
+| Real operating spending (C2, I) | DGFiP gross: debits on real class-6 accounts + debits on class 7 (atténuations de produits, 739) | 2022–2024 to the euro |
+| Real operating income (C2, II) | DGFiP gross: credits on real class-7 accounts + credits on class 6 (atténuations de charges) | 2022–2024 within €0.17M |
+| Real operating balance (C2, II − I) | OFGL « Epargne brute » bp | +0.13 %, 0.00 %, +0.28 % |
+| Real investment spending minus chapter 923 | OFGL « Dépenses d'investissement hors remb » bp | within 0.03 % |
+| Chapter 923 spending | OFGL « Remboursements d'emprunts hors GAD » bp | within 0.10 % |
+| Chapter 923 income | OFGL « Emprunts hors GAD » bp (+ account 1068 in 2022–2023) | within 0.06 % |
+
+Why the CA's operating totals are higher than OFGL's (about €4–5M on each side): the CA counts gross amounts, while
+OFGL nets the credits on spending accounts and the debits on income accounts. The balance is the same.
+In 2022 and 2023 the CA's chapter 923 income also includes the capitalised surplus (account 1068: €10.2M and €17.4M);
+from 2024 it is shown on its own line.
+
+2025: OFGL / DGFiP balances are provisional. The CA has €7.3M more operating spending than the provisional balances
+(balance €32.2M against €39.5M). Reported, not failing, until the final balances are published.
