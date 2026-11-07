@@ -5,7 +5,7 @@ import { getAllScrutins, getGroupLabels, getPeople, getPerson, getVotes } from "
 import { termPeriod } from "@/lib/parlement/members";
 
 // Every public vote of each of the member's loaded mandates with their recorded position: the complete list, not curated
-// (JM, 5 Nov 2026). AN: whole legislatures (AN open data). Sénat: every public vote during each mandate (Dosleg).
+// (JM, 5 Nov 2026). AN: every public vote held during each mandate (AN open data). Sénat: same, from Dosleg.
 
 export async function generateStaticParams() {
   return (await getPeople()).map((p) => ({ slug: p.slug }));
@@ -35,7 +35,7 @@ export async function GET(_req: Request, ctx: RouteContext<"/parlementaires/[slu
            s.voters, s.pour, s.contre, s.abstentions, s.selected_by.join(" "), s.url];
     }));
   const body = an
-    ? toCsv(`Votes publics de ses législatures — ${name}`,
+    ? toCsv(`Scrutins publics de l'Assemblée pendant ses mandats — ${name}`,
         terms.flatMap((t) => [`an-scrutins-${t.legislature}`, `an-scrutins-${t.legislature}-liste`])
           .map((id) => sources.get(id)).filter((s) => s != null),
         ["« Pas de vote enregistré » n'est pas une absence : la plupart des votes se font à main levée.",

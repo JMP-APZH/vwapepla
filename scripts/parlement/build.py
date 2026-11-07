@@ -10,7 +10,7 @@ Checks (exit 1 on failure): row counts equal to the manifest; exactly 4 sitting 
 2 sitting senators of Martinique, names and sex matching the RNE; one deputy per circonscription at any date of each
 legislature; every vote, amendment, question, membership points to a known person / scrutin / organe.
 """
-import collections, csv, html, json, pathlib, re, sys, unicodedata
+import collections, csv, datetime, html, json, pathlib, re, sys, unicodedata
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))  # our own code dir (python -I drops it)
 import votes  # noqa: E402
@@ -116,23 +116,33 @@ current_an = [r for r in an_seats if r["mandat.legislature"] == CURRENT and not 
 circos = sorted(int(r["mandat.election.lieu.numCirco"]) for r in current_an)
 if circos != [1, 2, 3, 4]:
     errors.append(f"sitting deputies of Martinique: circonscriptions {circos}, expected [1, 2, 3, 4]")
+
+
+def an_start(r):
+    """A replacement deputy's AMO30 mandate is dated from the general election (XVth, 972-2: Kéclard-Mondésir from
+    2017-06-18, while Azerot sat until 2018-04-23): the mandate starts when the replacement takes office."""
+    if r["mandat.election.causeMandat"].lower().startswith("remplacement") and r["mandat.mandature.datePriseFonction"]:
+        return day(r["mandat.mandature.datePriseFonction"])
+    return day(r["mandat.dateDebut"])
+
+
 for leg in LEGS:  # never two deputies on one seat at the same date
     by_circ = collections.defaultdict(list)
     for r in an_seats:
         if r["mandat.legislature"] == leg:
-            by_circ[r["mandat.election.lieu.numCirco"]].append((day(r["mandat.dateDebut"]), day(r["mandat.dateFin"]) or "9999"))
+            by_circ[r["mandat.election.lieu.numCirco"]].append((an_start(r), day(r["mandat.dateFin"]) or "9999"))
     for c, spans in by_circ.items():
         spans.sort()
         if any(b[0] < a[1] for a, b in zip(spans, spans[1:])):
             errors.append(f"legislature {leg}, circonscription 972-{c}: overlapping mandates {spans}")
-for r in sorted(an_seats, key=lambda r: (r["mandat.legislature"], r["mandat.election.lieu.numCirco"], r["mandat.dateDebut"])):
+for r in sorted(an_seats, key=lambda r: (r["mandat.legislature"], r["mandat.election.lieu.numCirco"], an_start(r))):
     uid, leg, n = r["uid"], r["mandat.legislature"], int(r["mandat.election.lieu.numCirco"])
     pid = f"parl-an:{uid}"
     last, first = r["etatCivil.ident.nom"], r["etatCivil.ident.prenom"]
     sex = "F" if r["etatCivil.ident.civ"].startswith("Mme") else "M"
     persons[pid] = {"id": pid, "last_name": last, "first_name": first, "sex": sex}
     seat = f"{an_body(leg)}:depute-972-{n}"
-    start, end = day(r["mandat.dateDebut"]), day(r["mandat.dateFin"])
+    start, end = an_start(r), day(r["mandat.dateFin"])
     terms[pid].append(("AN", leg, start, end))
     mandates.append({"person_id": pid, "seat_id": seat, "start_date": start,
                      "function_start": day(r["mandat.mandature.datePriseFonction"]), "end_date": end,
@@ -408,13 +418,20 @@ for v in raw("senat-votes-972"):
 
 # --- amendments ----------------------------------------------------------------------------------------------------
 amendments = []
+# A legislature's amendments file the archive server would not deliver (manifest has no entry): skipped, stated as a gap
+# by Vwapepla ("pas encore chargés"), loaded at the next successful download. Never shown as zero.
+amend_missing = [leg for leg in LEGS if f"an-amendements-{leg}" not in MANIFEST]
 for leg in LEGS:
     ds = f"an-amendements-{leg}"
+    if leg in amend_missing:
+        print(f"  {ds}: not downloaded (archive server), stated as a data gap")
+        continue
     for a in raw(ds):
         author = f"parl-an:{a['signataires.auteur.acteurRef']}"
         rapporteur = a["signataires.auteur.typeAuteur"] == "Rapporteur"
         who = [(author, "premier_signataire")] if author in an_persons and in_leg(author, leg) else []
-        co = set((a["cosignataires"] or "").split(","))
+        # XIVth: the co-signer list repeats the first signatory; counted once, as first signatory
+        co = set((a["cosignataires"] or "").split(",")) - {"", a["signataires.auteur.acteurRef"]}
         who += [(f"parl-an:{x}", "cosignataire") for x in (a["martinique_acteurRefs"] or "").split(",")
                 if x in co and f"parl-an:{x}" in an_persons and in_leg(f"parl-an:{x}", leg)]
         num = re.search(r"(\d+)$", a["texteLegislatifRef"] or "")
@@ -424,7 +441,7 @@ for leg in LEGS:
         for pid, role in who:
             amendments.append({"id": f"{a['uid']}:{pid}", "amendment_id": a["uid"], "chamber": "AN", "legislature": leg,
                                "person_id": pid, "role": role, "as_rapporteur": rapporteur,
-                               "signatories": 1 + len(co - {""}), "number": a["identification.numeroLong"],
+                               "signatories": 1 + len(co), "number": a["identification.numeroLong"],
                                "text_ref": a["texteLegislatifRef"] or None,
                                "text_number": num.group(1) if num else None, "text_title": None, "text_id": None,
                                "article": a["pointeurFragmentTexte.division.articleDesignation"] or None,
@@ -531,10 +548,10 @@ for pid, (key, uuid, f) in sorted(latest.items()):
 gaps = []
 
 
-def gap(gid, chamber, period, topic, status, label, detail, source, url=None, person=None):
+def gap(gid, chamber, period, topic, status, label, detail, source, url=None, person=None, checked_on=None):
     gaps.append({"id": gid, "chamber": chamber, "person_id": person, "period": period, "topic": topic, "status": status,
                  "label_fr": label, "detail_fr": detail, "checked_url": url or MANIFEST[source]["dataset_page"],
-                 "checked_on": MANIFEST[source]["retrieved"], "source_id": source})
+                 "checked_on": checked_on or MANIFEST[source]["retrieved"], "source_id": source})
 
 
 fmt = lambda n: f"{n:,}".replace(",", " ")  # noqa: E731  French thousands separator
@@ -561,6 +578,13 @@ for leg in LEGS:
         gap(f"an-{leg}-votes-delegation", "AN", period, "votes", "absent", "Votes par délégation non signalés",
             f"Les données de la {ROMAN[leg]} législature ne disent pas si un vote a été émis par délégation "
             "(un député votant pour un collègue) : ce n'est donc jamais indiqué pour cette période.", f"an-scrutins-{leg}")
+    if leg in amend_missing:
+        gap(f"an-{leg}-amendements-non-charges", "AN", period, "amendements", "absent", "Amendements pas encore chargés",
+            f"Le fichier des amendements de la {ROMAN[leg]} législature est publié par l'Assemblée nationale, mais son "
+            "serveur d'archives a interrompu chaque téléchargement le 7 novembre 2026 (fichier de 649 Mo). Ces amendements "
+            "ne sont donc pas encore sur Vwapepla : leur nombre n'est pas zéro, il est inconnu ici. Ils seront chargés au "
+            "prochain téléchargement réussi.", None, url=MANIFEST[f"an-scrutins-{leg}"]["dataset_page"],
+            checked_on=datetime.date.today().isoformat())
     own = [a for a in amendments if a["chamber"] == "AN" and a["legislature"] == leg and a["role"] == "premier_signataire"]
     no_outcome = sum(1 for a in own if not a["outcome"])
     if leg != CURRENT and own and no_outcome:

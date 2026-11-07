@@ -19,7 +19,9 @@ python -I scripts/core/load_supabase.py --domain parlement                    # 
   - AN committee meetings (`an-reunions-17`, no names: only whether an attendance list is published);
   - HATVP list and declarations (whitelisted fields: the member's own sections only; never address, birth date,
     contact details, spouse or assistants), RNE and the 2024 candidacies (suppléants).
-  The AN archive server ends long transfers early: `_get` falls back to `_patient_fetch` (HTTP Range, growing pauses).
+  The AN archive server ends long transfers early: `_get` falls back to `_patient_fetch` (HTTP Range, growing pauses;
+  when its CDN serves no range, a full download from byte 0, kept only if it gets further). A job that still fails
+  (XVth amendments, 7 Nov 2026) has no manifest entry: `build.py` skips it and writes a « pas encore chargés » gap.
   The big zips (AN amendments 100-650 MB, Sénat dumps) are best run alone (`--only`).
 - `build.py`: core rows of the two chambers (`institutions`, `bodies` one per AN legislature, `seats`, `persons`,
   `mandates`) and the `parl_*` tables: deputies of the XIVth-XVIIth legislatures, senators whose mandate ran on or after

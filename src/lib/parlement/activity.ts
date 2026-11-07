@@ -140,6 +140,11 @@ const TOPIC_ORDER = ["votes", "presence", "amendements", "questions", "declarati
 
 /** Gaps that concern one member: their chamber's general gaps and their own, in a fixed topic order. Gaps of one AN
  *  legislature (id « an-<n>-… ») only for members who sat in it; gaps about former members only on their cards. */
+/** Legislatures whose amendments file could not be loaded (gap `an-<n>-amendements-non-charges`): never shown as zero. */
+export function amendmentsNotLoaded(gaps: DataGap[]): Set<string> {
+  return new Set(gaps.flatMap((g) => g.id.match(/^an-(\d+)-amendements-non-charges$/)?.[1] ?? []));
+}
+
 export function gapsFor(gaps: DataGap[], m: { chamber: "AN" | "SEN"; personId: string; legislatures?: string[]; current?: boolean }): DataGap[] {
   const order = (t: string) => { const i = TOPIC_ORDER.indexOf(t); return i < 0 ? 99 : i; };
   return gaps.filter((g) => {

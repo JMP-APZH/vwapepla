@@ -85,11 +85,11 @@ const SCRUTIN_COLS = "id,chamber,legislature,number,date,type_code,type_label,ti
 function termScrutins(t: Pick<Term, "chamber" | "legislature" | "start" | "end">, selectedOnly: boolean) {
   return all<Scrutin>("parl_scrutins", (a, b) => {
     let q = supabase.from("parl_scrutins").select(SCRUTIN_COLS).eq("chamber", t.chamber);
+    // AN: the legislature, and the mandate's own dates too (a deputy who resigned, or a replacement who took office
+    // later, sat only part of it: votes held outside the mandate are not "no recorded vote").
     if (t.chamber === "AN") q = q.eq("legislature", t.legislature ?? "");
-    else {
-      q = q.gte("date", t.start);
-      if (t.end) q = q.lte("date", t.end);
-    }
+    q = q.gte("date", t.start);
+    if (t.end) q = q.lte("date", t.end);
     if (selectedOnly) q = q.neq("selected_by", "{}");
     return q.order("id").range(a, b);
   });

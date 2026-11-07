@@ -95,6 +95,7 @@
   "termVotes": "Votes publics retenus (règle V1) : {n} positions enregistrées sur {total} scrutins",
   "termNoSelected": "Votes publics retenus (règle V1) : aucun scrutin pendant ce mandat.",
   "termAmendments": "Amendements déposés comme premier signataire : {n} ({adopted} adoptés, {rejected} rejetés, {other} autres issues, {pending} sans issue publiée)",
+  "termAmendmentsMissing": "Amendements : pas encore chargés sur Vwapepla (voir « Données manquantes ou partielles »). Leur nombre n'est pas zéro, il est inconnu ici.",
   "termNoQuestions": "Questions au Gouvernement : aucune dans les données publiées.",
   "termDownloadVotes": "Télécharger tous les votes publics de ses mandats (CSV, liste complète)",
   "formerNote": "Faits publiés par l'Assemblée nationale, le Sénat et la HATVP sur ses mandats terminés. Données du {date}.",

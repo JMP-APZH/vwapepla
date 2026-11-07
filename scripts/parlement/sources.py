@@ -34,30 +34,39 @@ def _get(url):
 def _patient_fetch(url, dest, minutes=30):
     """Fallback for the AN archive server, which ends long transfers early and sometimes stalls for minutes
     (7 Nov 2026): HTTP Range requests from the last byte, with growing pauses, until the announced size is reached or
-    `minutes` pass without progress. Same guarantee as the core fetch: a short file is never kept."""
-    part = dest.with_name(dest.name + ".part")
+    `minutes` pass without progress. Its CDN does not serve ranges of files it marks "too big" to cache (the XVth
+    amendments: 206 with no bytes): when a resume brings nothing, the next try is a full download from byte 0, kept only
+    if it gets further. Same guarantee as the core fetch: a short file is never kept."""
+    part, fresh = dest.with_name(dest.name + ".part"), dest.with_name(dest.name + ".fresh")
     part.unlink(missing_ok=True)
     head = urllib.request.urlopen(urllib.request.Request(url, method="HEAD"), timeout=120)
     size = int(head.headers["Content-Length"])
-    last, wait = time.monotonic(), 5
+    last, wait, full = time.monotonic(), 5, False
     while (have := part.stat().st_size if part.exists() else 0) < size:
         if time.monotonic() - last > minutes * 60:
             part.unlink(missing_ok=True)
             raise IncompleteDownload(f"{url}: stalled at {have:,} of {size:,} bytes for {minutes} min")
+        target = fresh if full and have else part
+        fresh.unlink(missing_ok=True)
         try:
-            req = urllib.request.Request(url, headers={"Range": f"bytes={have}-"})
-            with urllib.request.urlopen(req, timeout=300) as r, open(part, "ab") as f:
-                if r.status != 206:
+            headers = {} if target is fresh or not have else {"Range": f"bytes={have}-"}
+            with urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=120) as r,                     open(target, "ab") as f:
+                if headers and r.status != 206:
                     raise IncompleteDownload(f"{url}: server does not resume")
                 while chunk := r.read(1 << 20):
                     f.write(chunk)
         except (OSError, http.client.HTTPException):
             pass
+        if target is fresh:
+            if fresh.exists() and fresh.stat().st_size > have:
+                fresh.replace(part)
+            fresh.unlink(missing_ok=True)
         now = part.stat().st_size if part.exists() else 0
         if now > have:
             last, wait = time.monotonic(), 5
-            print(f"     patient resume: {now:,} of {size:,} bytes")
+            print(f"     patient {'restart' if target is fresh else 'resume'}: {now:,} of {size:,} bytes", flush=True)
         else:
+            full = not full  # alternate: resume from the last byte, then a full download from byte 0
             time.sleep(wait)
             wait = min(wait * 2, 120)
     if part.stat().st_size != size:
@@ -300,8 +309,10 @@ def _scrutins(url):
         """One row per (scrutin, Martinique deputy) with the recorded position, plus the scrutin's own metadata."""
         uids = set(_an_martinique_actors())
         meta = SCRUTIN_COLS
+        # XVIIth: plural list names; XIVth and the Congrès (VTCG…) also use the singular ones ("pour", "contre"…)
         positions = {"pours": "pour", "contres": "contre", "abstentions": "abstention", "nonVotants": "nonVotant",
-                     "nonVotantsVolontaires": "nonVotantVolontaire"}
+                     "nonVotantsVolontaires": "nonVotantVolontaire", "pour": "pour", "contre": "contre",
+                     "abstention": "abstention", "nonVotant": "nonVotant", "nonVotantVolontaire": "nonVotantVolontaire"}
 
         def walk(node, pos, group, found):
             if isinstance(node, dict):
