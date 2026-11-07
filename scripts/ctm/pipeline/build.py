@@ -11,7 +11,7 @@ import collections, csv, json, pathlib, re, sys, unicodedata
 HERE = pathlib.Path(__file__).resolve().parent
 for d in (HERE, HERE.parent, HERE.parents[1] / "core"):  # python -I drops the script dir; sources.py imports fetching
     sys.path.insert(0, str(d))
-from metrics import CI, FUM, METRICS  # noqa: E402
+from metrics import CI, FUM, FUM_2016, METRICS  # noqa: E402
 from functions import FIRST_YEAR as FUNC_FROM, area_sums, labels as area_labels  # noqa: E402
 from acts import build_acts  # noqa: E402
 from sources import NATURE_FONCTION  # noqa: E402  (yearly nature-fonction dataset ids)
@@ -125,20 +125,22 @@ for (siren, year, key), row in list(actuals.items()):
 fum_sum = collections.defaultdict(float)  # (year, metric, source) -> amount
 
 
-def add_fum(ds, rows, years):
+def add_fum(ds, rows, years, mapping=FUM):
     for r in rows:
         year = int(r["exer"][:4])
         if r["siren"] != CTM or r["cbudg"] != "1" or r["bal"] != "DEF" or year not in years:
             continue
         v = (num(r["obnetcre"]) or 0) - (num(r["obnetdeb"]) or 0)
-        for key, prefix in FUM.items():
+        for key, prefix in mapping.items():
             if r["compte"].startswith(prefix):
                 fum_sum[(year, key, ds)] += v
 
 
 add_fum("balances-comptables-des-departements", records("balances-comptables-des-departements"), range(2019, 2026))
-# 2016-2017 use the M57 chart before its 2018 renumbering (no 73432; octroi de mer elsewhere): not loaded, no guessed
-# mapping (shown as missing on the card). 2019 is in both sources: overlap check.
+# 2016-2017: M57 chart before its 2018 renumbering, mapped with FUM_2016 (validated by JM, 7 Nov 2026).
+# 2019 is in both sources: overlap check.
+for y in (2016, 2017):
+    add_fum(NATURE_FONCTION[y], records(NATURE_FONCTION[y]), {y}, FUM_2016)
 for y in (2018, 2019):
     add_fum(NATURE_FONCTION[y], records(NATURE_FONCTION[y]), {y})
 fum_overlap = {key: (fum_sum[(2019, key, "balances-comptables-des-departements")], fum_sum[(2019, key, NATURE_FONCTION[2019])])

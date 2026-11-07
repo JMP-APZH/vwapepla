@@ -56,6 +56,12 @@ METRICS = [
 FUM = {"fum_total": "734", "fum_octroi_de_mer": "73432", "fum_carburants": "7342", "fum_autres": "7348",
        "fum_transport": "73433", "fum_rhum": "73411"}
 
+# 2016-2017: the M57 chart before its 2018 renumbering (official labels, OFGL nomenclature file). Mapping validated by JM
+# on 7 Nov 2026 (B3-MAPPING.md §B): 7374 « Taxe additionnelle à l'octroi de mer », 7372 « Taxes sur les carburants »,
+# 7378x « Autres », 7376 transport tax, 7371 rum tax; total = group 737.
+FUM_2016 = {"fum_total": "737", "fum_octroi_de_mer": "7374", "fum_carburants": "7372", "fum_autres": "7378",
+            "fum_transport": "7376", "fum_rhum": "7371"}
+
 # DGFiP comptes individuels 2008-2011 (budget principal, k€): metric -> column, or a difference of two columns.
 CI = {"rf_total": "pfr", "df_total": "cfr", "epargne_brute": ("pfr", "cfr"), "encours_dette": "dba",
       "depenses_equipement": "ded", "frais_personnel": "chp"}

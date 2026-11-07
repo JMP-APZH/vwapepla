@@ -31,7 +31,6 @@
   "fumTitle": "Fiscalité spécifique ultramarine",
   "fumIntro": "Impôts propres aux collectivités d'outre-mer (compte 734 de la nomenclature M57, budget principal). C'est ce total que la Chambre régionale des comptes appelle « produits liés à l'octroi de mer ». Sur cette fiche, « octroi de mer » désigne uniquement l'octroi de mer régional (compte 73432).",
   "colYear": "Année",
-  "fumMissing2016": "2016-2017 : non présentés. Les comptes de la CTM suivaient alors une version de la nomenclature M57 antérieure à sa renumérotation de 2018 (pas de compte 73432), et la correspondance n'est pas encore vérifiée.",
   "beforeTitle": "Avant la CTM : Région et Département (2008-2015)",
   "beforeIntro": "Jusqu'en 2015, la Martinique avait deux collectivités, le Conseil régional et le Conseil général. Leurs comptes sont présentés côte à côte, jamais additionnés : leurs compétences étaient différentes.",
   "beforeRegion": "Région",
@@ -113,5 +112,6 @@
   "actsNone": "Aucun acte ne correspond à cette recherche.",
   "colNumber": "N°",
   "colTitle": "Titre",
-  "colBody": "Organe"
+  "colBody": "Organe",
+  "fumOldAccounts": "2016-2017 : comptes de la nomenclature M57 d'avant sa renumérotation de 2018, rattachés aux mêmes lignes d'après leurs libellés officiels (octroi de mer régional = compte 7374 « Taxe additionnelle à l'octroi de mer » ; taxe sur les carburants = 7372 ; autres = 7378 ; transport = 7376 ; rhums = 7371)."
 }

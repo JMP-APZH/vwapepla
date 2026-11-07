@@ -101,7 +101,7 @@ export function FiscaliteUltramarine({ rows, labels, range, sources }: {
   return (
     <FactBlock title={<>{ctm.fumTitle.fr} {range}</>} sources={sources} year={range}>
       <p className="mt-1 text-sm text-slate-600">{ctm.fumIntro.fr}</p>
-      <p className="mt-1 text-xs text-slate-500">{ctm.fumMissing2016.fr}</p>
+      <p className="mt-1 text-xs text-slate-500">{ctm.fumOldAccounts.fr}</p>
       <div className="mt-2 overflow-x-auto">
         <table className="w-full min-w-[36rem] text-sm">
           <thead>

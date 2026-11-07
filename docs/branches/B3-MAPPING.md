@@ -36,11 +36,24 @@ The three bodies are never summed. 2025 is provisional.
 
 Build check: `rf_total` and `df_total` equal the sum of their parts (within 0.5 %), every body and year.
 
-## B. Fiscalité ultramarine: DGFiP balances, budget principal, net credit, 2018–2025
+## B. Fiscalité ultramarine: DGFiP balances, budget principal, net credit, 2016–2025
 
-Sources: `balances-comptables-des-departements` (2019–2025) and the nature-fonction file 2018 (2019 is in both and
-identical). **2016–2017 are not loaded**: the CTM's accounts then follow the M57 chart before its 2018 renumbering
-(no account 73432; the octroi de mer appears to be in 7372, not validated). Stated as missing on the card. "Octroi de mer" on the card always means account 73432 only.
+Sources: `balances-comptables-des-departements` (2019–2025) and the nature-fonction files 2016–2018 (2019 is in both and
+identical). "Octroi de mer" on the card always means the octroi de mer régional only.
+
+**2016–2017 (validated by JM, 7 Nov 2026):** the CTM's accounts follow the M57 chart before its 2018 renumbering. Each
+line is mapped from the official account labels (OFGL nomenclature file):
+
+| Card line | 2016–2017 account (official label) | 2016 | 2017 | 2018 account | 2018 |
+|---|---|---|---|---|---|
+| Total | 737 group | 180.8 | 199.6 | 734 | 197.8 |
+| Octroi de mer régional | 7374 « Taxe additionnelle à l'octroi de mer » | 75.2 | 72.0 | 73432 | 75.1 |
+| Taxe sur les carburants | 7372 « Taxes sur les carburants » | 72.4 | 91.5 | 7342 | 82.9 |
+| Autres | 7378x « Autres » | 29.7 | 32.8 | 7348 | 36.0 |
+| Transport public aérien et maritime | 7376 | 2.0 | 1.9 | 73433 | 2.0 |
+| Rhums | 7371 | 1.4 | 1.3 | 73411 | 1.8 |
+
+Check R4b (`reconcile.py`): the five taxes add up to the total, every year.
 
 | Metric key | Accounts | 2024 |
 |---|---|---|
