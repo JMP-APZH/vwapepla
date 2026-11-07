@@ -330,6 +330,21 @@ JOBS += [file_job("ca", f"ctm-ca-{year}", f"{SITE}/?wpdmdl={wpdm}",
                   f"Compte administratif {year} (budget principal) voted by the Assemblée: check R6 against OFGL.",
                   licence=NO_LICENCE, ext="pdf") for year, delib, wpdm, slug in CA]
 
+# Forecast layer (« Prévisionnel », never mixed with actuals): budgets primitifs of the main budget and orientation
+# reports (ROB), as voted by the Assemblée. (year, type, délibération, wpdm id, download page slug).
+FORECAST = [(2024, "BP", "24-49-1", 8481, "delib-n24-49-1-budget-primitif-ctm-2024-budget-principal"),
+            (2025, "BP", "24-322-1", 19718, "delib-n24-322-1-budget-primitif-ctm-2025-budget-principal"),
+            (2026, "BP", "25-376-1", 28754, "delib-n25-376-1-budget-primitif-budget-principal-exercice-2026"),
+            (2024, "ROB", "24-02-1", 5321, "delib-n24-02-1-debat-orientations-budgetaires-ctm-2024"),
+            (2025, "ROB", "24-253-1", 18993, "delib-n24-253-1-orientations-budgetaires-ctm-2025"),
+            (2026, "ROB", "25-315-1", 27839, "delib-n25-315-1-orientations-budgetaires-exercice-2026")]
+_FORECAST_TITLE = {"BP": "budget primitif {y}, budget principal de la CTM", "ROB": "rapport d'orientations budgétaires {y}"}
+JOBS += [file_job("forecast", f"ctm-{kind.lower()}-{year}", f"{SITE}/?wpdmdl={wpdm}",
+                  f"Délibération n° {delib} — " + _FORECAST_TITLE[kind].format(y=year), f"{SITE}/download/{slug}/",
+                  "Collectivité Territoriale de Martinique",
+                  f"Forecast layer ({kind} {year}), shown as « Prévisionnel », never mixed with actuals.",
+                  licence=NO_LICENCE, ext="pdf") for year, kind, delib, wpdm, slug in FORECAST]
+
 # Not archived (5 Nov 2026): the convocation decrees 2015-939 and 2021-483 and the loi 2021-191 (end of the 2021 term,
 # March 2028). Their copies on prefecture sites answer HTTP 401 to scripted downloads; to add from Légifrance.
 # Election dates come from the Ministry datasets (description of the 2015 round-2 file: "… du 13 décembre 2015").

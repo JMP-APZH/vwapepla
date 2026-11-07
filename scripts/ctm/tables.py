@@ -22,4 +22,6 @@ TABLES = {
     "ctm_functional_actuals": "year,section,fonction",  # migration <ts>_ctm_functions_acts.sql
     "ctm_acts": "id",
     "ctm_ca_lines": "year,budget,line_key",  # migration <ts>_ctm_ca_lines.sql
+    "ctm_forecast_documents": "id",  # migration <ts>_ctm_forecast.sql
+    "ctm_forecast_figures": "document_id,line_key",
 }
