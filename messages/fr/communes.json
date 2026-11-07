@@ -93,5 +93,11 @@
   "crit_closed": "Les avis sont fermés pendant la période pré-électorale.",
   "crit_invalid": "Choisissez au moins une réponse avant d'envoyer.",
   "crit_check_failed": "La vérification anti-robot n'a pas abouti. Réessayez.",
-  "crit_error": "Votre avis n'a pas pu être enregistré. Réessayez plus tard."
+  "crit_error": "Votre avis n'a pas pu être enregistré. Réessayez plus tard.",
+  "channelsTitle": "Réseaux sociaux de la mairie",
+  "channelsIntro": "Comptes de la mairie relevés à la main par l'équipe Vwapepla, à une date donnée. Ce sont des constats, pas une note.",
+  "channelsNoneFound": "Aucun compte trouvé à cette date.",
+  "channelsNotObserved": "Pas encore relevé.",
+  "channelsSource": "Source : relevé de l'équipe Vwapepla aux dates indiquées, relu par la rédaction ; capture d'écran conservée hors ligne avec son empreinte (sha256). Les abonnés sont le chiffre affiché par la plateforme ce jour-là.",
+  "channelsMissing": "Réseaux sociaux de la mairie : pas encore relevés."
 }
