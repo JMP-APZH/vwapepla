@@ -357,3 +357,82 @@ if piste_keys():
 else:
     print("prefet: PISTE_CLIENT_ID / PISTE_CLIENT_SECRET not in .env.local: JORF jobs skipped "
           "(see scripts/prefet/README.md)")
+
+
+# --- Recueils des actes administratifs (RAA) of the préfecture: list of acts, from each bulletin's Sommaire -----------
+RAA_FROM = 2016  # cut-off validated with JM: postings covered from Dec 2015, acts from 2016
+
+
+def raa_fetcher(year):
+    def fetcher(dest):
+        import raa  # scripts/prefet/raa.py
+        root = pathlib.Path(__file__).resolve().parents[2]
+        folders = raa.year_folders()
+        if year not in folders:
+            raise SystemExit(f"RAA {year}: no folder on {raa.SITE}{raa.ROOT_PATH}")
+        acts, bulletins, problems = raa.index_year(year, folders[year], root / "data" / "raw" / "prefet" / "raa" / "cache")
+        fields = ["act_id", "act_date", "service", "title", "pages", "page", "bulletin", "published", "pdf_url",
+                  "listing_page"]
+        with open(dest.with_suffix(".part"), "w", encoding="utf-8", newline="") as out:
+            w = csv.DictWriter(out, fieldnames=fields, delimiter=";")
+            w.writeheader()
+            w.writerows(acts)
+        dest.with_suffix(".part").replace(dest)
+        print(f"     {len(bulletins)} bulletins, {len(acts)} acts" + (f", {len(problems)} problems:" if problems else ""))
+        for p in problems:
+            print(f"       {p}")
+    return fetcher
+
+
+JOBS += [
+    {**file_job("raa", f"raa-{y}", f"https://www.martinique.gouv.fr/Publications/Recueils-des-actes-administratifs-publies",
+                f"Recueils des actes administratifs de la préfecture de la Martinique — {y}",
+                "https://www.martinique.gouv.fr/Publications/Recueils-des-actes-administratifs-publies",
+                "Préfecture de la Martinique, recueils des actes administratifs",
+                f"Acts published in {y} (number, date, service, title, page), read from the Sommaire of each bulletin. "
+                "The bulletins stay on the préfecture's site; each act links to its PDF.",
+                licence="Actes administratifs publiés (documents administratifs, réutilisation libre — art. L321-1 CRPA)"),
+     "encoding": "utf-8", "fetcher": raa_fetcher(y)}
+    for y in range(RAA_FROM, __import__("datetime").date.today().year + 1)
+]
+
+
+# --- Natural disaster recognitions (« arrêtés CatNat »), GASPAR database (Géorisques, ministère de la Transition
+# écologique): one zip of national CSVs; only the CatNat table is kept, filtered on the 34 communes of Martinique.
+GASPAR_URL = "https://files.georisques.fr/GASPAR/gaspar.zip"
+
+
+def gaspar_fetcher(dest):
+    import zipfile
+    with tempfile.TemporaryDirectory() as tmp:
+        z = pathlib.Path(tmp) / "gaspar.zip"
+        fetch(GASPAR_URL, z)
+        with zipfile.ZipFile(z) as zf:
+            names = zf.namelist()
+            print(f"     zip: {', '.join(names)}")
+            name = next(n for n in names if "catnat" in n.lower() and n.lower().endswith(".csv"))
+            with zf.open(name) as raw:
+                text = io.TextIOWrapper(raw, encoding="utf-8-sig", newline="")
+                sample = text.readline()
+                delim = ";" if sample.count(";") >= sample.count(",") else ","
+                header = next(csv.reader([sample], delimiter=delim))
+                code = next(i for i, h in enumerate(header) if h.lower() in ("code_commune", "cod_commune"))
+                kept = 0
+                with open(dest.with_suffix(".part"), "w", encoding="utf-8", newline="") as out:
+                    w = csv.writer(out, delimiter=";")
+                    w.writerow(header)
+                    for row in csv.reader(text, delimiter=delim):
+                        if row and row[code].startswith("972"):
+                            w.writerow(row)
+                            kept += 1
+    dest.with_suffix(".part").replace(dest)
+    print(f"     {name}: {kept} Martinique rows kept")
+
+
+JOBS += [{**file_job("gaspar", "gaspar-catnat", GASPAR_URL,
+                     "Base GASPAR — arrêtés de reconnaissance de l'état de catastrophe naturelle (CatNat)",
+                     "https://www.data.gouv.fr/datasets/536995eea3a729239d20486b/",
+                     "Géorisques, ministère de la Transition écologique (base GASPAR)",
+                     "Natural disaster recognitions in the 34 communes of Martinique: event type, dates, decree and "
+                     "JO dates. National zip, CatNat table filtered on INSEE 972xx."),
+          "scope": "_972", "encoding": "utf-8", "fetcher": gaspar_fetcher}]

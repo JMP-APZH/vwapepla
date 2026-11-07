@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { lastExecutedYear, topMissions, totalsByYear as dptByYear, type DptCredit } from "./credits";
 import { beneficiaryLabel, byBeneficiary, totalsByYear, type Grant } from "./grants";
+import { eventsPerYear, toEvents, type Recognition } from "./disasters";
+import { actUrl, countTable, THEMES } from "./acts";
 import { crimeLines, stateSplit, unemploymentRows, type ContextFigure, type CrimeStat } from "./context";
 import { distributions, overallStatus as stateOverall, parseStateAnswers } from "./votes";
 import { coverage, currentHolder, gaps, postLabel, postingYears, seatTimeline, toPostings, type MandateRow } from "./postings";
@@ -170,5 +172,37 @@ describe("security and social context", () => {
     expect(lines.find((l) => l.key === "securite")?.cp).toBe(331);
     expect(lines.find((l) => l.key === "autres")?.missions).toEqual(["Culture"]);
     expect(lines.reduce((a, l) => a + l.share, 0)).toBeCloseTo(1);
+  });
+});
+
+describe("acts of the préfecture (RAA)", () => {
+  it("links an act to its page in the bulletin", () => {
+    expect(actUrl({ pdf_url: "https://www.martinique.gouv.fr/x.pdf", page: 3 })).toBe("https://www.martinique.gouv.fr/x.pdf#page=3");
+  });
+
+  it("builds the year x theme table with zeros for missing cells and a total per year", () => {
+    const t = countTable([{ year: 2025, theme: "eau", acts: "4" }, { year: 2025, theme: "autre", acts: 96 },
+      { year: 2024, theme: "risques", acts: 7 }]);
+    expect(t.years).toEqual([2024, 2025]);
+    expect(t.get(2025, "eau")).toBe(4);
+    expect(t.get(2024, "eau")).toBe(0);
+    expect(t.total(2025)).toBe(100);
+    expect(THEMES.at(-1)?.key).toBe("autre");
+  });
+});
+
+describe("natural disaster recognitions (CatNat)", () => {
+  const r = (nor: string, commune: string, start: string, risk = "Mouvement de Terrain"): Recognition => ({
+    id: `${nor}${commune}${start}`, nor, commune_code: commune, risk, event_start: start, event_end: start,
+    decree_date: "2025-01-01", jo_date: "2025-01-02", source_id: "gaspar-catnat",
+  });
+
+  it("groups communes of one decree, risk and date into one event, newest first, and counts events per year", () => {
+    const ev = toEvents([r("A", "97229", "2020-11-06"), r("A", "97209", "2020-11-06"), r("B", "97209", "2024-06-30"),
+      r("A", "97209", "2020-11-07"), r("C", "97213", "2014-01-01")]);
+    expect(ev.map((e) => e.key)).toEqual(["B|Mouvement de Terrain|2024-06-30", "A|Mouvement de Terrain|2020-11-07",
+      "A|Mouvement de Terrain|2020-11-06", "C|Mouvement de Terrain|2014-01-01"]);
+    expect(ev[2].communes).toEqual(["97209", "97229"]);
+    expect(eventsPerYear(ev, 2016)).toEqual([{ year: 2020, events: 2 }, { year: 2024, events: 1 }]);
   });
 });
