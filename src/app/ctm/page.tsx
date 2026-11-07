@@ -15,7 +15,7 @@ export const metadata: Metadata = { title: ctm.cardTitle.fr };
 
 const TERM_START = "2021-07-02"; // RNE: start of the mandates of the councillors elected in June 2021
 const CRC = "ctm:crc-ctm-2026-rapport-observations-definitives";
-const FUM_FROM = 2018; // M57 renumbered in 2018: 2016-2017 not comparable (docs/branches/B3-MAPPING.md §B)
+const FUM_FROM = 2016; // 2016-2017 from the pre-2018 M57 accounts, mapping validated by JM (B3-MAPPING.md §B)
 const FUM = ["fum_total", "fum_octroi_de_mer", "fum_carburants", "fum_autres", "fum_transport", "fum_rhum"];
 
 // The Collectivité: budget facts of the institution (B3 neutrality charter, docs/branches/B3-DISCOVERY.md §4): no score,

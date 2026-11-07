@@ -65,6 +65,11 @@ for y, ref in CRC_PRODUITS_OCTROI.items():
 for y, ref in CRC_RECETTES_FISCALES.items():
     check(f"R7 Impôts et taxes {y} (CRC p. 42, en M€)", v(y, "impots_taxes", "amount_bp"), ref, abs_tol=0.5e6)
 
+# Fiscalité ultramarine: the five taxes add up to the total, every year (2016-2017 with the pre-2018 accounts).
+for y in sorted({k[1] for k in A if k[0] == CTM and k[2] == "fum_total"}):
+    parts = sum(v(y, k) or 0 for k in ("fum_octroi_de_mer", "fum_carburants", "fum_autres", "fum_transport", "fum_rhum"))
+    check(f"R4b Fiscalité ultramarine {y} : somme des cinq taxes = total", parts, v(y, "fum_total"))
+
 # 2012 in both sources: DGFiP comptes individuels (2008-2011 series) vs OFGL budget principal.
 for o in json.loads((BUILD / "ctm_overlap_2012.json").read_text(encoding="utf-8")):
     name = {"239720014": "Région", "229720016": "Département"}[o["siren"]]
