@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { clientIp, overallStatus, parseAnswers, voterHash } from "./votes";
+import { clientIp, overallStatus, parseAnswers, siteDistributions, voterHash } from "./votes";
 
 const form = (o: Record<string, string>) => {
   const f = new FormData();
@@ -50,5 +50,21 @@ describe("overallStatus", () => {
     expect(overallStatus(["already_voted", "ok"])).toBe("ok");
     expect(overallStatus(["already_voted", "already_voted"])).toBe("already_voted");
     expect(overallStatus(["rate_limited", "already_voted"])).toBe("rate_limited");
+  });
+});
+
+describe("siteDistributions", () => {
+  const row = (question: string, total: number, score: number | null, votes: number | null) => ({ question, total, score, votes });
+  it("gives counts per level from 20 votes, nothing below, no average", () => {
+    const { closed, results } = siteDistributions(
+      [row("a_jour", 20, 1, 5), row("a_jour", 20, 5, 15), row("demarches", 4, null, null)], false);
+    expect(closed).toBe(false);
+    expect(results.find((r) => r.question === "a_jour")).toEqual({ question: "a_jour", total: 20, counts: { 1: 5, 2: 0, 3: 0, 4: 0, 5: 15 } });
+    expect(results.find((r) => r.question === "demarches")).toEqual({ question: "demarches", total: 4, counts: null });
+    expect(results.find((r) => r.question === "comprehensible")).toEqual({ question: "comprehensible", total: 0, counts: null });
+    expect(JSON.stringify(results)).not.toContain("average");
+  });
+  it("hides all counts while votes are closed", () => {
+    expect(siteDistributions([row("a_jour", 30, 3, 30)], true).results.every((r) => r.counts === null)).toBe(true);
   });
 });

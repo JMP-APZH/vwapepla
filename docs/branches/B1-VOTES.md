@@ -24,8 +24,9 @@ Build starts once the 12 criteria are validated and #34 is merged.
   JM sets the dates after the legal review). Loading needs JM's go.
 - Site: `castCriteriaVote` (Turnstile action `vote-commune`, monthly hash), `CriteriaVotes` block on the commune page
   (hidden while the criteria table is empty). The form and the Turnstile script load only when the visitor opens it.
-- Open: daily hash erasure with `pg_cron` (shared step, JM's call); website votes still show an average (to change to a
-  distribution with a later migration); competence statements to check (`ref_status: to_confirm`).
+- Daily hash erasure: `pg_cron` job `com-erase-vote-hashes` (03:17 UTC), applied 7 Nov 2026 (#53).
+- Open: website votes now shown as a distribution
+  (`com_site_vote_distribution`, applied 7 Nov 2026; drop `com_site_vote_summary` once main uses the new code); competence statements to check (`ref_status: to_confirm`).
 
 ## 1. What visitors are asked
 Stem, identical for every criterion: « Comment évaluez-vous l'action de la commune sur … ? ». About the commune's

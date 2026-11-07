@@ -33,13 +33,13 @@
   "siteNone": "Aucun site internet n'est indiqué pour cette mairie dans l'annuaire officiel Service-Public.",
   "votesTitle": "Avis des visiteurs, non représentatif",
   "votesIntro": "Donnez votre avis sur le site internet de la mairie (pas sur le maire ni sur le budget). Notes de 1 (pas du tout) à 5 (tout à fait). Avis anonyme : nous ne conservons ni votre adresse IP ni votre navigateur.",
-  "votesDisclaimer": "Ces avis sont donnés librement par les visiteurs du site Vwapepla. Ils ne constituent pas un sondage et ne sont pas représentatifs de la population. La moyenne n'est affichée qu'à partir de 20 avis.",
+  "votesDisclaimer": "Ces avis sont donnés librement par les visiteurs du site Vwapepla. Ils ne constituent pas un sondage et ne sont pas représentatifs de la population. Résultats affichés à partir de 20 avis par question, sous forme de répartition (pas de moyenne, pas de note globale, pas de classement).",
   "q_facile_a_trouver": "Les informations sont faciles à trouver",
   "q_a_jour": "Le site est à jour",
   "q_comprehensible": "Les informations sont claires et compréhensibles",
   "q_demarches": "On peut faire ses démarches en ligne",
   "votesSubmit": "Envoyer mon avis",
-  "votesNotEnough": "pas encore assez d'avis",
+  "votesNotEnough": "résultats affichés à partir de 20 avis",
   "votes_ok": "Merci, votre avis est enregistré. Les résultats sont mis à jour toutes les quelques minutes.",
   "votes_already_voted": "Vous avez déjà donné votre avis sur ce site ce mois-ci.",
   "votes_check_failed": "La vérification anti-robot n'a pas abouti. Réessayez.",
@@ -99,5 +99,10 @@
   "channelsNoneFound": "Aucun compte trouvé à cette date.",
   "channelsNotObserved": "Pas encore relevé.",
   "channelsSource": "Source : relevé de l'équipe Vwapepla aux dates indiquées, relu par la rédaction ; capture d'écran conservée hors ligne avec son empreinte (sha256). Les abonnés sont le chiffre affiché par la plateforme ce jour-là.",
-  "channelsMissing": "Réseaux sociaux de la mairie : pas encore relevés."
+  "channelsMissing": "Réseaux sociaux de la mairie : pas encore relevés.",
+  "votesDistribution": "Répartition des avis",
+  "votesCount": "avis",
+  "votesLevel1": "1 · pas du tout",
+  "votesLevel5": "5 · tout à fait",
+  "votesClosed": "Avis fermés pendant la période pré-électorale : ni vote ni résultats jusqu'à la fin de la période."
 }
