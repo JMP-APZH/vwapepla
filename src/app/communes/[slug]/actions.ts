@@ -5,14 +5,15 @@ import { headers } from "next/headers";
 import { getCommunes } from "@/lib/communes/data";
 import { OFFICIAL_SITES } from "@/lib/communes/sites";
 import { supabaseAdmin } from "@/lib/core/supabase-admin";
+import { verifyTurnstile } from "@/lib/core/turnstile";
 import { clientIp, overallStatus, parseAnswers, voterHash, type VoteStatus } from "@/lib/communes/votes";
 
 export type VoteState = { status: VoteStatus | null };
 
 /**
  * Records a visitor's opinion on the town hall's website (1-5 per question).
- * Anti-abuse: honeypot field, anonymous daily voter hash, and the SQL function's limits
- * (one vote per question per commune per 30 days, 40 votes per voter per day).
+ * Anti-abuse: honeypot field, Cloudflare Turnstile (shared helper), anonymous monthly voter hash, and the SQL
+ * function's limits (one vote per question per commune per month, 40 votes per voter per day).
  */
 export async function castSiteVote(_prev: VoteState, form: FormData): Promise<VoteState> {
   const code = String(form.get("commune") ?? "");
@@ -21,6 +22,8 @@ export async function castSiteVote(_prev: VoteState, form: FormData): Promise<Vo
   if (!answers || !OFFICIAL_SITES[code] || !(await getCommunes()).some((c) => c.code === code)) {
     return { status: "invalid" };
   }
+  const check = await verifyTurnstile(form.get("cf-turnstile-response"), { action: "vote-site" });
+  if (!check.ok) return { status: check.reason === "not_configured" || check.reason === "unavailable" ? "error" : "check_failed" };
   const secret = process.env.VOTE_SALT_SECRET;
   if (!secret) return { status: "error" };
   const h = await headers();

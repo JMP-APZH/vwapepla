@@ -51,7 +51,7 @@ Legend: ✅ done · 🟡 partial · ❌ not started · ⚠️ broken or inconsis
 | Three terms compared (full budget years; 2008–14 partial) | 🟡 | Table + charts work. **0 / 64 past mayors verified**, so every past term shows "maire : en cours de vérification" (JM to check `data/communes/officeholders/history.yaml`). |
 | Town-hall website (official directory) | ✅ | Annuaire Service-Public, read 2 Nov 2026; 25 sites, 9 communes with none. Hard-coded in `src/lib/communes/sites.ts`. |
 | Website checklist (39 criteria, 5 themes) | 🟡 | Criteria loaded (39). 34 draft audits in `data/communes/audit/sites/*.yaml` (automated first pass). **0 audits loaded / reviewed**, so every card shows "audit en cours". Phone review page + `apply_review.py` ready, waiting for JM's review. |
-| Visitor votes on website quality | 🟡 | Built (4 questions, 20-vote threshold, label "non représentatif", server-side writes, honeypot, salted daily hash, rate limit in SQL). **0 votes recorded**: never tested end to end in production (needs `VOTE_SALT_SECRET` on Vercel). No Cloudflare Turnstile yet. |
+| Visitor votes on website quality | 🟡 | Built (4 questions, 20-vote threshold, label "non représentatif", server-side writes, honeypot, salted monthly hash = one vote per question per month, rate limit in SQL, Cloudflare Turnstile via the shared helper). **0 votes recorded**: never tested end to end in production (needs `VOTE_SALT_SECRET`, `NEXT_PUBLIC_TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` on Vercel). Still shows an average: to change to a distribution (CLAUDE.md principle 4, 5 Nov 2026). |
 | Missing or doubtful information stated | ✅ | Computed (deputy ranks, missing years, unverified past mayors) + `DATA_NOTES` (Rivière-Pilote debt). |
 
 ## 4. Broken or inconsistent

@@ -8,13 +8,13 @@ const form = (o: Record<string, string>) => {
 };
 
 describe("voterHash", () => {
-  const day1 = new Date("2026-11-02T10:00:00Z"), day1b = new Date("2026-11-02T23:59:00Z"), day2 = new Date("2026-11-03T00:01:00Z");
-  it("is a 64-char hex, stable within a day", () => {
+  const day1 = new Date("2026-11-01T00:00:00Z"), day1b = new Date("2026-11-30T23:59:00Z"), day2 = new Date("2026-12-01T00:01:00Z");
+  it("is a 64-char hex, stable for the whole calendar month", () => {
     const h = voterHash("1.2.3.4", "UA", "s", day1);
     expect(h).toMatch(/^[0-9a-f]{64}$/);
     expect(voterHash("1.2.3.4", "UA", "s", day1b)).toBe(h);
   });
-  it("changes across days, voters and secrets", () => {
+  it("changes across months, voters and secrets", () => {
     const h = voterHash("1.2.3.4", "UA", "s", day1);
     expect(voterHash("1.2.3.4", "UA", "s", day2)).not.toBe(h);
     expect(voterHash("1.2.3.5", "UA", "s", day1)).not.toBe(h);
