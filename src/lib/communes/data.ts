@@ -2,7 +2,7 @@ import { cacheLife, cacheTag } from "next/cache";
 import { check } from "@/lib/core/data";
 import { supabase } from "@/lib/core/supabase";
 import type { Term } from "./terms";
-import { QUESTIONS, type Question, type VoteSummary } from "./vote-questions";
+import { siteDistributions, type SiteVoteResults, type SiteVoteRow } from "./vote-questions";
 import { criteriaResults, type CommuneVoteCriterion, type CriteriaResults, type CriteriaSummaryRow } from "./criteria-votes";
 
 // Commune domain (B1): typed, cached reads of the com_* tables. Data changes about once a year (new OFGL release / forecast entry):
@@ -140,19 +140,19 @@ export async function getTerms(): Promise<Term[]> {
 }
 
 /**
- * Visitor-vote summary for one commune's website (opinion layer). Averages are hidden by the SQL function below
- * 20 votes. Cached a few minutes (radio traffic hits the cache, not the database); a new vote calls updateTag.
+ * Visitor votes on one commune's website (opinion layer), as a distribution per question (no average). The SQL
+ * function hides the counts below 20 votes and during pre-election closures. Cached a few minutes (radio traffic hits
+ * the cache, not the database); a new vote calls updateTag(`votes-${code}`).
  */
-export async function getVoteSummary(code: string): Promise<VoteSummary[]> {
+export async function getVoteSummary(code: string): Promise<SiteVoteResults> {
   "use cache";
   cacheLife("minutes");
   cacheTag(`votes-${code}`);
-  const rows = check(await supabase.rpc("com_site_vote_summary", { p_commune: code }), "vote summary") as
-    { question: Question; votes: number | string; average: number | string | null }[];
-  return QUESTIONS.map((q) => {
-    const r = rows.find((x) => x.question === q);
-    return { question: q, votes: Number(r?.votes ?? 0), average: r?.average == null ? null : Number(r.average) };
-  });
+  const [rows, closed] = await Promise.all([
+    supabase.rpc("com_site_vote_distribution", { p_commune: code }),
+    supabase.rpc("com_votes_closed", { p_commune: code }),
+  ]);
+  return siteDistributions(check(rows, "com_site_vote_distribution") as SiteVoteRow[], check(closed, "com_votes_closed") === true);
 }
 
 /** Criteria of the visitor votes on the commune's action (validated by JM, 7 Nov 2026). */
