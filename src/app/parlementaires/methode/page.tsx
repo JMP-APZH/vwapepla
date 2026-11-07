@@ -20,7 +20,8 @@ export default async function MethodPage() {
 
       <h2 className="text-xl font-semibold">Ce que montrent les fiches</h2>
       <ul className="list-disc pl-5">
-        <li>Le mandat en cours : XVIIe législature (depuis juillet 2024) pour les députés, mandat commencé le 2 octobre 2023 pour les sénateurs. Les mandats antérieurs seront ajoutés plus tard.</li>
+        <li>Le mandat en cours : XVIIe législature (depuis juillet 2024) pour les députés, mandat commencé le 2 octobre 2023 pour les sénateurs.</li>
+        <li>Les mandats précédents depuis 2012 : XIVe, XVe et XVIe législatures pour les députés (anciens députés compris), mandats sénatoriaux en cours au renouvellement d&apos;octobre 2011 pour les sénateurs. Chaque mandat a son résumé (votes retenus par la même règle, amendements, questions), sans comparaison entre mandats : le nombre de scrutins publics et les données publiées changent d&apos;une législature à l&apos;autre.</li>
         <li>Les groupes, commissions et fonctions, avec les intitulés et les dates publiés par l&apos;Assemblée nationale et le Sénat. Aucune étiquette politique ajoutée par nous.</li>
         <li>Des chiffres d&apos;activité, toujours accompagnés d&apos;un avertissement : ils ne mesurent pas tout le travail parlementaire (commission, rapports, auditions, circonscription).</li>
         <li>Aucun score, aucun classement, aucun taux de présence, aucune comparaison entre parlementaires.</li>

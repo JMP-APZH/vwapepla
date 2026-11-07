@@ -3,7 +3,7 @@ import { check } from "@/lib/core/data";
 import { supabase } from "@/lib/core/supabase";
 import type { Amendment, DataGap, Question, Scrutin, Vote } from "./activity";
 import type { Declaration, InterestItem } from "./interests";
-import { AN_BODY, SEN_BODY, toMembers, type Chamber, type MandateDetail, type MandateRow, type Member, type Membership } from "./members";
+import { AN_BODY, SEN_BODY, toMembers, toPeople, type MandateDetail, type MandateRow, type Member, type Membership, type Person, type Term } from "./members";
 
 // Parlement domain (B2): typed, cached reads of the core mandates (two bodies) and the parl_* tables. Data is rebuilt
 // weekly (JM, Q10): cached for days and pre-rendered; a redeploy or revalidateTag("data") refreshes it.
@@ -20,22 +20,44 @@ async function all<T>(what: string, page: (from: number, to: number) => PromiseL
   }
 }
 
+const MANDATE_COLS = "person_id,seat_id,start_date,function_start,end_date,source_id,source_url,persons(last_name,first_name,sex)";
+const DETAIL_COLS = "person_id,seat_id,start_date,election_cause,end_cause,suppleant_last_name,suppleant_first_name,suppleant_sex,suppleant_source_id,official_url,hatvp_url,source_id";
+
+async function mandatesAndDetails(currentOnly: boolean) {
+  let q = supabase.from("mandates").select(MANDATE_COLS)
+    .or(`seat_id.like.assemblee-nationale-*,seat_id.like.${SEN_BODY}:*`);
+  if (currentOnly) q = q.is("end_date", null);
+  const [rows, details] = await Promise.all([
+    q.order("seat_id").order("start_date"),
+    all<MandateDetail>("parl_mandate_details", (a, b) => supabase.from("parl_mandate_details").select(DETAIL_COLS).order("id").range(a, b)),
+  ]);
+  return { rows: check(rows, "mandates") as unknown as MandateRow[], details };
+}
+
+/** Sitting members: the current mandates of the XVIIth legislature and of the Sénat. */
 export async function getMembers(): Promise<Member[]> {
   "use cache";
   cacheLife("days");
   cacheTag("data");
-  const [rows, details] = await Promise.all([
-    supabase.from("mandates")
-      .select("person_id,seat_id,start_date,function_start,end_date,source_id,source_url,persons(last_name,first_name,sex)")
-      .or(`seat_id.like.${AN_BODY}:*,seat_id.like.${SEN_BODY}:*`).is("end_date", null).order("seat_id"),
-    supabase.from("parl_mandate_details")
-      .select("person_id,seat_id,election_cause,suppleant_last_name,suppleant_first_name,suppleant_sex,suppleant_source_id,official_url,hatvp_url,source_id"),
-  ]);
-  return toMembers(check(rows, "mandates") as unknown as MandateRow[], check(details, "parl_mandate_details") as MandateDetail[]);
+  const { rows, details } = await mandatesAndDetails(true);
+  return toMembers(rows.filter((r) => r.seat_id.startsWith(`${AN_BODY}:`) || r.seat_id.startsWith(`${SEN_BODY}:`)), details);
 }
 
 export async function getMember(slug: string): Promise<Member | undefined> {
   return (await getMembers()).find((m) => m.slug === slug);
+}
+
+/** Every person with a loaded mandate (AN since 2012, Sénat since 2011), current and former. */
+export async function getPeople(): Promise<Person[]> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("data");
+  const [{ rows, details }, current] = await Promise.all([mandatesAndDetails(false), getMembers()]);
+  return toPeople(rows, details, current);
+}
+
+export async function getPerson(slug: string): Promise<Person | undefined> {
+  return (await getPeople()).find((p) => p.slug === slug);
 }
 
 export async function getMemberships(personId: string): Promise<Membership[]> {
@@ -59,30 +81,34 @@ export async function getGroupLabels(): Promise<Map<string, string>> {
 
 const SCRUTIN_COLS = "id,chamber,legislature,number,date,type_code,type_label,title,object,text_id,result_code,result_label,voters,pour,contre,abstentions,non_votants,text_signet,selected_by,url,source_id";
 
-/** Scrutins of one chamber since a date (the member's term start): AN XVIIth legislature, Sénat since the term. */
-function scrutins(chamber: Chamber, since: string, selectedOnly: boolean) {
+/** Public votes of one term: AN by legislature, Sénat by date (the term's start and end). */
+function termScrutins(t: Pick<Term, "chamber" | "legislature" | "start" | "end">, selectedOnly: boolean) {
   return all<Scrutin>("parl_scrutins", (a, b) => {
-    let q = supabase.from("parl_scrutins").select(SCRUTIN_COLS).eq("chamber", chamber).gte("date", since);
-    if (chamber === "AN") q = q.eq("legislature", "17");
+    let q = supabase.from("parl_scrutins").select(SCRUTIN_COLS).eq("chamber", t.chamber);
+    if (t.chamber === "AN") q = q.eq("legislature", t.legislature ?? "");
+    else {
+      q = q.gte("date", t.start);
+      if (t.end) q = q.lte("date", t.end);
+    }
     if (selectedOnly) q = q.neq("selected_by", "{}");
     return q.order("id").range(a, b);
   });
 }
 
-/** Scrutins selected by the published rule (V1), for the card. */
-export async function getSelectedScrutins(chamber: Chamber, since: string): Promise<Scrutin[]> {
+/** Scrutins selected by the published rule (V1) during one term, for the card. */
+export async function getSelectedScrutins(t: Pick<Term, "chamber" | "legislature" | "start" | "end">): Promise<Scrutin[]> {
   "use cache";
   cacheLife("days");
   cacheTag("data");
-  return scrutins(chamber, since, true);
+  return termScrutins({ chamber: t.chamber, legislature: t.legislature, start: t.start, end: t.end }, true);
 }
 
-/** Every public vote of the term (download only: complete, not curated). */
-export async function getAllScrutins(chamber: Chamber, since: string): Promise<Scrutin[]> {
+/** Every public vote of one term (download only: complete, not curated). */
+export async function getAllScrutins(t: Pick<Term, "chamber" | "legislature" | "start" | "end">): Promise<Scrutin[]> {
   "use cache";
   cacheLife("days");
   cacheTag("data");
-  return scrutins(chamber, since, false);
+  return termScrutins({ chamber: t.chamber, legislature: t.legislature, start: t.start, end: t.end }, false);
 }
 
 /** What the official open data does not give (absent or partial), measured and dated by the pipeline. */

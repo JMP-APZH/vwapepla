@@ -7,10 +7,10 @@ National files too big to keep whole (AN JSON zips, Sénat CSVs) are streamed to
 Martinique's members; the fetcher writes a ';' UTF-8 CSV so the engine can count rows and hash it. Columns are the
 source's own field names (dotted path for nested JSON); `record` keeps the raw JSON of the kept item when useful.
 """
-import collections, csv, functools, io, json, pathlib, re, tempfile, unicodedata, zipfile
+import collections, csv, functools, http.client, io, json, pathlib, re, tempfile, time, unicodedata, urllib.request, zipfile
 import xml.etree.ElementTree as ET
 
-from fetching import fetch, file_job  # scripts/core (put on sys.path by download_sources.py)
+from fetching import IncompleteDownload, fetch, file_job  # scripts/core (put on sys.path by download_sources.py)
 
 AN = "https://data.assemblee-nationale.fr/static/openData/repository/17"
 SEN = "https://data.senat.fr/data"
@@ -23,9 +23,47 @@ _tmp = tempfile.TemporaryDirectory(ignore_cleanup_errors=True)
 def _get(url):
     if url not in _cache:
         p = pathlib.Path(_tmp.name) / f"{len(_cache)}{pathlib.Path(url).suffix}"
-        fetch(url, p)  # length-checked, resumed, curl fallback (scripts/core/fetching.py)
+        try:
+            fetch(url, p)  # length-checked, resumed, curl fallback (scripts/core/fetching.py)
+        except IncompleteDownload:
+            _patient_fetch(url, p)
         _cache[url] = p
     return _cache[url]
+
+
+def _patient_fetch(url, dest, minutes=30):
+    """Fallback for the AN archive server, which ends long transfers early and sometimes stalls for minutes
+    (7 Nov 2026): HTTP Range requests from the last byte, with growing pauses, until the announced size is reached or
+    `minutes` pass without progress. Same guarantee as the core fetch: a short file is never kept."""
+    part = dest.with_name(dest.name + ".part")
+    part.unlink(missing_ok=True)
+    head = urllib.request.urlopen(urllib.request.Request(url, method="HEAD"), timeout=120)
+    size = int(head.headers["Content-Length"])
+    last, wait = time.monotonic(), 5
+    while (have := part.stat().st_size if part.exists() else 0) < size:
+        if time.monotonic() - last > minutes * 60:
+            part.unlink(missing_ok=True)
+            raise IncompleteDownload(f"{url}: stalled at {have:,} of {size:,} bytes for {minutes} min")
+        try:
+            req = urllib.request.Request(url, headers={"Range": f"bytes={have}-"})
+            with urllib.request.urlopen(req, timeout=300) as r, open(part, "ab") as f:
+                if r.status != 206:
+                    raise IncompleteDownload(f"{url}: server does not resume")
+                while chunk := r.read(1 << 20):
+                    f.write(chunk)
+        except (OSError, http.client.HTTPException):
+            pass
+        now = part.stat().st_size if part.exists() else 0
+        if now > have:
+            last, wait = time.monotonic(), 5
+            print(f"     patient resume: {now:,} of {size:,} bytes")
+        else:
+            time.sleep(wait)
+            wait = min(wait * 2, 120)
+    if part.stat().st_size != size:
+        part.unlink(missing_ok=True)
+        raise IncompleteDownload(f"{url}: {part.stat().st_size:,} bytes, expected {size:,}")
+    part.replace(dest)
 
 
 def _json_items(url):
@@ -35,6 +73,94 @@ def _json_items(url):
             if name.endswith(".json"):
                 with zf.open(name) as f:
                     yield name, json.load(f)
+
+
+BIG_JSON = 150 * 1024 * 1024  # a single JSON file above this is read from the XML twin, streamed (XIV archives)
+
+
+def _strip(tag):
+    return tag.rsplit("}", 1)[-1]
+
+
+def _xml_dict(el):
+    """XML element -> dict shaped like the AN JSON exports (same names; '@xsi:nil'; lists for repeated children)."""
+    attrs = {f"@{'xsi:' if '}' in k and 'XMLSchema-instance' in k else ''}{_strip(k)}": v for k, v in el.attrib.items()}
+    kids = list(el)
+    if not kids:
+        text = (el.text or "").strip()
+        if attrs.get("@xsi:nil") == "true":
+            return {"@xsi:nil": "true"}
+        return {**attrs, "#text": text} if attrs and text else (attrs or text or None)
+    out = dict(attrs)
+    for k in kids:
+        tag, val = _strip(k.tag), _xml_dict(k)
+        if tag in out:
+            out[tag] = out[tag] if isinstance(out[tag], list) else [out[tag]]
+            out[tag].append(val)
+        else:
+            out[tag] = val
+    return out
+
+
+def _find(node, kind):
+    """Every value under key `kind` in a nested JSON document (lists flattened)."""
+    if isinstance(node, dict):
+        for k, v in node.items():
+            if k == kind:
+                yield from (x for x in _as_list(v) if isinstance(x, dict))
+            else:
+                yield from _find(v, kind)
+    elif isinstance(node, list):
+        for v in node:
+            yield from _find(v, kind)
+
+
+def _an_records(url, kind):
+    """Each `kind` record (scrutin, amendement, question, dossierParlementaire) of an AN zip, whatever the layout:
+    one JSON file per record (XVth-XVIIth), or one file for the whole legislature (XIVth): parsed whole when small,
+    else read from the published XML twin (same names) with a streaming parser."""
+    if url.endswith(".xml.zip"):
+        yield from _an_xml_records(url, kind)
+        return
+    with zipfile.ZipFile(_get(url)) as zf:
+        infos = [i for i in zf.infolist() if i.filename.endswith(".json")]
+        if len(infos) > 1:
+            for i in infos:
+                with zf.open(i) as f:
+                    doc = json.load(f)
+                if isinstance(doc.get(kind), dict):
+                    yield doc[kind]
+            return
+        if infos[0].file_size <= BIG_JSON:
+            with zf.open(infos[0]) as f:
+                yield from _find(json.load(f), kind)
+            return
+    yield from _an_xml_records(url.replace(".json.zip", ".xml.zip"), kind)
+
+
+def _an_xml_records(xml_url, kind):
+    with zipfile.ZipFile(_get(xml_url)) as zf:
+        info = max(zf.infolist(), key=lambda i: i.file_size)
+        with zf.open(info) as f:
+            depth = 0
+            for event, el in ET.iterparse(f, events=("start", "end")):
+                if _strip(el.tag) != kind:
+                    continue
+                if event == "start":
+                    depth += 1
+                    continue
+                depth -= 1
+                if depth == 0:
+                    yield _xml_dict(el)
+                    el.clear()
+
+
+def _first(d, paths):
+    for path in paths:
+        v = _dig(d, path)
+        if v not in (None, ""):
+            return v
+    return None
 
 
 def _as_list(x):
@@ -145,14 +271,15 @@ SCRUTIN_COLS = ["uid", "numero", "legislature", "dateScrutin", "sessionRef", "se
                 "syntheseVote.decompte.contre", "syntheseVote.decompte.abstentions", "syntheseVote.decompte.nonVotants"]
 
 
-def fetch_an_scrutins_liste(dest):
-    """Every public vote of the legislature (metadata only, national): the vote rule runs on all scrutins, and a
-    Martinique deputy absent from the nominative lists has "no recorded vote" (not an absence)."""
-    def rows():
-        for name, doc in _json_items(f"{AN}/loi/scrutins/Scrutins.json.zip"):
-            if s := doc.get("scrutin"):
-                yield [_dig(s, c) for c in SCRUTIN_COLS]
-    _write(dest, SCRUTIN_COLS, rows())
+def _scrutins_liste(url):
+    def fetcher(dest):
+        """Every public vote of the legislature (metadata only, national): the vote rule runs on all scrutins, and a
+        Martinique deputy absent from the nominative lists has "no recorded vote" (not an absence)."""
+        _write(dest, SCRUTIN_COLS, ([_dig(s, c) for c in SCRUTIN_COLS] for s in _an_records(url, "scrutin")))
+    return fetcher
+
+
+fetch_an_scrutins_liste = _scrutins_liste(f"{AN}/loi/scrutins/Scrutins.json.zip")
 
 
 def fetch_an_reunions(dest):
@@ -168,61 +295,82 @@ def fetch_an_reunions(dest):
     _write(dest, ["uid", "timeStampDebut", "organeReuniRef", "cycleDeVie.etat", "participantsInternes.count"], rows())
 
 
-def fetch_an_scrutins(dest):
-    """One row per (scrutin, Martinique deputy) with the recorded position, plus the scrutin's own metadata."""
-    uids = set(_an_martinique_actors())
-    meta = SCRUTIN_COLS
-    positions = {"pours": "pour", "contres": "contre", "abstentions": "abstention", "nonVotants": "nonVotant",
-                 "nonVotantsVolontaires": "nonVotantVolontaire"}
+def _scrutins(url):
+    def fetcher(dest):
+        """One row per (scrutin, Martinique deputy) with the recorded position, plus the scrutin's own metadata."""
+        uids = set(_an_martinique_actors())
+        meta = SCRUTIN_COLS
+        positions = {"pours": "pour", "contres": "contre", "abstentions": "abstention", "nonVotants": "nonVotant",
+                     "nonVotantsVolontaires": "nonVotantVolontaire"}
 
-    def walk(node, pos, group, found):
-        if isinstance(node, dict):
-            if node.get("acteurRef") and _text(node["acteurRef"]) in uids:
-                found.append((_text(node["acteurRef"]), _text(node.get("mandatRef")), pos, *group,
-                              _text(node.get("parDelegation")), _text(node.get("causePositionVote"))))
-            if "organeRef" in node and "vote" in node:  # a political group: its ref and majority position
-                group = (_text(node["organeRef"]), _dig(node, "vote.positionMajoritaire"))
-            for k, v in node.items():
-                walk(v, positions.get(k, pos), group, found)
-        elif isinstance(node, list):
-            for v in node:
-                walk(v, pos, group, found)
+        def walk(node, pos, group, found):
+            if isinstance(node, dict):
+                if node.get("acteurRef") and _text(node["acteurRef"]) in uids:
+                    found.append((_text(node["acteurRef"]), _text(node.get("mandatRef")), pos, *group,
+                                  _text(node.get("parDelegation")), _text(node.get("causePositionVote"))))
+                if "organeRef" in node and "vote" in node:  # a political group: its ref and majority position
+                    group = (_text(node["organeRef"]), _dig(node, "vote.positionMajoritaire"))
+                for k, v in node.items():
+                    walk(v, positions.get(k, pos), group, found)
+            elif isinstance(node, list):
+                for v in node:
+                    walk(v, pos, group, found)
 
-    def rows():
-        for name, doc in _json_items(f"{AN}/loi/scrutins/Scrutins.json.zip"):
-            s = doc.get("scrutin")
-            if not s:
-                continue
-            found = []
-            walk(s.get("ventilationVotes"), None, (None, None), found)
-            # mises au point (corrections announced after the vote) are kept separately: the official result stays the vote
-            mises = json.dumps(s.get("miseAuPoint"), ensure_ascii=False) if s.get("miseAuPoint") else None
-            for f in found:
-                yield [_dig(s, c) for c in meta] + list(f) + [mises]
-    _write(dest, meta + ["acteurRef", "mandatRef", "position", "groupe_organeRef", "groupe_positionMajoritaire",
-                         "parDelegation", "causePositionVote", "miseAuPoint"], rows())
+        def rows():
+            for s in _an_records(url, "scrutin"):
+                found = []
+                walk(s.get("ventilationVotes"), None, (None, None), found)
+                # mises au point (corrections announced after the vote) are kept separately: the official result stays the vote
+                mises = json.dumps(s.get("miseAuPoint"), ensure_ascii=False) if s.get("miseAuPoint") else None
+                for f in found:
+                    yield [_dig(s, c) for c in meta] + list(f) + [mises]
+        _write(dest, meta + ["acteurRef", "mandatRef", "position", "groupe_organeRef", "groupe_positionMajoritaire",
+                             "parDelegation", "causePositionVote", "miseAuPoint"], rows())
+    return fetcher
 
 
-def fetch_an_amendements(dest):
-    """Amendments signed (auteur) or co-signed by a Martinique deputy; the dispositif text is left in the source."""
-    uids = set(_an_martinique_actors())
-    cols = ["uid", "legislature", "identification.numeroLong", "identification.numeroOrdreDepot", "texteLegislatifRef",
-            "examenRef", "signataires.auteur.acteurRef", "signataires.auteur.groupePolitiqueRef", "signataires.auteur.typeAuteur",
-            "signataires.libelle", "pointeurFragmentTexte.division.articleDesignation", "cycleDeVie.dateDepot",
-            "cycleDeVie.dateSort", "cycleDeVie.sort", "cycleDeVie.etatDesTraitements.etat.libelle",
-            "cycleDeVie.etatDesTraitements.sousEtat.libelle"]
+fetch_an_scrutins = _scrutins(f"{AN}/loi/scrutins/Scrutins.json.zip")
 
-    def rows():
-        for name, doc in _json_items(f"{AN}/loi/amendements_div_legis/Amendements.json.zip"):
-            a = doc.get("amendement")
-            if not a:
-                continue
-            author = _text(_dig_raw(a, "signataires.auteur.acteurRef"))
-            cos = [_text(x) for x in _as_list(_dig_raw(a, "signataires.cosignataires.acteurRef"))]
-            mine = sorted(({author} | set(cos)) & uids)
-            if mine:
-                yield [_dig(a, c) for c in cols] + [",".join(cos), ",".join(mine), "auteur" if author in uids else "cosignataire"]
-    _write(dest, cols + ["cosignataires", "martinique_acteurRefs", "role"], rows())
+
+# Output column -> paths in the record (XVth-XVIIth names first, then the XIVth export's names).
+AMENDEMENT_COLS = {
+    "uid": ["uid"], "legislature": ["legislature", "identifiant.legislature"],
+    "identification.numeroLong": ["identification.numeroLong", "numeroLong"],
+    "identification.numeroOrdreDepot": ["identification.numeroOrdreDepot", "identifiant.numero"],
+    "texteLegislatifRef": ["texteLegislatifRef", "identifiant.saisine.refTexteLegislatif"], "examenRef": ["examenRef"],
+    "signataires.auteur.acteurRef": ["signataires.auteur.acteurRef"],
+    "signataires.auteur.groupePolitiqueRef": ["signataires.auteur.groupePolitiqueRef"],
+    "signataires.auteur.typeAuteur": ["signataires.auteur.typeAuteur"],
+    "signataires.libelle": ["signataires.libelle", "signataires.texteAffichable"],
+    "pointeurFragmentTexte.division.articleDesignation": ["pointeurFragmentTexte.division.articleDesignation",
+                                                         "pointeurFragmentTexte.division.articleDesignationCourte"],
+    "cycleDeVie.dateDepot": ["cycleDeVie.dateDepot", "dateDepot"],
+    "cycleDeVie.dateSort": ["cycleDeVie.dateSort", "sort.dateSaisie"],
+    "cycleDeVie.sort": ["cycleDeVie.sort", "sort.sortEnSeance"],
+    "cycleDeVie.etatDesTraitements.etat.libelle": ["cycleDeVie.etatDesTraitements.etat.libelle", "etat"],
+    "cycleDeVie.etatDesTraitements.sousEtat.libelle": ["cycleDeVie.etatDesTraitements.sousEtat.libelle"],
+    "documentURI": ["representations.representation.contenu.documentURI"],
+}
+
+
+def _amendements(url):
+    def fetcher(dest):
+        """Amendments signed (auteur) or co-signed by a Martinique deputy; the dispositif text is left in the source."""
+        uids = set(_an_martinique_actors())
+
+        def rows():
+            for a in _an_records(url, "amendement"):
+                author = _text(_dig_raw(a, "signataires.auteur.acteurRef"))
+                cos = [_text(x) for x in _as_list(_dig_raw(a, "signataires.cosignataires.acteurRef"))]
+                mine = sorted(({author} | set(cos)) & uids)
+                if mine:
+                    yield ([_first(a, paths) for paths in AMENDEMENT_COLS.values()]
+                           + [",".join(cos), ",".join(mine), "auteur" if author in uids else "cosignataire"])
+        _write(dest, list(AMENDEMENT_COLS) + ["cosignataires", "martinique_acteurRefs", "role"], rows())
+    return fetcher
+
+
+fetch_an_amendements = _amendements(f"{AN}/loi/amendements_div_legis/Amendements.json.zip")
 
 
 QUESTION_COLS = ["uid", "identifiant.numero", "identifiant.legislature", "type", "auteur.identite.acteurRef",
@@ -231,27 +379,31 @@ QUESTION_COLS = ["uid", "identifiant.numero", "identifiant.legislature", "type",
                  "textesReponse.texteReponse.infoJO.dateJO", "cloture.codeCloture", "cloture.libelleCloture", "cloture.dateCloture"]
 
 
+QUESTION_ALT = {"indexationAN.analyses.analyse": ["indexationAN.analyses.analyse", "indexationAN.ANALYSE.ANA"]}
+
+
 def _questions(url):
     def fetcher(dest):
         uids = set(_an_martinique_actors())
-        rows = ([_dig(q, c) for c in QUESTION_COLS] for _, doc in _json_items(url) if (q := doc.get("question"))
-                and _text(_dig_raw(q, "auteur.identite.acteurRef")) in uids)
+        rows = ([_first(q, QUESTION_ALT.get(c, [c])) for c in QUESTION_COLS] for q in _an_records(url, "question")
+                if _text(_dig_raw(q, "auteur.identite.acteurRef")) in uids)
         _write(dest, QUESTION_COLS, rows)
     return fetcher
 
 
-def fetch_an_dossiers(dest):
-    """All legislative files of the 17th legislature (national, small): needed to apply the published vote rule."""
-    cols = ["uid", "legislature", "titreDossier.titre", "titreDossier.titreChemin", "titreDossier.senatChemin",
-            "procedureParlementaire.code", "procedureParlementaire.libelle", "initiateur.acteurs.acteur.acteurRef",
-            "fusionDossier", "indexation"]
+DOSSIER_COLS = ["uid", "legislature", "titreDossier.titre", "titreDossier.titreChemin", "titreDossier.senatChemin",
+                "procedureParlementaire.code", "procedureParlementaire.libelle", "initiateur.acteurs.acteur.acteurRef",
+                "fusionDossier", "indexation"]
 
-    def rows():
-        for name, doc in _json_items(f"{AN}/loi/dossiers_legislatifs/Dossiers_Legislatifs.json.zip"):
-            d = doc.get("dossierParlementaire")
-            if d:
-                yield [_dig(d, c) for c in cols]
-    _write(dest, cols, rows())
+
+def _dossiers(url):
+    def fetcher(dest):
+        """All legislative files of the legislature (national, small): needed to apply the published vote rule."""
+        _write(dest, DOSSIER_COLS, ([_dig(d, c) for c in DOSSIER_COLS] for d in _an_records(url, "dossierParlementaire")))
+    return fetcher
+
+
+fetch_an_dossiers = _dossiers(f"{AN}/loi/dossiers_legislatifs/Dossiers_Legislatifs.json.zip")
 
 
 # ------------------------------------------------------------------ Sénat
@@ -536,6 +688,51 @@ def _job(folder, ds, url, title, page, credit, purpose, fetcher):
 
 
 AN_PAGE = "https://data.assemblee-nationale.fr"
+REPO = "https://data.assemblee-nationale.fr/static/openData/repository"
+ROMAN = {14: "XIV", 15: "XV", 16: "XVI"}
+EARLIER = (14, 15, 16)
+# Archive files of the earlier legislatures, as linked from data.assemblee-nationale.fr/archives-* (checked 7 Nov 2026).
+# XIVth amendments and written questions: one JSON file of 0.7-1.5 GB, so the XML twin is read, streamed.
+ARCHIVE = {
+    14: {"scrutins": "loi/scrutins/Scrutins_XIV.json.zip",
+         "amendements": "loi/amendements_legis_XIV/Amendements_XIV.xml.zip",
+         "dossiers": "loi/dossiers_legislatifs/Dossiers_Legislatifs_XIV.json.zip",
+         "questions-ecrites": "questions/questions_ecrites/Questions_ecrites_XIV.xml.zip",
+         "questions-orales": "questions/questions_orales_sans_debat/Questions_orales_sans_debat_XIV.json.zip",
+         "questions-gouvernement": "questions/questions_gouvernement/Questions_gouvernement_XIV.json.zip"},
+    15: {"scrutins": "loi/scrutins/Scrutins_XV.json.zip", "amendements": "loi/amendements_legis/Amendements_XV.json.zip",
+         "dossiers": "loi/dossiers_legislatifs/Dossiers_Legislatifs_XV.json.zip",
+         "questions-ecrites": "questions/questions_ecrites/Questions_ecrites_XV.json.zip",
+         "questions-orales": "questions/questions_orales_sans_debat/Questions_orales_sans_debat_XV.json.zip",
+         "questions-gouvernement": "questions/questions_gouvernement/Questions_gouvernement_XV.json.zip"},
+    16: {"scrutins": "loi/scrutins/Scrutins.json.zip", "amendements": "loi/amendements_div_legis/Amendements.json.zip",
+         "dossiers": "loi/dossiers_legislatifs/Dossiers_Legislatifs.json.zip",
+         "questions-ecrites": "questions/questions_ecrites/Questions_ecrites.json.zip",
+         "questions-orales": "questions/questions_orales_sans_debat/Questions_orales_sans_debat.json.zip",
+         "questions-gouvernement": "questions/questions_gouvernement/Questions_gouvernement.json.zip"},
+}
+ARCHIVE_PAGE = {14: f"{AN_PAGE}/archives-anterieures/archives-14e", 15: f"{AN_PAGE}/archives-anterieures/archives-15e",
+                16: f"{AN_PAGE}/archives-16e"}
+
+
+def _earlier_jobs(leg):
+    """Same datasets as the XVIIth, for an earlier legislature (archives; amendments are the biggest files)."""
+    url = lambda k: f"{REPO}/{leg}/{ARCHIVE[leg][k]}"  # noqa: E731
+    name, page = f"{ROMAN[leg]}e législature", ARCHIVE_PAGE[leg]
+    return [
+        _job("an", f"an-scrutins-{leg}", url("scrutins"), f"Scrutins — {name}", page, AN_CREDIT,
+             "Public votes: position of each Martinique deputy, scrutin metadata.", _scrutins(url("scrutins"))),
+        _job("an", f"an-scrutins-{leg}-liste", url("scrutins"), f"Scrutins — {name} (liste)", page, AN_CREDIT,
+             "All public votes of the legislature (metadata): input of the vote-selection rule.", _scrutins_liste(url("scrutins"))),
+        _job("an", f"an-dossiers-{leg}", url("dossiers"), f"Dossiers législatifs — {name}", page, AN_CREDIT,
+             "All legislative files (titles): input of the vote-selection rule.", _dossiers(url("dossiers"))),
+        *[_job("an", f"an-{k}-{leg}", url(k), f"{title} — {name}", page, AN_CREDIT,
+               f"{title} asked by a Martinique deputy (subject, ministry, answer date).", _questions(url(k)))
+          for k, title in [("questions-ecrites", "Questions écrites"), ("questions-orales", "Questions orales sans débat"),
+                           ("questions-gouvernement", "Questions au Gouvernement")]],
+        _job("an", f"an-amendements-{leg}", url("amendements"), f"Amendements — {name}", page, AN_CREDIT,
+             "Amendments signed or co-signed by a Martinique deputy, with their outcome.", _amendements(url("amendements"))),
+    ]
 AN_CREDIT = "Assemblée nationale, data.assemblee-nationale.fr"
 SEN_CREDIT = "Sénat, data.senat.fr"
 JOBS = [
@@ -576,6 +773,7 @@ JOBS = [
            "Questions orales sans débat", "questions-orales-sans-debat"),
           ("questions-gouvernement", "questions_gouvernement/Questions_gouvernement.json.zip",
            "Questions au Gouvernement", "questions-au-gouvernement")]],
+    *[job for leg in EARLIER for job in _earlier_jobs(leg)],
     _job("senat", "senat-senateurs", f"{SEN}/senateurs/ODSEN_GENERAL.csv", "Sénateurs — informations générales (ODSEN_GENERAL)",
          "https://data.senat.fr/les-senateurs/", SEN_CREDIT,
          "Senators of Martinique (current and former): identity, group, permanent committee, status.", fetch_senat_general),
