@@ -4,5 +4,5 @@ export const QUESTIONS = ["facile_a_trouver", "a_jour", "comprehensible", "demar
 export type Question = (typeof QUESTIONS)[number];
 export const MIN_VOTES = 20; // below this, no average is shown (CLAUDE.md principle 4)
 
-export type VoteStatus = "ok" | "already_voted" | "rate_limited" | "invalid" | "error";
+export type VoteStatus = "ok" | "already_voted" | "rate_limited" | "invalid" | "check_failed" | "error";
 export type VoteSummary = { question: Question; votes: number; average: number | null };

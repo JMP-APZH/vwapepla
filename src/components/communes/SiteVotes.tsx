@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { Turnstile } from "@/components/card/Turnstile";
 import { castSiteVote, type VoteState } from "@/app/communes/[slug]/actions";
 import { MIN_VOTES, QUESTIONS, type VoteSummary } from "@/lib/communes/vote-questions";
 import { communes } from "@/i18n";
@@ -53,6 +54,7 @@ export function SiteVotes({ code, summary }: { code: string; summary: VoteSummar
               </div>
             </fieldset>
           ))}
+          <Turnstile action="vote-site" resetKey={state} />
           {state.status && <p role="alert" className="text-sm text-red-800">{communes[`votes_${state.status}`].fr}</p>}
           <button type="submit" disabled={pending}
                   className="min-h-11 w-full rounded-lg bg-violet-900 px-4 text-sm font-medium text-white disabled:opacity-60">

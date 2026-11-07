@@ -7,12 +7,14 @@ export * from "./vote-questions";
 // Never about the mayor or the budget. Shown only from MIN_VOTES votes, labelled "non représentatif".
 
 /**
- * Anonymous voter id: sha256(ip | user agent | daily salt), where the daily salt = HMAC(secret, YYYY-MM-DD UTC).
- * Neither the IP nor the user agent is stored; the hash changes every day and cannot be reversed without the secret.
+ * Anonymous voter id: sha256(ip | user agent | monthly salt), where the monthly salt = HMAC(secret, YYYY-MM UTC).
+ * Monthly (JM, 5 Nov 2026; was daily): the SQL limit "one vote per question per 30 days" only holds if the hash
+ * stays the same for the month, so it means one vote per question per calendar month. Neither the IP nor the user
+ * agent is stored; the hash changes every month and cannot be reversed without the secret.
  */
 export function voterHash(ip: string, userAgent: string, secret: string, now = new Date()): string {
-  const day = now.toISOString().slice(0, 10);
-  const salt = createHmac("sha256", secret).update(day).digest("hex");
+  const month = now.toISOString().slice(0, 7);
+  const salt = createHmac("sha256", secret).update(month).digest("hex");
   return createHash("sha256").update(`${ip}|${userAgent}|${salt}`).digest("hex");
 }
 
