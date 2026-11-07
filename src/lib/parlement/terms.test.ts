@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { gapsFor, type Amendment, type DataGap, type Question, type Scrutin, type Vote } from "./activity";
+import { amendmentsNotLoaded, gapsFor, type Amendment, type DataGap, type Question, type Scrutin, type Vote } from "./activity";
 import { formerMembers, inTermRow, termPeriod, toMembers, toPeople, type MandateRow, type Membership } from "./members";
 import { currentRows, currentTerm, formerLabel, pastTerms, termSummary } from "./terms";
 
@@ -75,5 +75,11 @@ describe("terms", () => {
       .toEqual(["an-17-votes-dossier", "an-votes-main-levee"]);
     expect(gapsFor(all, { chamber: "AN", personId: "p", legislatures: ["14"], current: false }).map((x) => x.id))
       .toEqual(["an-14-votes-dossier", "an-votes-main-levee", "hatvp-anciens"]);
+  });
+
+  it("lists the legislatures whose amendments are not loaded, so they are never shown as zero", () => {
+    const g = (id: string): DataGap => ({ id, chamber: "AN", person_id: null, period: "", topic: "amendements", status: "absent",
+      label_fr: id, detail_fr: "", checked_url: null, checked_on: "2026-11-07", source_id: null });
+    expect([...amendmentsNotLoaded([g("an-15-amendements-non-charges"), g("an-14-amendements-issue")])]).toEqual(["15"]);
   });
 });

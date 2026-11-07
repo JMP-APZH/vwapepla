@@ -10,7 +10,7 @@ import { MandateBlock } from "@/components/parlement/MandateBlock";
 import { PastTermsBlock } from "@/components/parlement/PastTerms";
 import { getMedia, getSources } from "@/lib/core/data";
 import { date } from "@/lib/core/format";
-import { gapsFor, voteLines } from "@/lib/parlement/activity";
+import { amendmentsNotLoaded, gapsFor, voteLines } from "@/lib/parlement/activity";
 import { getAmendments, getDataGaps, getDeclarations, getInterestItems, getMemberships, getPeople, getPerson, getQuestions, getSelectedScrutins, getToday, getVotes } from "@/lib/parlement/data";
 import { currentCommittee, currentGroup, seatLabel, termPeriod } from "@/lib/parlement/members";
 import { currentRows, currentTerm, formerLabel, membershipsIn, pastTerms, termSummary } from "@/lib/parlement/terms";
@@ -110,7 +110,7 @@ export default async function MemberPage({ params }: PageProps<"/parlementaires/
         <AmendmentsBlock member={m} own={curOwn} sources={src([an ? "an-amendements-17" : "senat-amendements-972"])} />
         <QuestionsBlock questions={curQuestions} sources={src(curQuestions.length ? curQuestions.map((q) => q.source_id) : [an ? "an-questions-ecrites-17" : "senat-questions-972"])} />
       </>}
-      <PastTermsBlock summaries={summaries} sex={p.sex} slug={p.slug} title={(m ? parlement.pastTermsTitle : parlement.termsTitle).fr}
+      <PastTermsBlock summaries={summaries} sex={p.sex} slug={p.slug} amendmentsMissing={amendmentsNotLoaded(allGaps)} title={(m ? parlement.pastTermsTitle : parlement.termsTitle).fr}
                       sources={src([an ? "an-deputes" : "senat-mandats-senat", ...activitySources.filter((id) => !id.includes("-17"))])} />
       <InterestsBlock declarations={declarations} items={m ? items : []} former={!m}
                       sources={src(["hatvp-liste", ...(m && items.length ? ["hatvp-declarations-972"] : [])])} />
