@@ -26,4 +26,6 @@ TABLES = {
     "com_entity_actuals": "siren,year,agregat",
     "com_forecast_documents": "id",
     "com_forecast_figures": "document_id,metric_key",
+    "com_vote_criteria": "key",
+    "com_vote_closures": "id",
 }
