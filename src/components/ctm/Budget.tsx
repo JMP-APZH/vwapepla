@@ -131,7 +131,8 @@ export function BeforeCtm({ tables, sources }: {
   tables: { label: string; rows: BeforeRow[] }[]; sources: Source[];
 }) {
   return (
-    <FactBlock title={ctm.beforeTitle.fr} sources={sources} year="2008-2015">
+    <FactBlock title={<>{ctm.beforeTitle.fr}{ctm.beforeShort.kr && <span className="font-normal text-slate-500"> · {ctm.beforeShort.kr}</span>}</>}
+               sources={sources} year="2008-2015">
       <p className="mt-1 text-sm text-slate-600">{ctm.beforeIntro.fr}</p>
       <div className="mt-3 grid gap-4 sm:grid-cols-2">
         {tables.map((t) => (

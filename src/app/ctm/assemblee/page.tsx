@@ -38,7 +38,7 @@ export default async function AssembleePage() {
       header={
         <CardHeader
           portrait={<Portrait name="Assemblée" removalSubject="Assemblée de Martinique" />}
-          title={ctm.assembleeTitle.fr}
+          title={<>{ctm.assembleeTitle.fr}{ctm.assembleeTitle.kr && <span className="block text-base font-normal text-slate-400">{ctm.assembleeTitle.kr}</span>}</>}
           facts={[
             { label: ctm.assembleePresident.fr, value: president
               ? <>{president.name}{president.functionStart && <span className="font-normal text-slate-400"> · {date(president.functionStart)}</span>}</> : "—" },
