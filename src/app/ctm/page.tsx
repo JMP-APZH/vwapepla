@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CardHeader, CardShell, Caveat, MissingInfo, RightOfReply } from "@/components/card/Card";
 import { Portrait } from "@/components/card/Portrait";
+import { AreaSpending } from "@/components/ctm/Areas";
 import { BeforeCtm, BreakdownBlock, FiscaliteUltramarine, SavingsDebt } from "@/components/ctm/Budget";
 import { getSources } from "@/lib/core/data";
 import { date, int } from "@/lib/core/format";
 import { beforeCtm, breakdown, CTM, get, index, referenceYear, series, sourceIds } from "@/lib/ctm/budget";
-import { getActuals, getMetricDefs } from "@/lib/ctm/data";
+import { getActuals, getFunctional, getMetricDefs } from "@/lib/ctm/data";
+import { areasForYear } from "@/lib/ctm/functions";
 import { ctm } from "@/i18n";
 
 export const metadata: Metadata = { title: ctm.cardTitle.fr };
@@ -19,7 +21,7 @@ const FUM = ["fum_total", "fum_octroi_de_mer", "fum_carburants", "fum_autres", "
 // The Collectivité: budget facts of the institution (B3 neutrality charter, docs/branches/B3-DISCOVERY.md §4): no score,
 // no ranking; every block sourced; the Région and the Département before 2016 shown side by side, never summed.
 export default async function CtmPage() {
-  const [rows, defs, sources] = await Promise.all([getActuals(), getMetricDefs(), getSources()]);
+  const [rows, defs, sources, functional] = await Promise.all([getActuals(), getMetricDefs(), getSources(), getFunctional()]);
   const idx = index(rows);
   const year = referenceYear(rows) ?? 2024;
   const ctmYears = [...new Set(rows.filter((r) => r.entity_siren === CTM).map((r) => r.year))].sort();
@@ -84,6 +86,8 @@ export default async function CtmPage() {
                       sources={src(sourceIds([spending.total, ...spending.parts]))} />
       <BreakdownBlock title={ctm.investTitle.fr} year={year} total={invest[0]} parts={invest.slice(1, 3)} extra={invest.slice(3)}
                       sources={src(sourceIds(invest))} />
+      <AreaSpending year={year} lines={areasForYear(functional, year)} rows={functional}
+                    sources={src([...new Set(functional.map((f) => f.source_id)), "ctm:ofgl-fonctions-m57-libelles"])} />
       <SavingsDebt savings={savings} debt={debt} capacity={capacity} range={range} provisionalYear={provisional}
                    crcUrl={sources.get(CRC)?.url ?? null}
                    sources={src([...sourceIds(rows.filter((r) => r.entity_siren === CTM && ["epargne_brute", "encours_dette"].includes(r.metric_key)))])} />
