@@ -155,6 +155,19 @@ def fetch_an_scrutins_liste(dest):
     _write(dest, SCRUTIN_COLS, rows())
 
 
+def fetch_an_reunions(dest):
+    """Every committee meeting of the legislature (national, no names): date, committee, state and whether an attendance
+    list is published. Used only to state how complete the published attendance is (never shown per deputy)."""
+    def rows():
+        for name, doc in _json_items(f"{AN}/vp/reunions/Agenda.json.zip"):
+            r = doc.get("reunion") or {}
+            if r.get("@xsi:type") != "reunionCommission_type":
+                continue
+            listed = _as_list(((r.get("participants") or {}).get("participantsInternes") or {}).get("participantInterne"))
+            yield [r.get("uid"), r.get("timeStampDebut"), r.get("organeReuniRef"), _dig(r, "cycleDeVie.etat"), len(listed)]
+    _write(dest, ["uid", "timeStampDebut", "organeReuniRef", "cycleDeVie.etat", "participantsInternes.count"], rows())
+
+
 def fetch_an_scrutins(dest):
     """One row per (scrutin, Martinique deputy) with the recorded position, plus the scrutin's own metadata."""
     uids = set(_an_martinique_actors())
@@ -288,6 +301,15 @@ _PG_ESC = re.compile(r"\\(.)")
 _PG_CHR = {"t": "\t", "n": "\n", "r": "\r", "b": "\b", "f": "\f", "v": "\v", "\\": "\\"}
 
 
+# The Sénat dumps hold Windows-1252 typography (0x92 ’, 0x96 –, 0x9c œ…) stored as C1 control characters U+0080-U+009F
+# (in LATIN1 dumps and, already converted, in UTF8 ones): read as cp1252 where it defines them (never legitimate text).
+_C1 = {b: bytes([b]).decode("cp1252") for b in range(0x80, 0xA0) if b not in (0x81, 0x8D, 0x8F, 0x90, 0x9D)}
+
+
+def _pg_decode(raw, enc):
+    return raw.decode(enc).translate(_C1)
+
+
 def _pg_value(v):
     return None if v == r"\N" else _PG_ESC.sub(lambda m: _PG_CHR.get(m.group(1), m.group(1)), v)
 
@@ -313,7 +335,7 @@ def _pg_rows(url, tables):
                     table = None
                     continue
                 if table:
-                    yield table, dict(zip(cols, map(_pg_value, raw.decode(enc).rstrip("\r\n").split("\t"))))
+                    yield table, dict(zip(cols, map(_pg_value, _pg_decode(raw, enc).rstrip("\r\n").split("\t"))))
 
 
 QUESTIONS_DUMP = f"{SEN}/questions/questions.zip"
@@ -384,6 +406,60 @@ def fetch_senat_amendements(dest):
     out.sort(key=lambda r: (r[4] or "", r[0]))
     _write(dest, [f"amd.{c}" for c in AMELI_COLS] + ["sor.lib", "matricule", "amdsen.rng", "amdsen.qua", "signataires"]
            + [f"txt.{c}" for c in AMELI_TXT_COLS] + ["nat.libcourt", "ses.ann"], out)
+
+
+DOSLEG_DUMP = f"{SEN}/dosleg/dosleg.zip"
+SEN_SCRUTIN_COLS = ["sesann", "scrnum", "scrdat", "scrint", "scrpou", "scrcon", "scrvot", "scrsuf", "scrmaj", "soslib",
+                    "scrjso"]
+
+
+def _st(x):
+    return (x or "").strip()
+
+
+def fetch_senat_scrutins(dest):
+    """Every public vote (scrutin public) of the Sénat in Dosleg (since the 2006-2007 session): metadata, totals and the
+    legislative file it belongs to (via date_seance -> lecass -> lecture -> loi). National, no positions."""
+    tabs = {"scr", "date_seance", "lecass", "lecture", "loi"}
+    rows = {t: [] for t in tabs}
+    for t, r in _pg_rows(DOSLEG_DUMP, tabs):
+        rows[t].append(r)
+    ds = {r["code"]: r for r in rows["date_seance"]}
+    lecass = {_st(r["lecassidt"]): r for r in rows["lecass"]}
+    lecture = {_st(r["lecidt"]): r for r in rows["lecture"]}
+    loi = {_st(r["loicod"]): r for r in rows["loi"]}
+    def out():
+        for s in sorted(rows["scr"], key=lambda s: (int(s["sesann"]), int(s["scrnum"]))):
+            d = ds.get(s["code"])
+            a = d and lecass.get(_st(d["lecidt"]))
+            lec = (a and lecture.get(_st(a["lecidt"]))) or (d and lecture.get(_st(d["lecidt"])))
+            o = (lec and loi.get(_st(lec["loicod"]))) or {}
+            yield ([s[c] for c in SEN_SCRUTIN_COLS] + [_st(d and d["date_s"]) or None]
+                   + [_st(o.get(c)) or None for c in ("signet", "typloicod", "loient", "loitit", "loiint")])
+    _write(dest, SEN_SCRUTIN_COLS + ["date_seance.date_s", "loi.signet", "loi.typloicod", "loi.loient", "loi.loitit",
+                                     "loi.loiint"], out())
+
+
+def fetch_senat_votes(dest):
+    """Nominative positions (votsen) of every senator of Martinique, current and former, on every public vote in
+    Dosleg, with the published status (congé, président de séance, déport…) and the delegate's matricule if any."""
+    mats = _senat_martinique_matricules()[0]
+    lib = {"posvot": {}, "stavot": {}, "titsen": {}}
+    out = []
+    for t, r in _pg_rows(DOSLEG_DUMP, set(lib) | {"votsen"}):
+        if t == "posvot":
+            lib[t][r["posvotcod"]] = r["posvotlib"]
+        elif t == "stavot":
+            lib[t][r["stavotidt"]] = r["stavotlib"]
+        elif t == "titsen":
+            lib[t][r["titsencod"]] = r["titsenlib"]
+        elif r["senmat"] in mats:
+            out.append([r["sesann"], r["scrnum"], r["senmat"], r["posvotcod"], lib["posvot"].get(r["posvotcod"]),
+                        r["stavotidt"], lib["stavot"].get(r["stavotidt"]), lib["titsen"].get(r["titsencod"]),
+                        r["senmatdel"], r["votsenmar"]])
+    out.sort(key=lambda r: (int(r[0]), int(r[1]), r[2]))
+    _write(dest, ["sesann", "scrnum", "matricule", "posvotcod", "posvot.lib", "stavotidt", "stavot.lib", "titsen.lib",
+                  "senmatdel", "votsenmar"], out)
 
 
 HATVP_XML = "https://www.hatvp.fr/livraison/merge/declarations.xml"
@@ -487,6 +563,10 @@ JOBS = [
          "Dossiers législatifs — XVIIe législature", f"{AN_PAGE}/travaux-parlementaires/dossiers-legislatifs",
          AN_CREDIT, "All legislative files (titles, procedure): input of the published vote-selection rule.",
          fetch_an_dossiers),
+    _job("an", "an-reunions-17", f"{AN}/vp/reunions/Agenda.json.zip", "Agenda — réunions de la XVIIe législature",
+         f"{AN_PAGE}/travaux-parlementaires/reunions", AN_CREDIT,
+         "Committee meetings (no names): how many publish an attendance list (stated as a data gap, never a rate).",
+         fetch_an_reunions),
     *[_job("an", f"an-{ds}-17", f"{AN}/questions/{path}", f"{title} — XVIIe législature",
            f"{AN_PAGE}/travaux-parlementaires/questions/{page}", AN_CREDIT,
            f"{title} asked by a Martinique deputy (subject, ministry, answer date).", _questions(f"{AN}/questions/{path}"))
@@ -524,6 +604,14 @@ JOBS = [
          "https://data.senat.fr/ameli/", SEN_CREDIT,
          "Amendments signed by Martinique's senators (séance since 2001, commission since 2010), rank and outcome.",
          fetch_senat_amendements),
+    _job("senat", "senat-scrutins", DOSLEG_DUMP, "Dosleg — scrutins publics (dump PostgreSQL)",
+         "https://data.senat.fr/dosleg/", SEN_CREDIT,
+         "Every public vote of the Sénat since 2006-2007 (object, totals, legislative file): input of the vote rule.",
+         fetch_senat_scrutins),
+    _job("senat", "senat-votes-972", DOSLEG_DUMP, "Dosleg — votes nominatifs des sénateurs (dump PostgreSQL)",
+         "https://data.senat.fr/dosleg/", SEN_CREDIT,
+         "Position of each senator of Martinique (current and former) on every public vote, with published status.",
+         fetch_senat_votes),
     # National files, small enough to keep whole (filtered at import), like the communes RNE files.
     file_job("rne", "rne-deputes", "https://www.data.gouv.fr/datasets/r/1ac42ff4-1336-44f8-a221-832039dbc142",
              "Répertoire national des élus — députés", "https://www.data.gouv.fr/datasets/repertoire-national-des-elus-1/",

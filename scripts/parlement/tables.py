@@ -1,7 +1,7 @@
 """Tables loaded by scripts/core/load_supabase.py --domain parlement, from data/build/parlement/<table>.json.
 
 Order respects foreign keys; value = conflict target. Core tables (institutions, bodies, seats, persons, mandates,
-sources, media) for this domain's own rows, and parl_* tables only (migration 20261105170000_parl_init.sql).
+sources, media) for this domain's own rows, and parl_* tables only (migration 20261107120000_parl_init.sql).
 """
 TABLES = {
     # core rows of this domain (scripts/parlement/build.py)
@@ -22,6 +22,7 @@ TABLES = {
     "parl_questions": "id",
     "parl_interest_declarations": "id",
     "parl_interest_items": "id",
+    "parl_data_gaps": "id",
     # official portraits: python -I scripts/core/media.py --domain parlement [--upload]
     "media": "id",
 }

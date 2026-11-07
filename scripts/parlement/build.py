@@ -1,6 +1,6 @@
 """Build normalised tables from data/raw/parlement/ into data/build/parlement/<table>.json (one JSON array per Supabase
 table: core rows of the two chambers + parl_* tables). Current terms only (cut-off, docs/branches/B2-DISCOVERY.md §1bis):
-the XVIIth legislature for deputies, the current mandate for senators.
+the XVIIth legislature for deputies, the current mandate for senators (Sénat public votes: every one in Dosleg).
 
 Deterministic and idempotent: same raw files -> same output. Run: python -I scripts/parlement/build.py
 Checks (exit 1 on failure): row counts equal to the manifest; exactly 4 sitting deputies (circonscriptions 1-4) and
@@ -48,6 +48,10 @@ def slug(*parts):
 
 def ordinal(n):
     return "1re" if n == 1 else f"{n}e"
+
+
+def upper_first(s):
+    return s[:1].upper() + s[1:]
 
 
 # --- sources -------------------------------------------------------------------------------------------------------
@@ -230,7 +234,7 @@ for s in scr_list:
     for p in parts:
         counts[p] += 1
     counts["selected"] += bool(parts)
-    scrutins.append({"id": s["uid"], "number": int(s["numero"]), "date": day(s["dateScrutin"]),
+    scrutins.append({"id": s["uid"], "chamber": "AN", "legislature": "17", "number": int(s["numero"]), "date": day(s["dateScrutin"]),
                      "type_code": s["typeVote.codeTypeVote"], "type_label": s["typeVote.libelleTypeVote"],
                      "title": s["titre"], "object": s["objet.libelle"] or None, "text_id": dref if d else None,
                      "result_code": s["sort.code"], "result_label": s["sort.libelle"],
@@ -238,7 +242,7 @@ for s in scr_list:
                      "contre": int(s["syntheseVote.decompte.contre"] or 0),
                      "abstentions": int(s["syntheseVote.decompte.abstentions"] or 0),
                      "non_votants": int(s["syntheseVote.decompte.nonVotants"] or 0),
-                     "selected_by": [f"{votes.RULE}:{p}" for p in parts],
+                     "text_signet": None, "selected_by": [f"{votes.RULE}:{p}" for p in parts],
                      "url": f"{AN_URL}/dyn/17/scrutins/{s['numero']}", "source_id": "an-scrutins-17-liste"})
 scr_ids = {s["id"] for s in scrutins}
 MAP_POSITIONS = {"pours": "pour", "pour": "pour", "contres": "contre", "contre": "contre", "abstentions": "abstention",
@@ -279,6 +283,56 @@ for v in vote_rows:
     elif v["group_id"]:
         used.add(v["group_id"])
 
+# --- scrutins, votes (Sénat, Dosleg) -------------------------------------------------------------------------------------
+# Every public vote in Dosleg (since the 2006-2007 session); positions of the sitting senators during their term.
+# Result: the Sénat adopts when « pour » exceeds « contre » (absolute majority of the votes cast), as on senat.fr.
+SEN_POS = {"1": "pour", "2": "contre", "3": "abstention", "4": "nonVotant"}
+sen_counts = collections.Counter()
+sen_scr = {}
+for s in raw("senat-scrutins"):
+    sid = f"sen:{s['sesann']}-{s['scrnum']}"
+    parts = votes.select_senat(s)
+    pour, contre = int(s["scrpou"] or 0), int(s["scrcon"] or 0)
+    voters, cast = int(s["scrvot"] or 0), int(s["scrsuf"] or 0)
+    title = re.sub(r"^sur\s+", "", (s["scrint"] or "").strip())
+    sen_scr[sid] = {"id": sid, "chamber": "SEN", "legislature": s["sesann"], "number": int(s["scrnum"]),
+                    "date": day(s["scrdat"]), "type_code": "SPO", "type_label": "scrutin public",
+                    "title": upper_first(title), "object": None, "text_id": None,
+                    "result_code": "adopté" if pour > contre else "rejeté",
+                    "result_label": "adopté" if pour > contre else "rejeté",
+                    "voters": voters or None, "pour": pour, "contre": contre,
+                    "abstentions": voters - cast if voters else None, "non_votants": None,
+                    "text_signet": s["loi.signet"] or None, "selected_by": [f"{votes.RULE}:{p}" for p in parts],
+                    "url": f"{SEN_URL}/scrutin-public/{s['sesann']}/scr{s['sesann']}-{s['scrnum']}.html",
+                    "source_id": "senat-scrutins"}
+first_sen_start = min(sen_start.values())
+for sid, s in sen_scr.items():
+    if s["date"] >= first_sen_start:
+        sen_counts["term"] += 1
+        sen_counts["selected"] += bool(s["selected_by"])
+        for p in s["selected_by"]:
+            sen_counts[p.split(":")[1]] += 1
+scrutins += sen_scr.values()
+scr_ids |= set(sen_scr)
+selected_sen = {sid for sid, s in sen_scr.items() if s["selected_by"]}
+sen_missing = collections.defaultdict(set)
+for v in raw("senat-votes-972"):
+    pid, sid = f"parl-sen:{v['matricule']}", f"sen:{v['sesann']}-{v['scrnum']}"
+    if pid not in sen_ids:
+        continue  # former senators of Martinique: earlier terms
+    if sid not in sen_scr:
+        # Published position, but the scrutin itself is missing from Dosleg's scr table (it exists on senat.fr):
+        # stated as a data gap; sessions start in October, so the session year tells whether it is in the term.
+        if int(v["sesann"]) >= int(sen_start[pid][:4]):
+            sen_missing[sid].add(pid)
+        continue
+    if sen_scr[sid]["date"] < sen_start[pid]:
+        continue
+    status = v["stavot.lib"] if v["stavotidt"] not in ("0", "") else None
+    vote_rows.append({"scrutin_id": sid, "person_id": pid, "position": SEN_POS[v["posvotcod"]],
+                      "by_delegation": bool(v["senmatdel"]), "group_id": None, "group_position": None,
+                      "cause": status, "mise_au_point": None, "source_id": "senat-votes-972"})
+
 # --- amendments ----------------------------------------------------------------------------------------------------
 amendments = []
 for a in raw("an-amendements-17"):
@@ -290,7 +344,8 @@ for a in raw("an-amendements-17"):
             if x in co and f"parl-an:{x}" in dep_ids]
     num = re.search(r"(\d+)$", a["texteLegislatifRef"] or "")
     for pid, role in who:
-        amendments.append({"id": f"{a['uid']}:{pid}", "amendment_id": a["uid"], "chamber": "AN", "person_id": pid,
+        amendments.append({"id": f"{a['uid']}:{pid}", "amendment_id": a["uid"], "chamber": "AN", "legislature": "17",
+                           "person_id": pid,
                            "role": role, "as_rapporteur": rapporteur, "signatories": 1 + len(co - {""}),
                            "number": a["identification.numeroLong"], "text_ref": a["texteLegislatifRef"] or None,
                            "text_number": num.group(1) if num else None, "text_title": None, "text_id": None,
@@ -307,6 +362,7 @@ for a in raw("senat-amendements-972"):
     url = (f"{SEN_URL}/amendements/{'commissions/' if com else ''}{ann}-{ann + 1}/{txt.group(0)}/Amdt_{num}.html"
            if txt else None)
     amendments.append({"id": f"sen:{a['amd.id']}:{pid}", "amendment_id": f"sen:{a['amd.id']}", "chamber": "SEN",
+                       "legislature": str(ann),
                        "person_id": pid, "role": "premier_signataire" if a["amdsen.rng"] == "0" else "cosignataire",
                        "as_rapporteur": False, "signatories": int(a["signataires"]), "number": num,
                        "text_ref": a["txt.doslegsignet"] or None, "text_number": a["txt.num"] or None,
@@ -321,7 +377,7 @@ for ds in ("an-questions-ecrites-17", "an-questions-orales-17", "an-questions-go
         pid = f"parl-an:{q['auteur.identite.acteurRef']}"
         if pid not in dep_ids:
             continue
-        questions.append({"id": q["uid"], "chamber": "AN", "person_id": pid, "kind": q["type"],
+        questions.append({"id": q["uid"], "chamber": "AN", "legislature": "17", "person_id": pid, "kind": q["type"],
                           "number": q["identifiant.numero"], "title": q["indexationAN.analyses.analyse"] or None,
                           "rubrique": q["indexationAN.rubrique"] or None,
                           "ministry": q["minAttribs.minAttrib.denomination.abrege"] or q["minInt.abrege"] or None,
@@ -334,7 +390,8 @@ for q in raw("senat-questions-972"):
     if pid not in sen_ids or (day(q["datejodepot"]) or "") < sen_start[pid]:
         continue
     ref = q["reference"]
-    questions.append({"id": f"sen:{q['id']}", "chamber": "SEN", "person_id": pid, "kind": q["natquecod"],
+    questions.append({"id": f"sen:{q['id']}", "chamber": "SEN", "legislature": q["legislature"] or "", "person_id": pid,
+                      "kind": q["natquecod"],
                       "number": q["numero"], "title": q["titre"] or None, "rubrique": q["rubrique"] or None,
                       "ministry": q["mindepotlib"] or None, "asked": day(q["datejodepot"]),
                       "answered": day(q["reponse.datejorep"]), "status": q["etaquelib"] or None,
@@ -391,6 +448,75 @@ for pid, (key, uuid, f) in sorted(latest.items()):
 for pid in sorted(person_ids - set(latest)):
     print(f"note: no published declaration of interests in open data for {pid}")
 
+# --- data gaps: what the official open data does not give, measured on the files and dated (shown, never hidden) -------
+gaps = []
+
+
+def gap(gid, chamber, period, topic, status, label, detail, source, url=None, person=None):
+    gaps.append({"id": gid, "chamber": chamber, "person_id": person, "period": period, "topic": topic, "status": status,
+                 "label_fr": label, "detail_fr": detail, "checked_url": url or MANIFEST[source]["dataset_page"],
+                 "checked_on": MANIFEST[source]["retrieved"], "source_id": source})
+
+
+fmt = lambda n: f"{n:,}".replace(",", " ")  # noqa: E731  French thousands separator
+an_scr = [s for s in scrutins if s["chamber"] == "AN"]
+gap("an-17-votes-main-levee", "AN", "XVIIe législature", "votes", "absent", "Votes à main levée",
+    "La plupart des votes en séance se font à main levée ou par assis-levé : ils ne sont pas nominatifs et ne figurent "
+    f"dans aucune donnée. Seuls les {fmt(len(an_scr))} scrutins publics de la législature donnent la position de chaque "
+    "député. « Pas de vote enregistré » ne veut donc pas dire absent.", "an-scrutins-17-liste")
+no_dossier = sum(1 for s in an_scr if not s["text_id"])
+gap("an-17-votes-dossier", "AN", "XVIIe législature", "votes", "partiel", "Scrutins sans dossier législatif",
+    f"{fmt(no_dossier)} scrutins publics sur {fmt(len(an_scr))} ne sont rattachés à aucun dossier législatif dans les "
+    "données de l'Assemblée : pour eux, la règle de sélection V1 ne lit que l'objet du scrutin.", "an-scrutins-17-liste")
+# Committee attendance: coverage of the published lists (never anyone's attendance).
+retrieved = MANIFEST["an-reunions-17"]["retrieved"]
+meetings = [m for m in raw("an-reunions-17") if m["cycleDeVie.etat"].startswith("Confirm") and day(m["timeStampDebut"]) <= retrieved]
+listed = sum(1 for m in meetings if int(m["participantsInternes.count"]) > 0)
+gap("an-17-presence-commission", "AN", "XVIIe législature", "presence", "partiel", "Présence en commission",
+    f"L'Assemblée publie une liste de présence pour {fmt(listed)} réunions de commission sur {fmt(len(meetings))} tenues "
+    f"depuis juillet 2024 ({round(100 * listed / len(meetings))} %), selon les commissions. Vwapepla n'affiche pas ces présences : "
+    "un décompte se lirait comme un taux de présence, et le travail en commission ne se résume pas à être présent.",
+    "an-reunions-17")
+presence_coverage = {}
+for pid in sorted(dep_ids):
+    own = [m for m in memberships if m["person_id"] == pid and organes[m["organe_id"]]["kind"] in ("COMPER", "CNPE", "DELEG")]
+    mine = [x for x in meetings if any(x["organeReuniRef"] == m["organe_id"] and (m["start_date"] or "") <= day(x["timeStampDebut"])
+                                       and (not m["end_date"] or day(x["timeStampDebut"]) <= m["end_date"]) for m in own)]
+    if mine:  # printed for the team (decision point), not stored: attendance itself is not shown (JM, 7 Nov 2026)
+        presence_coverage[pid] = (sum(1 for x in mine if int(x["participantsInternes.count"]) > 0), len(mine))
+sen_term = [s for s in sen_scr.values() if s["date"] >= first_sen_start]
+gap("sen-votes-groupe", "SEN", "depuis octobre 2023", "votes", "partiel", "Votes de groupe au Sénat",
+    "Au Sénat, lors d'un scrutin public ordinaire, un délégué de chaque groupe peut déposer les bulletins de tous ses "
+    "membres : une position publiée ne dit pas si le sénateur était présent dans l'hémicycle. Seules les "
+    f"positions sont publiées ({fmt(len(sen_term))} scrutins publics depuis octobre 2023), pas la présence.",
+    "senat-votes-972")
+gap("sen-votes-solennel", "SEN", "depuis 2006", "votes", "partiel", "Scrutins solennels non signalés",
+    "La base Dosleg du Sénat ne signale pas les scrutins publics solennels ni le nombre de sénateurs n'ayant pas pris "
+    "part au vote : la règle V1 (a) ne s'applique pas au Sénat. Les nombres de votants, pour, contre sont ceux publiés ; "
+    "les abstentions sont les votants moins les suffrages exprimés.", "senat-scrutins")
+if sen_missing:
+    nums = ", ".join(f"n° {k.split('-')[1]} ({k[4:8]}-{int(k[4:8]) + 1})"
+                     for k in sorted(sen_missing, key=lambda k: (k[4:8], int(k.split("-")[1]))))
+    gap("sen-scrutins-manquants", "SEN", "depuis octobre 2023", "votes", "partiel", "Scrutins absents des données ouvertes",
+        f"{len(sen_missing)} scrutins publics du mandat ont des positions nominatives dans la base Dosleg du Sénat, mais ni "
+        f"date ni objet : ils ne sont pas affichés ici et restent consultables sur senat.fr ({nums}).", "senat-scrutins")
+gap("sen-presence-commission", "SEN", "mandat en cours", "presence", "absent", "Présence en commission",
+    "Les données ouvertes du Sénat (data.senat.fr) ne contiennent aucune liste de présence aux réunions de commission.",
+    "senat-commissions")
+gap("an-mandats-anterieurs", "AN", "XIVe à XVIe législatures (2012-2024)", "mandats", "absent",
+    "Mandats antérieurs pas encore affichés",
+    "Les votes, amendements et questions des législatures précédentes sont publiés par l'Assemblée nationale mais ne sont "
+    "pas encore chargés sur Vwapepla.", "an-deputes",
+    url="https://data.assemblee-nationale.fr/archives-anterieures/archives-14e")
+gap("sen-mandats-anterieurs", "SEN", "avant octobre 2023", "mandats", "absent", "Mandats antérieurs pas encore affichés",
+    "Les votes, amendements et questions des mandats sénatoriaux précédents sont publiés par le Sénat mais ne sont pas "
+    "encore chargés sur Vwapepla.", "senat-mandats-senat")
+for pid in sorted(person_ids - set(latest)):
+    gap(f"hatvp-declaration-interets:{pid}", "AN" if pid in dep_ids else "SEN", "mandat en cours", "declarations", "absent",
+        "Déclaration d'intérêts", "Aucune déclaration d'intérêts de ce mandat dans les données ouvertes de la HATVP à la date "
+        "de récupération : les activités déclarées ne peuvent pas être affichées. Voir hatvp.fr.",
+        "hatvp-declarations-972", person=pid)
+
 # --- checks --------------------------------------------------------------------------------------------------------------
 for t, rows in [("memberships", memberships), ("votes", vote_rows), ("amendments", amendments), ("questions", questions),
                 ("declarations", declarations), ("interest items", interest_items)]:
@@ -409,12 +535,13 @@ tables = {
     "parl_organes": sorted((organes[o] for o in used), key=lambda o: o["id"]),
     "parl_memberships": sorted(memberships, key=lambda m: m["id"]),
     "parl_texts": sorted(texts.values(), key=lambda t: t["id"]),
-    "parl_scrutins": sorted(scrutins, key=lambda s: s["number"]),
+    "parl_scrutins": sorted(scrutins, key=lambda s: (s["chamber"], s["legislature"], s["number"])),
     "parl_votes": sorted(vote_rows, key=lambda v: (v["scrutin_id"], v["person_id"])),
     "parl_amendments": sorted(amendments, key=lambda a: a["id"]),
     "parl_questions": sorted(questions, key=lambda q: q["id"]),
     "parl_interest_declarations": sorted(declarations, key=lambda d: d["id"]),
     "parl_interest_items": interest_items,
+    "parl_data_gaps": sorted(gaps, key=lambda g: g["id"]),
 }
 for name, rows in tables.items():
     (OUT / f"{name}.json").write_text(json.dumps(rows, ensure_ascii=False, indent=1), encoding="utf-8")
@@ -422,10 +549,15 @@ for name, rows in tables.items():
 
 by = lambda rows, f: dict(sorted(collections.Counter(f(r) for r in rows).items()))  # noqa: E731
 short = {p["id"]: p["last_name"] for p in persons}
-print(f"\nrule {votes.RULE}: {counts['selected']} of {len(scrutins)} scrutins selected; parts (overlapping) "
+print(f"\nrule {votes.RULE}: {counts['selected']} of {len(an_scr)} AN scrutins selected; parts (overlapping) "
       f"a {counts['a']}, b {counts['b']}, c {counts['c']}, d {counts['d']}")
+print(f"rule {votes.RULE} (Sénat, since {first_sen_start}): {sen_counts['selected']} of {sen_counts['term']} scrutins "
+      f"selected; b {sen_counts['b']}, c {sen_counts['c']}")
 print("recorded positions on selected scrutins:",
-      by([v for v in vote_rows if v["scrutin_id"] in selected], lambda v: short[v["person_id"]]))
+      by([v for v in vote_rows if v["scrutin_id"] in selected | selected_sen], lambda v: short[v["person_id"]]))
+print("data gaps:", len(gaps))
+print("committee meetings with a published attendance list, own committees/delegations (not stored):",
+      {short[p]: f"{n}/{m}" for p, (n, m) in presence_coverage.items()})
 print("amendments as first signatory:", by([a for a in amendments if a["role"] == "premier_signataire"], lambda a: short[a["person_id"]]))
 print("questions:", by(questions, lambda q: (short[q["person_id"]], q["kind"])))
 print("interest items (latest declaration):", by(interest_items, lambda i: short[i["person_id"]]))
