@@ -1,9 +1,9 @@
 import { cacheLife, cacheTag } from "next/cache";
 import { check } from "@/lib/core/data";
 import { supabase } from "@/lib/core/supabase";
-import type { Amendment, Question, Scrutin, Vote } from "./activity";
+import type { Amendment, DataGap, Question, Scrutin, Vote } from "./activity";
 import type { Declaration, InterestItem } from "./interests";
-import { AN_BODY, SEN_BODY, toMembers, type MandateDetail, type MandateRow, type Member, type Membership } from "./members";
+import { AN_BODY, SEN_BODY, toMembers, type Chamber, type MandateDetail, type MandateRow, type Member, type Membership } from "./members";
 
 // Parlement domain (B2): typed, cached reads of the core mandates (two bodies) and the parl_* tables. Data is rebuilt
 // weekly (JM, Q10): cached for days and pre-rendered; a redeploy or revalidateTag("data") refreshes it.
@@ -57,24 +57,42 @@ export async function getGroupLabels(): Promise<Map<string, string>> {
   return new Map(rows.map((r) => [r.id, r.label_fr]));
 }
 
-const SCRUTIN_COLS = "id,number,date,type_code,type_label,title,object,text_id,result_code,result_label,pour,contre,abstentions,non_votants,selected_by,url,source_id";
+const SCRUTIN_COLS = "id,chamber,legislature,number,date,type_code,type_label,title,object,text_id,result_code,result_label,voters,pour,contre,abstentions,non_votants,text_signet,selected_by,url,source_id";
 
-/** Scrutins selected by the published rule (V1), for the card. */
-export async function getSelectedScrutins(): Promise<Scrutin[]> {
-  "use cache";
-  cacheLife("days");
-  cacheTag("data");
-  return all<Scrutin>("parl_scrutins", (a, b) => supabase.from("parl_scrutins").select(SCRUTIN_COLS)
-    .neq("selected_by", "{}").order("number").range(a, b));
+/** Scrutins of one chamber since a date (the member's term start): AN XVIIth legislature, Sénat since the term. */
+function scrutins(chamber: Chamber, since: string, selectedOnly: boolean) {
+  return all<Scrutin>("parl_scrutins", (a, b) => {
+    let q = supabase.from("parl_scrutins").select(SCRUTIN_COLS).eq("chamber", chamber).gte("date", since);
+    if (chamber === "AN") q = q.eq("legislature", "17");
+    if (selectedOnly) q = q.neq("selected_by", "{}");
+    return q.order("id").range(a, b);
+  });
 }
 
-/** Every public vote of the legislature (download only: complete, not curated). */
-export async function getAllScrutins(): Promise<Scrutin[]> {
+/** Scrutins selected by the published rule (V1), for the card. */
+export async function getSelectedScrutins(chamber: Chamber, since: string): Promise<Scrutin[]> {
   "use cache";
   cacheLife("days");
   cacheTag("data");
-  return all<Scrutin>("parl_scrutins", (a, b) => supabase.from("parl_scrutins").select(SCRUTIN_COLS)
-    .order("number").range(a, b));
+  return scrutins(chamber, since, true);
+}
+
+/** Every public vote of the term (download only: complete, not curated). */
+export async function getAllScrutins(chamber: Chamber, since: string): Promise<Scrutin[]> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("data");
+  return scrutins(chamber, since, false);
+}
+
+/** What the official open data does not give (absent or partial), measured and dated by the pipeline. */
+export async function getDataGaps(): Promise<DataGap[]> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("data");
+  return check(await supabase.from("parl_data_gaps")
+    .select("id,chamber,person_id,period,topic,status,label_fr,detail_fr,checked_url,checked_on,source_id").order("id"),
+  "parl_data_gaps") as DataGap[];
 }
 
 export async function getVotes(personId: string): Promise<Vote[]> {
@@ -82,11 +100,11 @@ export async function getVotes(personId: string): Promise<Vote[]> {
   cacheLife("days");
   cacheTag("data");
   return all<Vote>("parl_votes", (a, b) => supabase.from("parl_votes")
-    .select("scrutin_id,person_id,position,by_delegation,group_id,group_position,mise_au_point,source_id")
+    .select("scrutin_id,person_id,position,by_delegation,group_id,group_position,cause,mise_au_point,source_id")
     .eq("person_id", personId).order("scrutin_id").range(a, b));
 }
 
-const AMENDMENT_COLS = "id,amendment_id,chamber,person_id,role,as_rapporteur,signatories,number,text_ref,text_number,text_title,article,filed,outcome,state,url,source_id";
+const AMENDMENT_COLS = "id,amendment_id,chamber,legislature,person_id,role,as_rapporteur,signatories,number,text_ref,text_number,text_title,article,filed,outcome,state,url,source_id";
 
 export async function getAmendments(personId: string, role: Amendment["role"]): Promise<Amendment[]> {
   "use cache";
@@ -101,7 +119,7 @@ export async function getQuestions(personId: string): Promise<Question[]> {
   cacheLife("days");
   cacheTag("data");
   return all<Question>("parl_questions", (a, b) => supabase.from("parl_questions")
-    .select("id,chamber,person_id,kind,number,title,rubrique,ministry,asked,answered,status,url,source_id")
+    .select("id,chamber,legislature,person_id,kind,number,title,rubrique,ministry,asked,answered,status,url,source_id")
     .eq("person_id", personId).order("id").range(a, b));
 }
 

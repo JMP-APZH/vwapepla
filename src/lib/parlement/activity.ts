@@ -3,27 +3,28 @@
 // totalled next to them); no rate, no score, no ranking. Pure functions, unit-tested.
 
 export type Scrutin = {
-  id: string; number: number; date: string; type_code: string; type_label: string; title: string;
-  object: string | null; text_id: string | null; result_code: string | null; result_label: string | null;
-  pour: number; contre: number; abstentions: number; non_votants: number; selected_by: string[]; url: string;
-  source_id: string;
+  id: string; chamber: "AN" | "SEN"; legislature: string; number: number; date: string; type_code: string;
+  type_label: string; title: string; object: string | null; text_id: string | null; result_code: string | null;
+  result_label: string | null; voters: number | null; pour: number; contre: number; abstentions: number | null;
+  non_votants: number | null; text_signet: string | null; selected_by: string[]; url: string; source_id: string;
 };
 
 export type Vote = {
-  scrutin_id: string; person_id: string; position: "pour" | "contre" | "abstention" | "nonVotant";
-  by_delegation: boolean; group_id: string | null; group_position: string | null; mise_au_point: string | null;
-  source_id: string;
+  scrutin_id: string; person_id: string; position: "pour" | "contre" | "abstention" | "nonVotant" | "nonVotantVolontaire";
+  by_delegation: boolean; group_id: string | null; group_position: string | null; cause: string | null;
+  mise_au_point: string | null; source_id: string;
 };
 
 export type Amendment = {
-  id: string; amendment_id: string; chamber: "AN" | "SEN"; person_id: string;
+  id: string; amendment_id: string; chamber: "AN" | "SEN"; legislature: string; person_id: string;
   role: "premier_signataire" | "cosignataire"; as_rapporteur: boolean; signatories: number; number: string;
   text_ref: string | null; text_number: string | null; text_title: string | null; article: string | null;
   filed: string | null; outcome: string | null; state: string | null; url: string | null; source_id: string;
 };
 
 export type Question = {
-  id: string; chamber: "AN" | "SEN"; person_id: string; kind: string; number: string | null; title: string | null;
+  id: string; chamber: "AN" | "SEN"; legislature: string; person_id: string; kind: string; number: string | null;
+  title: string | null;
   rubrique: string | null; ministry: string | null; asked: string | null; answered: string | null;
   status: string | null; url: string | null; source_id: string;
 };
@@ -42,21 +43,29 @@ export const RULE_PARTS = [
   { key: "V1:d", label: "Motions de censure" },
 ] as const;
 
+/** Parts of the rule that select at least one of these scrutins (the Sénat has no solemn flag, no censure motion). */
+export function partsUsed(scrutins: Pick<Scrutin, "selected_by">[]): (typeof RULE_PARTS)[number][] {
+  const used = new Set(scrutins.flatMap((s) => s.selected_by));
+  return RULE_PARTS.filter((p) => used.has(p.key));
+}
+
 export type VoteLine = {
   scrutin: Scrutin; position: string; groupPosition: string | null; byDelegation: boolean; correction: string | null;
+  status: string | null;
 };
 
 /** One line per scrutin (most recent first): the member's recorded position, or « pas de vote enregistré »
  *  (which is not an absence: charter §3.3). */
 export function voteLines(scrutins: Scrutin[], votes: Vote[]): VoteLine[] {
   const mine = new Map(votes.map((v) => [v.scrutin_id, v]));
-  return [...scrutins].sort((a, b) => b.number - a.number).map((s) => {
+  return [...scrutins].sort((a, b) => b.date.localeCompare(a.date) || b.number - a.number).map((s) => {
     const v = mine.get(s.id);
     return {
       scrutin: s,
       position: v ? POSITION_FR[v.position] ?? v.position : NO_VOTE,
       groupPosition: v?.group_position ? POSITION_FR[v.group_position] ?? v.group_position : null,
       byDelegation: v?.by_delegation ?? false,
+      status: s.chamber === "SEN" ? v?.cause ?? null : null, // Sénat: published status (congé, président de séance…)
       correction: v?.mise_au_point ? (POSITION_FR[v.mise_au_point.replace(/^dysfonctionnement:/, "")] ?? v.mise_au_point) : null,
     };
   });
@@ -117,4 +126,21 @@ export function questionCounts(rows: Question[]): { kind: string; label: string;
   const order = (k: string) => { const i = KIND_ORDER.indexOf(k); return i < 0 ? 99 : i; };
   return [...m.entries()].sort((a, b) => order(a[0]) - order(b[0]))
     .map(([kind, c]) => ({ kind, label: QUESTION_KIND_FR[kind] ?? kind, ...c }));
+}
+
+// --- data gaps -------------------------------------------------------------------------------------------------------
+
+export type DataGap = {
+  id: string; chamber: "AN" | "SEN"; person_id: string | null; period: string; topic: string;
+  status: "absent" | "partiel"; label_fr: string; detail_fr: string; checked_url: string | null; checked_on: string;
+  source_id: string | null;
+};
+
+const TOPIC_ORDER = ["votes", "presence", "amendements", "questions", "declarations", "mandats"];
+
+/** Gaps that concern one member: their chamber's general gaps and their own, in a fixed topic order. */
+export function gapsFor(gaps: DataGap[], m: { chamber: "AN" | "SEN"; personId: string }): DataGap[] {
+  const order = (t: string) => { const i = TOPIC_ORDER.indexOf(t); return i < 0 ? 99 : i; };
+  return gaps.filter((g) => g.chamber === m.chamber && (g.person_id == null || g.person_id === m.personId))
+    .sort((a, b) => order(a.topic) - order(b.topic) || a.id.localeCompare(b.id));
 }

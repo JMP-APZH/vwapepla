@@ -4,12 +4,13 @@ import { notFound } from "next/navigation";
 import { CardHeader, CardShell, Caveat, MissingInfo, RightOfReply } from "@/components/card/Card";
 import { Portrait } from "@/components/card/Portrait";
 import { AmendmentsBlock, QuestionsBlock, VotesBlock } from "@/components/parlement/ActivityBlocks";
+import { DataGapsBlock } from "@/components/parlement/DataGaps";
 import { InterestsBlock } from "@/components/parlement/InterestsBlock";
 import { MandateBlock } from "@/components/parlement/MandateBlock";
 import { getMedia, getSources } from "@/lib/core/data";
 import { date } from "@/lib/core/format";
-import { voteLines } from "@/lib/parlement/activity";
-import { getAmendments, getDeclarations, getInterestItems, getMember, getMembers, getMemberships, getQuestions, getSelectedScrutins, getToday, getVotes } from "@/lib/parlement/data";
+import { gapsFor, voteLines } from "@/lib/parlement/activity";
+import { getAmendments, getDataGaps, getDeclarations, getInterestItems, getMember, getMembers, getMemberships, getQuestions, getSelectedScrutins, getToday, getVotes } from "@/lib/parlement/data";
 import { currentCommittee, currentGroup, seatLabel } from "@/lib/parlement/members";
 import { fill, upperFirst } from "@/lib/parlement/text";
 import { parlement } from "@/i18n";
@@ -29,11 +30,10 @@ export default async function MemberPage({ params }: PageProps<"/parlementaires/
   const m = await getMember((await params).slug);
   if (!m) notFound();
   const an = m.chamber === "AN";
-  const [sources, media, memberships, own, questions, declarations, items, today, scrutins, votes] = await Promise.all([
+  const [sources, media, memberships, own, questions, declarations, items, today, scrutins, votes, allGaps] = await Promise.all([
     getSources(), getMedia(an ? "assemblee-nationale" : "senat"), getMemberships(m.personId),
     getAmendments(m.personId, "premier_signataire"), getQuestions(m.personId), getDeclarations(m.personId),
-    getInterestItems(m.personId), getToday(), an ? getSelectedScrutins() : Promise.resolve([]),
-    an ? getVotes(m.personId) : Promise.resolve([]),
+    getInterestItems(m.personId), getToday(), getSelectedScrutins(m.chamber, m.start), getVotes(m.personId), getDataGaps(),
   ]);
   const src = (ids: (string | null | undefined)[]) =>
     [...new Set(ids.filter((x): x is string => !!x))].map((id) => sources.get(id)).filter((s) => s != null);
@@ -46,12 +46,11 @@ export default async function MemberPage({ params }: PageProps<"/parlementaires/
   const lines = voteLines(scrutins, votes);
   const dataDate = sources.get(an ? "an-deputes" : "senat-senateurs")?.retrieved;
 
+  const gaps = gapsFor(allGaps, m);
   const missing = [
     ...(photo ? [] : [parlement.missingPhoto.fr]),
-    ...(an ? [] : [parlement.missingSenateVotes.fr, parlement.missingSuppleant.fr]),
-    parlement.missingCommitteePresence.fr,
+    ...(an ? [] : [parlement.missingSuppleant.fr]),
     ...(an && own.length > 0 ? [parlement.missingAmendmentTitle.fr] : []),
-    parlement.missingEarlier.fr,
   ];
 
   return (
@@ -74,10 +73,12 @@ export default async function MemberPage({ params }: PageProps<"/parlementaires/
       caveats={<Caveat>{fill(parlement.activityCaveat.fr, { date: date(m.start) })} {parlement.chambersCaveat.fr}</Caveat>}
       rightOfReply={<RightOfReply text={fill(parlement.rightOfReply.fr, { name })} subject={`Droit de réponse — ${name} (${label})`} />}
     >
+      <DataGapsBlock gaps={gaps} sources={sources} />
       <MissingInfo items={missing} />
       <MandateBlock member={m} memberships={memberships} today={today}
                     sources={src([m.sourceId, ...memberships.map((x) => x.source_id), m.suppleant?.sourceId, an ? "an-organes" : null])} />
-      {an && <VotesBlock member={m} lines={lines} sources={src(["an-scrutins-17", "an-scrutins-17-liste", "an-dossiers-17"])} />}
+      <VotesBlock member={m} lines={lines} period={an ? "XVIIe législature" : `depuis le ${date(m.start)}`}
+                  sources={src(an ? ["an-scrutins-17", "an-scrutins-17-liste", "an-dossiers-17"] : ["senat-votes-972", "senat-scrutins"])} />
       <AmendmentsBlock member={m} own={own} sources={src([an ? "an-amendements-17" : "senat-amendements-972"])} />
       <QuestionsBlock questions={questions} sources={src(questions.length ? questions.map((q) => q.source_id) : [an ? "an-questions-ecrites-17" : "senat-questions-972"])} />
       <InterestsBlock declarations={declarations} items={items} sources={src(["hatvp-liste", ...(items.length ? ["hatvp-declarations-972"] : [])])} />

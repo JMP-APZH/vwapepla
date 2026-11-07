@@ -8,13 +8,15 @@ import { useState } from "react";
 export type VoteItem = {
   id: string; number: number; dateLabel: string; title: string; url: string; parts: string[]; position: string;
   groupPosition: string | null; result: string | null; byDelegation: boolean; correction: string | null;
+  status: string | null;
 };
 
 const STEP = 20;
 
 export function VoteList({ items, parts, labels }: {
   items: VoteItem[]; parts: { key: string; label: string }[];
-  labels: { all: string; more: string; position: string; group: string; result: string; delegation: string; correction: string };
+  labels: { all: string; more: string; position: string; group: string; result: string; delegation: string; correction: string;
+            status: string };
 }) {
   const [part, setPart] = useState<string | null>(null);
   const [shown, setShown] = useState(STEP);
@@ -39,6 +41,7 @@ export function VoteList({ items, parts, labels }: {
             <dl className="mt-1 grid grid-cols-1 gap-x-4 text-xs sm:grid-cols-3">
               <div><dt className="inline text-slate-500">{labels.position} : </dt>
                 <dd className="inline font-medium">{v.position}{v.byDelegation && ` (${labels.delegation})`}</dd></div>
+              {v.status && <div><dt className="inline text-slate-500">{labels.status} : </dt><dd className="inline">{v.status}</dd></div>}
               {v.groupPosition && <div><dt className="inline text-slate-500">{labels.group} : </dt><dd className="inline">{v.groupPosition}</dd></div>}
               {v.result && <div><dt className="inline text-slate-500">{labels.result} : </dt><dd className="inline">{v.result}</dd></div>}
             </dl>
