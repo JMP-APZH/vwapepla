@@ -37,6 +37,38 @@ export default async function Methodologie() {
         </ul>
       </section>
       <section className="space-y-2">
+        <h2 className="text-lg font-semibold">Collectivité Territoriale de Martinique (CTM)</h2>
+        <ul className="list-disc space-y-1 pl-5 text-slate-700">
+          <li>
+            Comptes : OFGL, comptes consolidés des régions (la CTM y figure depuis 2016), et balances comptables de la DGFiP.
+            Avant 2016, la Région et le Département sont présentés côte à côte, jamais additionnés : 2012-2015 d&apos;après
+            l&apos;OFGL, 2008-2011 d&apos;après les comptes individuels de la DGFiP (budget principal seulement).
+          </li>
+          <li>
+            Contrôle de cohérence : chaque agrégat de l&apos;OFGL est recalculé à partir des comptes de la DGFiP, et les montants
+            sont comparés au rapport de la Chambre régionale des comptes (2026). Tolérance : 1 %, ou 50 000 € pour les petits
+            montants. Le texte de ce rapport (p. 56) donne une dette 2021 différente de son propre tableau en annexe (p. 80) ;
+            la fiche affiche les montants de l&apos;annexe, identiques à l&apos;OFGL, et le signale.
+          </li>
+          <li>
+            « Fiscalité spécifique ultramarine » = compte 734 de la nomenclature M57 (ce que la Chambre régionale des comptes
+            appelle « produits liés à l&apos;octroi de mer »). « Octroi de mer » désigne uniquement l&apos;octroi de mer régional
+            (compte 73432). Série à partir de 2018 : la nomenclature M57 a été renumérotée cette année-là.
+          </li>
+          <li>
+            Élus : l&apos;Assemblée d&apos;après le Répertoire national des élus (RNE). Le RNE ne liste qu&apos;une partie du Conseil
+            exécutif ; les autres membres viennent des déclarations publiées par la HATVP et restent marqués « non vérifié »
+            jusqu&apos;à l&apos;archivage de la délibération d&apos;élection.
+          </li>
+          <li>
+            Listes électorales : résultats officiels du ministère de l&apos;Intérieur. Pour 2015, la liste de chaque élu est
+            publiée ; pour 2021, elle est déduite des candidatures du 1er tour. Les groupes politiques de l&apos;Assemblée ne
+            sont pas indiqués tant que la CTM ne publie pas les déclarations de groupe. Les listes sont présentées dans
+            l&apos;ordre de leur numéro, jamais classées.
+          </li>
+        </ul>
+      </section>
+      <section className="space-y-2">
         <h2 className="text-lg font-semibold">{common.sources.fr}</h2>
         <ul className="space-y-1 text-sm text-slate-700">
           {sources.map((s) => (

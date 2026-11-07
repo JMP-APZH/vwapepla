@@ -1,17 +1,24 @@
 import { describe, expect, it } from "vitest";
 import type { Actual } from "./data";
-import type { HeadlineFigure } from "./config";
-import { computeHeadline, headlineKeys } from "./headline";
+import { HERO } from "./config";
+import { computeHero, heroKeys, spread } from "./headline";
 import { median, perHab, years } from "@/lib/core/format";
+import { debtYears, pctDec } from "./format";
 
 const row = (c: string, k: string, amount: number | null, perHabValue: number | null = null): Actual => ({
-  commune_code: c, year: 2024, metric_key: k, amount, eur_per_hab: perHabValue, provisional: false, source_id: "src",
+  commune_code: c, year: 2024, metric_key: k, amount, eur_per_hab: perHabValue, provisional: false, source_id: `src-${k}`,
 });
 
 describe("format", () => {
   it("never renders a missing value as zero", () => {
     expect(perHab(null)).toBe("non calculable");
     expect(years(undefined)).toBe("non calculable");
+  });
+  it("shows long durations without decimals (993 ans), short ones with one; rates with one decimal", () => {
+    expect(debtYears(992.94)).toBe("993 ans");
+    expect(debtYears(5.66)).toBe("5,7 ans");
+    expect(debtYears(null)).toBe("non calculable");
+    expect(pctDec(0.0717).replace(/\s/g, " ")).toBe("7,2 %");
   });
   it("median handles even/odd/empty", () => {
     expect(median([3, 1, 2])).toBe(2);
@@ -20,44 +27,52 @@ describe("format", () => {
   });
 });
 
-describe("computeHeadline", () => {
-  const debt: HeadlineFigure = {
-    kind: "per_hab", metric: "encours_dette", label: "Dette",
-    extra: { metric: "capacite_desendettement", label: "pour rembourser" },
-  };
-  const staff: HeadlineFigure = { kind: "share", metric: "frais_personnel", of: "df_total", label: "Personnel" };
+describe("computeHero", () => {
+  const commune = (c: string, eb: number, rf: number, cap: number | null, eq: number) => [
+    row(c, "epargne_brute", eb), row(c, "rf_total", rf), row(c, "capacite_desendettement", cap),
+    row(c, "depenses_equipement", eq * 1000, eq),
+  ];
   const rows = [
-    row("97201", "encours_dette", 1000, 100), row("97201", "capacite_desendettement", null),
-    row("97202", "encours_dette", 4000, 400), row("97202", "capacite_desendettement", 4),
-    row("97203", "encours_dette", 2000, 200),
-    row("97204", "encours_dette", 9000, 900),
-    row("97201", "frais_personnel", 60), row("97201", "df_total", 100),
-    row("97202", "frais_personnel", 50), row("97202", "df_total", 0), // zero denominator -> not computable
+    ...commune("97201", 10, 100, 4, 300), ...commune("97202", -5, 100, null, 100),
+    ...commune("97203", 20, 100, 2, 500), ...commune("97204", 30, 0, 993, 900), // zero revenue: rate not computable
   ];
   const strata = new Map<string, string | null>([["97201", "3"], ["97202", "3"], ["97203", "3"], ["97204", "9"]]);
 
-  it("lists the keys a set needs", () => {
-    expect(headlineKeys([debt, staff]).sort()).toEqual(
-      ["capacite_desendettement", "df_total", "encours_dette", "frais_personnel"]);
+  it("lists the keys the trio needs", () => {
+    expect(heroKeys(HERO).sort()).toEqual(["capacite_desendettement", "depenses_equipement", "epargne_brute", "rf_total"]);
   });
 
-  it("keeps a non-computable ratio as null (negative savings), not 0", () => {
-    const [h] = computeHeadline([debt], "97201", rows, strata);
-    expect(h.value).toBe(100);
-    expect(h.extra).toBeNull();
+  it("computes the rate, the years and € / hab.; keeps non-computable values as null", () => {
+    const [rate, cap, eq] = computeHero(HERO, "97201", rows, strata);
+    expect(rate.value).toBe(0.1);
+    expect(cap.value).toBe(4);
+    expect(eq.value).toBe(300);
+    expect(computeHero(HERO, "97202", rows, strata)[1].value).toBeNull(); // épargne brute <= 0
+    expect(computeHero(HERO, "97204", rows, strata)[0].value).toBeNull(); // zero denominator
+    expect(computeHero(HERO, "97204", rows, strata)[1].value).toBe(993); // shown as computed, never capped
   });
 
-  it("computes Martinique and same-stratum medians; hides small strata", () => {
-    const [a] = computeHeadline([debt], "97201", rows, strata);
-    expect(a.medianMartinique).toBe(300); // median of 100, 400, 200, 900
-    expect(a.medianStratum).toBe(200); // stratum 3: 100, 400, 200
-    const [b] = computeHeadline([debt], "97204", rows, strata);
-    expect(b.medianStratum).toBeNull(); // stratum 9 has a single commune
+  it("uses one reference group: the stratum, or Martinique when the stratum is too small", () => {
+    const [rate, cap] = computeHero(HERO, "97201", rows, strata);
+    expect(rate.reference).toEqual({ kind: "stratum", size: 3 });
+    expect(rate.median).toBe(0.1); // -0.05, 0.1, 0.2
+    expect(cap.median).toBe(3); // 4, 2 (null skipped)
+    const [r4] = computeHero(HERO, "97204", rows, strata);
+    expect(r4.reference).toEqual({ kind: "martinique", size: 4 });
+    expect(computeHero(HERO, "97201", rows, new Map())[0].reference.kind).toBe("martinique"); // compare page
   });
 
-  it("share figures guard against a zero denominator", () => {
-    const [h] = computeHeadline([staff], "97202", rows, strata);
-    expect(h.value).toBeNull();
-    expect(computeHeadline([staff], "97201", rows, strata)[0].value).toBe(0.6);
+  it("cites the source of each figure", () => {
+    const [rate, cap] = computeHero(HERO, "97201", rows, strata);
+    expect(rate.sourceIds).toEqual(["src-epargne_brute", "src-rf_total"]);
+    expect(cap.sourceIds).toEqual(["src-capacite_desendettement"]);
+  });
+});
+
+describe("spread", () => {
+  it("gives quartiles and range, never below 3 values", () => {
+    expect(spread([1, 2, 3, 4, 5])).toEqual({ p25: 2, p75: 4, min: 1, max: 5, n: 5 });
+    expect(spread([10, 0, 20, 30])).toEqual({ p25: 7.5, p75: 22.5, min: 0, max: 30, n: 4 });
+    expect(spread([1, 2])).toBeNull();
   });
 });

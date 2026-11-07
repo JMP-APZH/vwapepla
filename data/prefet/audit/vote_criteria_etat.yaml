@@ -1,0 +1,100 @@
+# Visitor votes on the State's action in Martinique — criteria VALIDATED by JM on 5 Nov 2026 (all 8; criterion 8 keeps
+# its own opening « l'écoute et le dialogue de l'État »). Build only after the CLAUDE.md amendment (PR #23) is merged.
+#
+# Opinion layer (CLAUDE.md principle 4), same safeguards as the communes' website votes:
+#   - anonymous; voter id = sha256(ip | user agent | daily secret salt), no IP stored (src/lib/communes/votes.ts pattern);
+#   - written only server-side (secret key, security-definer RPC), never by the browser; RLS hides the raw votes;
+#   - one vote per criterion per voter per 30 days; 40 votes per voter per day max (anti-abuse, same RPC pattern);
+#   - shown only from 20 votes per criterion, as the DISTRIBUTION of answers (counts per level), no average, no global score;
+#   - labelled « Avis des visiteurs, non représentatif » in its own block (OpinionBlock), never inside a fact block;
+#   - about the State's action, never about a person: no préfet or sous-préfet is named in the questions.
+#   - each question is shown next to the sourced facts it relates to (fact_blocks), so visitors vote on the record.
+#
+# Fields: key · label_fr (question) · description_fr (what it covers) · competence (who acts: etat = mainly the State;
+#   partagee = the State shares it, and `others` lists who else) · state_role_fr (what the State does on it, wording for
+#   the competence note) · fact_blocks (card blocks / sources shown next to the question) · ref_status.
+# Question stem, identical for every criterion: « Comment évaluez-vous l'action de l'État en Martinique sur … ? »
+
+scale:
+  levels:            # 1-5, plus "sans avis" (not counted in the distribution)
+    1: Très insatisfaisante
+    2: Plutôt insatisfaisante
+    3: Ni satisfaisante ni insatisfaisante
+    4: Plutôt satisfaisante
+    5: Très satisfaisante
+  no_opinion: Sans avis
+min_votes: 20
+label_fr: Avis des visiteurs, non représentatif
+
+criteria:
+  - key: vie_chere
+    label_fr: Comment évaluez-vous l'action de l'État en Martinique sur le coût de la vie ?
+    description_fr: Encadrement de prix (bouclier qualité-prix, prix maximum des carburants), observatoire des prix, contrôle de la concurrence.
+    competence: partagee
+    others: [CTM]                     # taux d'octroi de mer votés par la CTM
+    state_role_fr: L'État négocie le bouclier qualité-prix, fixe chaque mois le prix maximum des carburants et contrôle la concurrence ; la CTM vote les taux d'octroi de mer.
+    fact_blocks: [prix_encadres, dpt_par_programme]
+    ref_status: to_confirm            # legal bases of BQP (loi du 20 nov. 2012) and fuel prices (arrêté du 5 fév. 2014) to quote from Légifrance
+
+  - key: plan_chlordecone
+    label_fr: Comment évaluez-vous l'action de l'État en Martinique sur le plan chlordécone ?
+    description_fr: Plan interministériel chlordécone (santé, analyses des sols et des aliments, recherche, indemnisation des maladies professionnelles).
+    competence: etat
+    others: [CTM, communes]           # actions associées (agriculture, cantines)
+    state_role_fr: L'État pilote le plan chlordécone et le fonds d'indemnisation. Les décisions de justice relèvent de juridictions indépendantes et sont présentées comme des faits, sans être évaluées ici.
+    fact_blocks: [dpt_par_programme, actes_chlordecone]
+    ref_status: to_confirm            # plan number/period and DPT line to read
+
+  - key: securite_stupefiants
+    label_fr: Comment évaluez-vous l'action de l'État en Martinique sur la sécurité et la lutte contre le trafic de stupéfiants ?
+    description_fr: Police, gendarmerie, douanes ; saisies, moyens engagés ; délinquance enregistrée.
+    competence: etat
+    others: [communes]                # pouvoirs de police du maire, police municipale
+    state_role_fr: La sécurité publique et la lutte contre les trafics relèvent de l'État (police, gendarmerie, douanes) ; le maire dispose de pouvoirs de police et d'une police municipale.
+    fact_blocks: [delinquance_enregistree, dpt_par_programme]
+    ref_status: verified              # SSMSI data downloaded; competence split to re-read in the legal review
+
+  - key: chomage
+    label_fr: Comment évaluez-vous l'action de l'État en Martinique sur le chômage ?
+    description_fr: Politique de l'emploi (France Travail, contrats aidés, insertion), aides aux entreprises.
+    competence: partagee
+    others: [CTM]                     # développement économique, formation professionnelle
+    state_role_fr: L'État conduit la politique de l'emploi ; la CTM est compétente pour le développement économique et la formation professionnelle.
+    fact_blocks: [contexte_social_insee, dpt_par_programme]
+    ref_status: to_confirm
+
+  - key: pauvrete
+    label_fr: Comment évaluez-vous l'action de l'État en Martinique sur la pauvreté ?
+    description_fr: Prestations sociales nationales, politique de la ville, hébergement et logement.
+    competence: partagee
+    others: [CTM, communes]           # action sociale (CTM), CCAS (communes)
+    state_role_fr: L'État finance les prestations nationales, la politique de la ville et l'hébergement ; la CTM conduit l'action sociale et les communes leurs CCAS.
+    fact_blocks: [contexte_social_insee, dpt_par_programme]
+    ref_status: to_confirm            # who pays RSA in Martinique to check before publication
+
+  - key: crises_eau
+    label_fr: Comment évaluez-vous l'action de l'État en Martinique sur les crises de l'eau ?
+    description_fr: Arrêtés sécheresse, contrôle sanitaire de l'eau, police de l'eau, financements des réseaux.
+    competence: partagee
+    others: [EPCI, CTM]               # service de l'eau = intercommunalités (CACEM, CAESM, CAP Nord)
+    state_role_fr: Le service de l'eau relève des intercommunalités ; l'État prend les arrêtés sécheresse, assure la police de l'eau et le contrôle sanitaire (ARS) et cofinance les réseaux.
+    fact_blocks: [crises_alertes, subventions_etat]
+    ref_status: to_confirm
+
+  - key: risques_naturels
+    label_fr: Comment évaluez-vous l'action de l'État en Martinique sur les risques naturels ?
+    description_fr: "Cyclones, séismes, volcan, submersion, sargasses : prévention, alerte, gestion de crise."
+    competence: partagee
+    others: [communes, CTM]           # plan communal de sauvegarde, pouvoirs de police du maire
+    state_role_fr: L'État organise l'alerte et la gestion de crise (ORSEC), les plans de prévention des risques et le plan séisme Antilles ; les maires ont leur plan communal de sauvegarde.
+    fact_blocks: [crises_alertes, dpt_par_programme]
+    ref_status: to_confirm
+
+  - key: dialogue_mouvements_sociaux
+    label_fr: Comment évaluez-vous l'écoute et le dialogue de l'État en Martinique lors des mouvements sociaux ?
+    description_fr: Réunions et protocoles de sortie de crise, mesures d'ordre public prises pendant les mouvements (arrêtés, couvre-feux).
+    competence: etat
+    others: []
+    state_role_fr: L'État est responsable de l'ordre public et conduit les négociations qui relèvent de ses compétences.
+    fact_blocks: [crises_alertes, actes_publies]
+    ref_status: to_confirm

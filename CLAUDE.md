@@ -16,10 +16,34 @@ Sister projects of the same author: prix-martinique.org (cost of living, live) a
    *Amendment (JM, 31 Oct 2026):* the town-hall **website audit** (facts: dated legal/quality checklist with evidence,
    criteria in `data/audit/criteria.yaml`) and anonymous **visitor votes on website quality** are allowed. Never a score
    of a mayor's budget; no league table without a further decision.
+   *Amendment (JM, 5 Nov 2026):* the préfet card shows no score of a person; visitor votes on the State's action
+   (principle 4) are not a ranking.
 3. **Fair comparisons.** Always show per-inhabitant values, allow comparison within population strata, and display a caveat that some services (waste, water, transport) are handled by the intercommunal bodies (CACEM, CAESM, CAP Nord), which affects comparability.
 4. **Facts ≠ opinions.** Facts layer (team-managed, sourced) is strictly separated from any future citizen-comment layer. MVP2 has no comments.
-   Visitor votes (website quality only) are an opinion layer: separate block and table, shown only from 20 votes,
-   labelled "avis des visiteurs, non représentatif"; written only server-side (secret key), never by the browser.
+   *Amendment (JM, 5 Nov 2026) — visitor votes* are an opinion layer, allowed on (1) town-hall website quality
+   (communes) and (2) the State's action in Martinique by policy area (préfet card; criteria with competence tags in
+   `data/prefet/audit/vote_criteria_etat.yaml`). Same safeguards everywhere: separate block and table; shown only from
+   20 votes per criterion, as a distribution (no average, no global score, no ranking); labelled "avis des visiteurs,
+   non représentatif"; written only server-side (secret key), never by the browser; anonymous salted voter hash,
+   no IP stored; rate limits. Never about a named person.
+   *Amendment (JM, 5 Nov 2026) — votes on the commune's action:* (3) the commune's action by criterion (commune
+   card; criteria with competence tags commune / EPCI / CTM / État in `data/communes/audit/vote_criteria.yaml`, each
+   validated by JM; only topics where the commune acts, the others name who is in charge). Same safeguards, plus: scale
+   1–5 and « je ne sais pas » (recorded, its share shown next to the distribution, never inside it); 20 votes per
+   criterion **and per commune**, current term only; no question on the budget or the management of public money
+   (principle 2); never a comparison or ranking between communes. For **all** visitor votes (1)–(3): monthly-salted
+   voter hash and « one vote per criterion per month » (a daily salt cannot enforce a 30-day limit); Cloudflare
+   Turnstile checked server-side before any write, through a shared helper (widget loaded only when the form is
+   opened); voter hash erased after 60 days; votes closed during official pre-election periods (dates to confirm in the
+   legal review).
+   *Amendment (JM, 5 Nov 2026) — editorial layer « Le regard de Vwapepla »*, distinct from facts and from visitor
+   opinions: its own block and style, outside `FactBlock`, never in a chart or card header; signed (author or « la
+   rédaction de Vwapepla ») and dated, with update date and a visible correction log; every factual claim links to a
+   sourced fact already on the site (no figure appears only in an editorial), opinions written as opinions; public role
+   only, nothing on private life, origin, ethnicity or appearance; right of reply published next to the text; reviewed
+   by a second person and covered by the pre-launch legal review (loi 1881); partner content (e.g. SEM radio) keeps the
+   partner's editorial line separate; frozen for elected officeholders during official campaign periods (to confirm in
+   the legal review); stored in its own `<prefix>_editorials` table(s), never mixed with fact tables.
 5. **Right of reply.** Each card has a visible "Droit de réponse" contact path for the officeholder (MVP2: mailto/form, no workflow).
 6. **Reproducibility.** Data import is a script, re-runnable, idempotent, versioned. Never hand-edit figures in the database.
 

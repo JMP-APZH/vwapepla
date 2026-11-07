@@ -1,9 +1,10 @@
 """Download the open-data sources of one domain into data/raw/<domain>/ (gitignored).
 
 The list of sources lives in scripts/<domain>/sources.py (JOBS); this engine is shared by every domain.
-Re-runnable and idempotent: files are named <dataset><scope>_<retrieval date>.csv; an existing file for the same day is
-skipped unless --force. Writes data/raw/<domain>/manifest.json with URL, licence, retrieval date, row count and sha256
-for each file, so every figure can be traced back to its source.
+Re-runnable and idempotent: files are named <dataset><scope>_<retrieval date>.<ext> (csv unless the job says
+otherwise); an existing file for the same day is skipped unless --force. Downloads are checked for completeness
+(fetching.fetch). Writes data/raw/<domain>/manifest.json with URL, licence (per job), retrieval date, size in bytes,
+row count (csv only) and sha256 for each file, so every figure can be traced back to its source.
 
 Usage: python -I scripts/core/download_sources.py --domain communes [--force] [--only <dataset_id> ...]
 """
@@ -44,21 +45,24 @@ def main():
         if only and ds not in only:
             continue
         (raw / job["folder"]).mkdir(parents=True, exist_ok=True)
-        dest = raw / job["folder"] / f"{ds}{job['scope']}_{today}.csv"
+        ext = job.get("ext", "csv")
+        dest = raw / job["folder"] / f"{ds}{job['scope']}_{today}.{ext}"
         if dest.exists() and not force:
             print(f"skip {dest.name} (exists)")
         else:
             print(f"get  {ds} ...", flush=True)
             (job["fetcher"] or (lambda d: fetch(job["url"], d)))(dest)
         data = dest.read_bytes()
-        with open(dest, encoding=job["encoding"], newline="") as f:  # count records, not lines (fields may hold newlines)
-            rows = sum(1 for _ in csv.reader(f, delimiter=";")) - 1
+        rows = None
+        if ext == "csv":
+            with open(dest, encoding=job["encoding"], newline="") as f:  # count records, not lines (fields may hold newlines)
+                rows = sum(1 for _ in csv.reader(f, delimiter=";")) - 1
         manifest[ds] = {
             "file": str(dest.relative_to(ROOT)).replace("\\", "/"), "url": job["url"], "title": job["title"](),
-            "dataset_page": job["page"], "retrieved": today, "rows": rows, "sha256": hashlib.sha256(data).hexdigest(),
-            "licence": LICENCE, "credit": f"Source : {job['credit']}", "purpose": job["purpose"], "domain": domain,
+            "dataset_page": job["page"], "retrieved": today, "rows": rows, "bytes": len(data),
+            "sha256": hashlib.sha256(data).hexdigest(), "licence": job.get("licence", LICENCE), "credit": f"Source : {job['credit']}", "purpose": job["purpose"], "domain": domain,
         }
-        print(f"     {rows} rows")
+        print(f"     {rows} rows" if rows is not None else f"     {len(data):,} bytes")
         manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
 
 

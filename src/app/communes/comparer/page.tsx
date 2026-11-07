@@ -5,7 +5,9 @@ import { ComparePicker } from "@/components/communes/ComparePicker";
 import { SourceNote } from "@/components/card/SourceNote";
 import { BLOCKS, blockLines } from "@/lib/communes/breakdown";
 import { compareRows, parseCompare } from "@/lib/communes/compare";
-import { FIRST_YEAR, PROVISIONAL_YEARS, REFERENCE_YEAR, STRATA } from "@/lib/communes/config";
+import { FIRST_YEAR, HERO, HERO_METRICS, PROVISIONAL_YEARS, REFERENCE_YEAR, STRATA } from "@/lib/communes/config";
+import { computeHero, heroKeys } from "@/lib/communes/headline";
+import { debtYears, pctDec } from "@/lib/communes/format";
 import { getCommunes, getCommuneYears, getMetrics, getYearActuals } from "@/lib/communes/data";
 import { getSources } from "@/lib/core/data";
 import { eur, int, pct, years as yrs } from "@/lib/core/format";
@@ -49,7 +51,12 @@ async function Comparison({ searchParams }: Pick<PageProps<"/communes/comparer">
   }
 
   const blocks = BLOCKS.map((b) => ({ ...b, lines: blockLines(metrics, b.id) }));
-  const rows = await getYearActuals(year, [...new Set(blocks.flatMap((b) => b.lines.map((l) => l.key)))]);
+  const rows = await getYearActuals(year, [...new Set([...blocks.flatMap((b) => b.lines.map((l) => l.key)), ...heroKeys(HERO)])]);
+  // Key figures first (same definitions as the card's hero); median of the 34 communes, since the communes picked
+  // can belong to different population strata.
+  const hero = codes.map((code) => computeHero(HERO, code, rows, new Map()));
+  const showHero = (kind: string, v: number | null) =>
+    kind === "ratio" ? pctDec(v) : kind === "years" ? debtYears(v) : eur(v);
   const picked = codes.map((code) => ({
     commune: list.find((c) => c.code === code)!,
     profile: allYears.find((y) => y.commune_code === code && y.year === year),
@@ -71,7 +78,7 @@ async function Comparison({ searchParams }: Pick<PageProps<"/communes/comparer">
             <tr>
               <th className={`${label} w-40 min-w-36`}>
                 Exercice {year}{provisional && ` (${common.provisional.fr})`}
-                <span className="block">en € par habitant</span>
+                <span className="block">en € par habitant, sauf taux et années</span>
               </th>
               {picked.map((p) => (
                 <th key={p.commune.code} className={`${cell} min-w-28 font-semibold text-slate-900`}>
@@ -103,6 +110,20 @@ async function Comparison({ searchParams }: Pick<PageProps<"/communes/comparer">
               ))}
               <td className={cell} />
             </tr>
+            <tr className="bg-slate-50">
+              <th colSpan={picked.length + 2} className="px-0 pb-1 pt-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">
+                <span className="sticky left-0 inline-block px-3">{communes.keyFigures.fr}</span>
+              </th>
+            </tr>
+            {HERO.map((f, i) => (
+              <tr key={f.key} className="border-b border-slate-100">
+                <th className={`${label} font-medium`}>{f.label}</th>
+                {hero.map((h, j) => (
+                  <td key={codes[j]} className={`${cell} font-medium`}>{showHero(f.kind, h[i].value)}</td>
+                ))}
+                <td className={`${cell} text-slate-500`}>{showHero(f.kind, hero[0][i].median)}</td>
+              </tr>
+            ))}
             {blocks.map((b) => [
               <tr key={b.id} className="bg-slate-50">
                 <th colSpan={picked.length + 2} className="px-0 pb-1 pt-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">
@@ -121,7 +142,7 @@ async function Comparison({ searchParams }: Pick<PageProps<"/communes/comparer">
                     </td>
                   ))}
                   <td className={`${cell} text-slate-500`}>
-                    {fmt(r.line.unit, r.medianMartinique, r.medianMartinique)}
+                    {HERO_METRICS.has(r.line.key) ? communes.keyFigureMark.fr : fmt(r.line.unit, r.medianMartinique, r.medianMartinique)}
                   </td>
                 </tr>
               )),

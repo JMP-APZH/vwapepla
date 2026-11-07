@@ -26,40 +26,34 @@ export const STRATA: Record<string, string> = {
 };
 export const MIN_STRATUM_SIZE = 3; // below this, a stratum median is not meaningful (not shown)
 
-// "Bidjé-a an 3 chif": three candidate sets, shown stacked until JM picks one.
-export type HeadlineFigure =
-  | { kind: "per_hab"; metric: string; label: string; extra?: { metric: string; label: string } }
-  | { kind: "share"; metric: string; of: string; label: string };
+// "Bidjé-a an 3 chif" (JM, 3 Nov 2026): the hero trio, each KPI's canonical place (docs/branches/B1-KPI.md).
+//   ratio   = amount of `num` / amount of `den` (0..1), not computable when `den` is 0 or missing
+//   years   = amount of `metric` (capacité de désendettement; null when épargne brute <= 0)
+//   per_hab = € per inhabitant of `metric`
+export type HeroFigure =
+  | { kind: "ratio"; key: string; num: string; den: string; label: string }
+  | { kind: "years"; key: string; metric: string; label: string }
+  | { kind: "per_hab"; key: string; metric: string; label: string };
 
-export const HEADLINE_SETS: { id: string; title: string; figures: HeadlineFigure[] }[] = [
-  {
-    id: "depenser-investir-dette",
-    title: "Dépenser · Investir · Dette",
-    figures: [
-      { kind: "per_hab", metric: "df_total", label: "Fonctionnement" },
-      { kind: "per_hab", metric: "di_hors_remb", label: "Investissement" },
-      {
-        kind: "per_hab", metric: "encours_dette", label: "Dette",
-        extra: { metric: "capacite_desendettement", label: "pour rembourser" },
-      },
-    ],
-  },
-  {
-    id: "recettes-investir-epargne",
-    title: "Recettes · Investir · Épargne",
-    figures: [
-      { kind: "per_hab", metric: "rf_total", label: "Recettes" },
-      { kind: "per_hab", metric: "di_hors_remb", label: "Investissement" },
-      { kind: "per_hab", metric: "epargne_brute", label: "Épargne brute" },
-    ],
-  },
-  {
-    id: "octroi-personnel-investir",
-    title: "Octroi · Personnel · Investir",
-    figures: [
-      { kind: "per_hab", metric: "octroi_de_mer", label: "Octroi de mer" },
-      { kind: "share", metric: "frais_personnel", of: "df_total", label: "Personnel / dépenses" },
-      { kind: "per_hab", metric: "di_hors_remb", label: "Investissement" },
-    ],
-  },
+export const HERO: HeroFigure[] = [
+  { kind: "ratio", key: "taux_epargne_brute", num: "epargne_brute", den: "rf_total", label: "Taux d'épargne brute" },
+  { kind: "years", key: "capacite_desendettement", metric: "capacite_desendettement", label: "Capacité de désendettement" },
+  { kind: "per_hab", key: "depenses_equipement", metric: "depenses_equipement", label: "Dépenses d'équipement" },
 ];
+
+// Structure of the budget (Step 3, B1-COMPARISONS.md §5): shares of operating revenue, OFGL consolidated like the card.
+export const STRUCTURE: HeroFigure[] = [
+  { kind: "ratio", key: "part_personnel", num: "frais_personnel", den: "rf_total", label: "Charges de personnel / recettes de fonctionnement" },
+  { kind: "ratio", key: "part_etat", num: "concours_etat", den: "rf_total", label: "Dotations de l'État / recettes de fonctionnement" },
+  { kind: "ratio", key: "part_octroi", num: "octroi_de_mer", den: "rf_total", label: "Octroi de mer / recettes de fonctionnement" },
+];
+
+/** Metric keys shown in the hero: not repeated with a second median elsewhere on the card. */
+export const HERO_METRICS = new Set(["capacite_desendettement", "depenses_equipement"]);
+/** Official reference line (Step 3, §4): "plafond national de référence" of 12 years for communes, loi n° 2018-32 du
+ * 22 janvier 2018 (LPFP 2018-2022), art. 29 — verified on Légifrance on 4 Nov 2026. A benchmark of the 2018-2022
+ * contracts with the State, not a legal ban. No official threshold exists for the other hero figures: no line. */
+export const DEBT_CEILING_YEARS = 12;
+export const DEBT_CEILING_SOURCE = "https://www.legifrance.gouv.fr/jorf/article_jo/JORFARTI000036526081";
+/** Above this, a capacité de désendettement gets its one-line explanation (épargne brute close to zero). */
+export const VERY_LONG_DEBT_YEARS = 30;

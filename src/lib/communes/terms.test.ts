@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Actual } from "./data";
-import { summarizeTerms, type Term } from "./terms";
+import { summarizeTerms, termChange, type Term } from "./terms";
 
 const terms: Term[] = [
   { id: "2008-2014", election_year: 2008, start_date: "2008-03-09", end_date: "2014-03-23", first_full_year: 2009, last_full_year: 2013 },
@@ -16,6 +16,8 @@ function series(from: number, to: number): Actual[] {
     out.push({ ...base, metric_key: "rf_total", eur_per_hab: y }); // value = year, easy averages
     out.push({ ...base, metric_key: "encours_dette", eur_per_hab: 1000 + y });
     out.push({ ...base, metric_key: "capacite_desendettement", eur_per_hab: null, amount: y === 2019 ? null : 5 });
+    out.push({ ...base, metric_key: "epargne_brute", eur_per_hab: null, amount: y === 2016 ? 90 : 10 });
+    out.push({ ...base, metric_key: "rf_amount", eur_per_hab: null, amount: y === 2016 ? 300 : 100 });
   }
   return out;
 }
@@ -25,6 +27,7 @@ describe("summarizeTerms", () => {
     { key: "rf_total", label: "", kind: "avg_per_hab" as const, unit: "eur" as const },
     { key: "encours_dette", label: "", kind: "end_per_hab" as const, unit: "eur" as const },
     { key: "capacite_desendettement", label: "", kind: "end_amount" as const, unit: "years" as const },
+    { key: "taux", label: "", kind: "ratio_sum" as const, num: "epargne_brute", den: "rf_amount", unit: "pct" as const },
   ];
   const s = summarizeTerms(terms, series(2012, 2025), rows);
 
@@ -43,5 +46,24 @@ describe("summarizeTerms", () => {
     expect(s[1].values.rf_total).toBe(2017); // mean of 2015..2019
     expect(s[1].values.encours_dette).toBe(1000 + 2019);
     expect(s[1].values.capacite_desendettement).toBeNull(); // not computable that year: stays null
+  });
+
+  it("computes a term rate as sum / sum, not as an average of yearly rates", () => {
+    // 2015-2019: épargne 10, 90, 10, 10, 10 over revenue 100, 300, 100, 100, 100 -> 130 / 700 (mean of rates = 0.14)
+    expect(s[1].values.taux).toBeCloseTo(130 / 700);
+  });
+});
+
+describe("termChange", () => {
+  it("says rates in points, years in years, euros with %", () => {
+    expect(termChange("pct", 0.072, 0.06)).toBe("+1,2 pt");
+    expect(termChange("years", 5.7, 4.9)).toBe("+0,8 an");
+    expect(termChange("years", 81, 6)).toBe("+75 ans");
+    expect(termChange("eur", 300, 250)).toBe("+50 € / hab. (+20 %)");
+    expect(termChange("eur", 250, 250)).toBe("0 € / hab. (0 %)");
+  });
+  it("is null when a term has no value", () => {
+    expect(termChange("pct", null, 0.06)).toBeNull();
+    expect(termChange("eur", 300, undefined)).toBeNull();
   });
 });

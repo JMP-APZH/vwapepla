@@ -1,6 +1,27 @@
 """Tables loaded by scripts/core/load_supabase.py --domain prefet, from data/build/prefet/<table>.json.
 
-Order respects foreign keys; value = conflict target. Core tables (institutions, bodies, seats, persons, mandates,
-terms, sources, media) for this domain's own rows, and pref_* tables only.
+Order respects foreign keys; value = conflict target of the upsert. Core tables (institutions, bodies, seats, persons,
+mandates, sources) for this domain's own rows, and pref_* tables only.
 """
-TABLES = {}
+TABLES = {
+    # core rows of this domain
+    "sources": "id",
+    "institutions": "id",
+    "bodies": "id",
+    "seats": "id",
+    # postings (JORF decrees, scripts/prefet/postings.py)
+    "persons": "id",
+    "mandates": "person_id,seat_id,start_date",
+    "pref_posting_events": "id",
+    "pref_career_steps": "id",
+    "pref_person_facts": "id",  # migration 20261105110000 (to apply after JM's review)
+    "media": "id",
+    "pref_vote_criteria": "key",  # visitor votes on the State's action (opinion layer): criteria only, never votes              # official portraits: scripts/core/media.py --domain prefet (core PR #24)
+    # préfet domain
+    "pref_crime_stats": "id",        # SSMSI recorded crime (scripts/prefet/crime.py)
+    "pref_context_figures": "id",    # INSEE unemployment + published poverty figures
+    "pref_acts": "id",               # RAA acts (scripts/prefet/raa.py, acts.py)
+    "pref_disaster_recognitions": "id",  # GASPAR arrêtés CatNat (scripts/prefet/disasters.py)
+    "pref_investment_grants": "id",
+    "pref_dpt_credits": "id",
+}
