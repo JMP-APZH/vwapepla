@@ -3,11 +3,13 @@ import Link from "next/link";
 import { CardHeader, CardShell, Caveat, MissingInfo, RightOfReply } from "@/components/card/Card";
 import { Portrait } from "@/components/card/Portrait";
 import { AreaSpending } from "@/components/ctm/Areas";
+import { CompteAdministratif } from "@/components/ctm/Ca";
 import { BeforeCtm, BreakdownBlock, FiscaliteUltramarine, SavingsDebt } from "@/components/ctm/Budget";
 import { getSources } from "@/lib/core/data";
 import { date, int } from "@/lib/core/format";
 import { beforeCtm, breakdown, CTM, get, index, referenceYear, series, sourceIds } from "@/lib/ctm/budget";
-import { getActuals, getFunctional, getMetricDefs } from "@/lib/ctm/data";
+import { caComparison, caYears } from "@/lib/ctm/ca";
+import { getActuals, getCaLines, getFunctional, getMetricDefs } from "@/lib/ctm/data";
 import { areasForYear } from "@/lib/ctm/functions";
 import { ctm } from "@/i18n";
 
@@ -21,7 +23,8 @@ const FUM = ["fum_total", "fum_octroi_de_mer", "fum_carburants", "fum_autres", "
 // The Collectivité: budget facts of the institution (B3 neutrality charter, docs/branches/B3-DISCOVERY.md §4): no score,
 // no ranking; every block sourced; the Région and the Département before 2016 shown side by side, never summed.
 export default async function CtmPage() {
-  const [rows, defs, sources, functional] = await Promise.all([getActuals(), getMetricDefs(), getSources(), getFunctional()]);
+  const [rows, defs, sources, functional, caLines] = await Promise.all([
+    getActuals(), getMetricDefs(), getSources(), getFunctional(), getCaLines()]);
   const idx = index(rows);
   const year = referenceYear(rows) ?? 2024;
   const ctmYears = [...new Set(rows.filter((r) => r.entity_siren === CTM).map((r) => r.year))].sort();
@@ -76,7 +79,7 @@ export default async function CtmPage() {
         <Link href="/ctm/assemblee" className="rounded-xl border border-slate-200 bg-white p-4 text-sm font-medium hover:border-slate-400">{ctm.tileAssemblee.fr} →</Link>
         <Link href="/ctm/conseil-executif" className="rounded-xl border border-slate-200 bg-white p-4 text-sm font-medium hover:border-slate-400">{ctm.tileExecutif.fr} →</Link>
       </nav>
-      <MissingInfo items={[ctm.missingEndOfTerm.fr, ctm.missingCa.fr, ctm.missingCompetences.fr]} />
+      <MissingInfo items={[ctm.missingEndOfTerm.fr, ctm.missingCompetences.fr]} />
       <h2 className="border-t border-slate-200 pt-4 text-sm font-semibold uppercase tracking-wide text-slate-500">
         {ctm.budgetTitle.fr}{ctm.budgetTitle.kr && <span className="font-normal normal-case"> · {ctm.budgetTitle.kr}</span>}
       </h2>
@@ -91,6 +94,14 @@ export default async function CtmPage() {
       <SavingsDebt savings={savings} debt={debt} capacity={capacity} range={range} provisionalYear={provisional}
                    crcUrl={sources.get(CRC)?.url ?? null}
                    sources={src([...sourceIds(rows.filter((r) => r.entity_siren === CTM && ["epargne_brute", "encours_dette"].includes(r.metric_key)))])} />
+      <CompteAdministratif
+        years={caYears(caLines).map((y) => {
+          const first = caLines.find((l) => l.year === y)!;
+          return { year: y, rows: caComparison(caLines, idx, y), deliberation: first.deliberation,
+                   pdfUrl: sources.get(first.source_id)?.url ?? null,
+                   provisional: rows.some((r) => r.entity_siren === CTM && r.year === y && r.provisional) };
+        })}
+        sources={src([...new Set(caLines.map((l) => l.source_id)), "ctm:ofgl-base-regions-consolidee"])} />
       <FiscaliteUltramarine rows={fumRows} labels={FUM.map((key) => ({ key, label: label(key) }))}
                             range={`${fumRows[0]?.year}-${fumRows.at(-1)?.year}`} sources={src(fumSources)} />
       <BeforeCtm tables={before} sources={src(beforeSources)} />
