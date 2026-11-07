@@ -3,6 +3,7 @@ import { check } from "@/lib/core/data";
 import { supabase } from "@/lib/core/supabase";
 import type { Term } from "./terms";
 import { QUESTIONS, type Question, type VoteSummary } from "./vote-questions";
+import { criteriaResults, type CommuneVoteCriterion, type CriteriaResults, type CriteriaSummaryRow } from "./criteria-votes";
 
 // Commune domain (B1): typed, cached reads of the com_* tables. Data changes about once a year (new OFGL release / forecast entry):
 // everything is cached for days and pre-rendered; a redeploy or revalidateTag("data") refreshes it.
@@ -152,6 +153,32 @@ export async function getVoteSummary(code: string): Promise<VoteSummary[]> {
     const r = rows.find((x) => x.question === q);
     return { question: q, votes: Number(r?.votes ?? 0), average: r?.average == null ? null : Number(r.average) };
   });
+}
+
+/** Criteria of the visitor votes on the commune's action (validated by JM, 7 Nov 2026). */
+export async function getCommuneVoteCriteria(): Promise<CommuneVoteCriterion[]> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("data");
+  return check(
+    await supabase.from("com_vote_criteria")
+      .select("key,label_fr,competence,others,commune_role_fr,ref_status,display_order").order("display_order"),
+    "com_vote_criteria",
+  ) as CommuneVoteCriterion[];
+}
+
+/**
+ * Results of the votes on the commune's action, current term (opinion layer). The SQL function hides the counts
+ * below 20 rated votes and during pre-election closures. Cached a few minutes; a new vote calls
+ * updateTag(`criteria-votes-${code}`).
+ */
+export async function getCriteriaVoteResults(code: string, keys: string[]): Promise<CriteriaResults> {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag(`criteria-votes-${code}`);
+  const rows = check(await supabase.rpc("com_criteria_vote_summary", { p_commune: code }), "com_criteria_vote_summary") as
+    CriteriaSummaryRow[];
+  return criteriaResults(rows, keys);
 }
 
 export type AuditCriterion = {

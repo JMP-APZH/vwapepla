@@ -15,6 +15,18 @@ already in production (B4, `pref_state_votes`), adapted to 34 communes.
 6. Voter hash erased after 60 days; votes closed during official pre-election periods.
 Build starts once the 12 criteria are validated and #34 is merged.
 
+## Build status (7 Nov 2026)
+- Migration `20261107140240_com_criteria_votes.sql` applied with JM's go: `com_vote_criteria`, `com_vote_closures`,
+  `com_criteria_votes`, `com_cast_criteria_vote`, `com_criteria_vote_summary`, `com_votes_closed`,
+  `com_erase_old_vote_hashes` (also covers `com_site_votes`). The 20-vote threshold counts votes with a score only;
+  « je ne sais pas » is counted beside the distribution. Rate limit: 15 per minute (one form sends up to 12 answers).
+- Loader: `scripts/communes/pipeline/build_votes.py` (criteria + `data/communes/audit/vote_closures.yaml`, empty until
+  JM sets the dates after the legal review). Loading needs JM's go.
+- Site: `castCriteriaVote` (Turnstile action `vote-commune`, monthly hash), `CriteriaVotes` block on the commune page
+  (hidden while the criteria table is empty). The form and the Turnstile script load only when the visitor opens it.
+- Open: daily hash erasure with `pg_cron` (shared step, JM's call); website votes still show an average (to change to a
+  distribution with a later migration); competence statements to check (`ref_status: to_confirm`).
+
 ## 1. What visitors are asked
 Stem, identical for every criterion: « Comment évaluez-vous l'action de la commune sur … ? ». About the commune's
 services, **never about a named person** (no mayor or deputy named in a question), and **never about the budget**

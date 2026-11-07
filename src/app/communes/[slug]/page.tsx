@@ -8,6 +8,7 @@ import { Caveat, CardHeader, CardShell, FactBlock, MissingInfo, OpinionBlock, Ri
 import { Portrait } from "@/components/card/Portrait";
 import { SiteChecklist } from "@/components/communes/SiteChecklist";
 import { SiteVotes } from "@/components/communes/SiteVotes";
+import { CriteriaVotes } from "@/components/communes/CriteriaVotes";
 import { TermsChart, type ChartPoint } from "@/components/communes/TermsChart";
 import { TermsComparison } from "@/components/communes/TermsComparison";
 import {
@@ -16,7 +17,7 @@ import {
 import { dgfipStratum, nationalLine, type NationalLine } from "@/lib/communes/national";
 import {
   getCommuneActuals, getCommuneBySlug, getCommunes, getCommuneYears, getCouncil, getMayor, getMetrics, getPastMayors,
-  getAuditCriteria, getSiteAudit, getTerms, getVoteSummary, getYearActuals,
+  getAuditCriteria, getCommuneVoteCriteria, getCriteriaVoteResults, getSiteAudit, getTerms, getVoteSummary, getYearActuals,
 } from "@/lib/communes/data";
 import { getMedia, getSources } from "@/lib/core/data";
 import { OFFICIAL_SITES, SITES_SOURCE } from "@/lib/communes/sites";
@@ -160,6 +161,11 @@ export default async function CommunePage({ params }: PageProps<"/communes/[slug
       caveats={<Caveat>{communes.caveatEpci.fr}</Caveat>}
       rightOfReply={<RightOfReply text={communes.rightOfReplyText.fr} subject={`Droit de réponse — ${commune.name}`} />}
     >
+      <a href="#avis-commune"
+         className="flex min-h-11 items-center justify-between gap-3 rounded-xl border border-violet-200 bg-violet-50/60 px-4 py-2 text-sm text-violet-950">
+        <span>{communes.critShortcut.fr}</span>
+        <span aria-hidden className="text-lg">↓</span>
+      </a>
       {OFFICIAL_SITES[commune.code] && (
         <a href="#site-mairie"
            className="flex min-h-11 items-center justify-between gap-3 rounded-xl border border-violet-200 bg-violet-50/60 px-4 py-2 text-sm text-violet-950">
@@ -231,6 +237,11 @@ export default async function CommunePage({ params }: PageProps<"/communes/[slug
         </p>
       </FactBlock>
 
+      {/* Opinion layer: visitors' views on the commune's action, per criterion (current term), apart from the facts. */}
+      <OpinionBlock>
+        <CommuneVotes code={commune.code} epciName={me?.epci_name ?? null} />
+      </OpinionBlock>
+
       {/* Town-hall website: the fact (listed site, official directory) then the opinion layer, kept apart. */}
       <section id="site-mairie" className="scroll-mt-4 space-y-3">
         <h2 className="text-xl font-semibold tracking-tight">{communes.siteTitle.fr}</h2>
@@ -261,4 +272,11 @@ export default async function CommunePage({ params }: PageProps<"/communes/[slug
 
 async function Votes({ code }: { code: string }) {
   return <SiteVotes code={code} summary={await getVoteSummary(code)} />;
+}
+
+async function CommuneVotes({ code, epciName }: { code: string; epciName: string | null }) {
+  const criteria = await getCommuneVoteCriteria();
+  if (!criteria.length) return null; // criteria not loaded yet
+  const results = await getCriteriaVoteResults(code, criteria.map((c) => c.key));
+  return <CriteriaVotes code={code} criteria={criteria} results={results} epciName={epciName} />;
 }

@@ -1,0 +1,13 @@
+# Pre-election periods during which the votes on the commune's action are closed and their results hidden
+# (JM's decision 6, 5 Nov 2026). Dates to be decided by JM after the pre-launch legal review (code électoral, L52-1).
+# One entry per period; commune_code: null = all 34 communes (general municipal elections), or an INSEE code
+# for a by-election. Loaded by scripts/communes/pipeline/build_votes.py into com_vote_closures (public read).
+#
+# Example (not active):
+#   - id: municipales-2032
+#     commune_code: null
+#     starts_on: 2031-09-01
+#     ends_on: 2032-03-31
+#     reason_fr: Période pré-électorale des élections municipales de mars 2032.
+#     source_url: https://www.legifrance.gouv.fr/...
+closures: []
