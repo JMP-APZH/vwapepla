@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { castStateVote, type StateVoteState } from "@/app/prefet/actions";
+import { Turnstile } from "@/components/card/Turnstile";
 import { LEVELS, MIN_VOTES, type Distribution, type VoteCriterion } from "@/lib/prefet/votes";
 import { prefet } from "@/i18n";
 
@@ -80,6 +81,7 @@ export function StateVotes({ criteria, summary }: { criteria: VoteCriterion[]; s
           <p role="status" className="text-sm text-violet-900">{prefet[`votes_${state.status!}`].fr}</p>
         ) : (
           <>
+            <Turnstile action="vote-etat" resetKey={state} />
             {state.status && <p role="alert" className="text-sm text-red-800">{prefet[`votes_${state.status}`].fr}</p>}
             <button type="submit" disabled={pending}
                     className="min-h-11 w-full rounded-lg bg-violet-900 px-4 text-sm font-medium text-white disabled:opacity-60">
