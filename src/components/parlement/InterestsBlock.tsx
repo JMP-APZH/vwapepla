@@ -7,13 +7,13 @@ import { parlement } from "@/i18n";
 
 /** HATVP: every declaration (type, dates, link); outside activities from the latest declaration of interests, copied
  *  as declared, member's own sections only. Asset declarations: link and dates only (charter §3.6). */
-export function InterestsBlock({ declarations, items, sources }: {
-  declarations: Declaration[]; items: InterestItem[]; sources: Source[];
+export function InterestsBlock({ declarations, items, sources, former = false }: {
+  declarations: Declaration[]; items: InterestItem[]; sources: Source[]; former?: boolean;
 }) {
   const groups = bySection(items);
   const first = items[0];
   return (
-    <FactBlock title={parlement.interestsTitle.fr} sources={sources} year="mandat en cours">
+    <FactBlock title={parlement.interestsTitle.fr} sources={sources} year={former ? "mandats terminés" : "mandat en cours"}>
       <p className="mt-1 text-sm text-slate-600">{parlement.interestsIntro.fr}</p>
       <ul className="mt-2 space-y-1 text-sm">
         {sortDeclarations(declarations).map((d) => (
@@ -26,6 +26,7 @@ export function InterestsBlock({ declarations, items, sources }: {
         ))}
       </ul>
       {declarations.some(isAssetDeclaration) && <p className="mt-1 text-xs text-slate-500">{parlement.interestsAssets.fr}</p>}
+      {!former && <>
       <h3 className="mt-4 text-sm font-semibold">{parlement.interestsActivities.fr}</h3>
       {first ? (
         <>
@@ -53,6 +54,7 @@ export function InterestsBlock({ declarations, items, sources }: {
           </div>
         </>
       ) : <p className="mt-1 text-sm text-slate-600">{parlement.interestsNone.fr}</p>}
+      </>}
     </FactBlock>
   );
 }

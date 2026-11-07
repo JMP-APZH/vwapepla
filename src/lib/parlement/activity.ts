@@ -138,9 +138,15 @@ export type DataGap = {
 
 const TOPIC_ORDER = ["votes", "presence", "amendements", "questions", "declarations", "mandats"];
 
-/** Gaps that concern one member: their chamber's general gaps and their own, in a fixed topic order. */
-export function gapsFor(gaps: DataGap[], m: { chamber: "AN" | "SEN"; personId: string }): DataGap[] {
+/** Gaps that concern one member: their chamber's general gaps and their own, in a fixed topic order. Gaps of one AN
+ *  legislature (id « an-<n>-… ») only for members who sat in it; gaps about former members only on their cards. */
+export function gapsFor(gaps: DataGap[], m: { chamber: "AN" | "SEN"; personId: string; legislatures?: string[]; current?: boolean }): DataGap[] {
   const order = (t: string) => { const i = TOPIC_ORDER.indexOf(t); return i < 0 ? 99 : i; };
-  return gaps.filter((g) => g.chamber === m.chamber && (g.person_id == null || g.person_id === m.personId))
-    .sort((a, b) => order(a.topic) - order(b.topic) || a.id.localeCompare(b.id));
+  return gaps.filter((g) => {
+    if (g.chamber !== m.chamber || (g.person_id != null && g.person_id !== m.personId)) return false;
+    const leg = g.id.match(/^an-(\d+)-/)?.[1];
+    if (leg && m.legislatures && !m.legislatures.includes(leg)) return false;
+    if (g.id.startsWith("hatvp-anciens") && m.current !== false) return false;
+    return true;
+  }).sort((a, b) => order(a.topic) - order(b.topic) || a.id.localeCompare(b.id));
 }
