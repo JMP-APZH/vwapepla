@@ -59,5 +59,11 @@
   "structureIntro": "Trois parts des recettes de fonctionnement, pour comprendre de quoi dépend le budget de la commune.",
   "structureStaffHelp": "Part des recettes courantes consacrée aux salaires et charges des agents.",
   "structureStateHelp": "Part des recettes courantes qui vient de l'État (DGF, autres dotations, compensations).",
-  "structureOctroiHelp": "Part des recettes courantes qui vient de l'octroi de mer (taxe propre aux outre-mer : pas de comparaison nationale)."
+  "structureOctroiHelp": "Part des recettes courantes qui vient de l'octroi de mer (taxe propre aux outre-mer : pas de comparaison nationale).",
+  "channelsTitle": "Réseaux sociaux de la mairie",
+  "channelsIntro": "Comptes de la mairie relevés à la main par l'équipe Vwapepla, à une date donnée. Ce sont des constats, pas une note.",
+  "channelsNoneFound": "Aucun compte trouvé à cette date.",
+  "channelsNotObserved": "Pas encore relevé.",
+  "channelsSource": "Source : relevé de l'équipe Vwapepla aux dates indiquées, relu par la rédaction ; capture d'écran conservée hors ligne avec son empreinte (sha256). Les abonnés sont le chiffre affiché par la plateforme ce jour-là.",
+  "channelsMissing": "Réseaux sociaux de la mairie : pas encore relevés."
 }

@@ -189,3 +189,32 @@ export async function getSiteAudit(code: string): Promise<SiteAudit | null> {
   ) as AuditItem[];
   return { ...audits[0], items };
 }
+
+export type ChannelObservation = {
+  id: string; platform: "facebook" | "instagram" | "tiktok" | "youtube" | "whatsapp_channel"; observed_on: string;
+  account_url: string | null; account_name: string | null; official: "yes" | "no" | "doubtful" | null;
+  official_basis: "linked_from_site" | "platform_verified" | "town_hall_confirmed" | "none" | null;
+  official_evidence_url: string | null; last_post_date: string | null; posts_last_90_days: number | null;
+  council_meetings_streamed: "yes" | "no" | "unknown" | null; council_stream_evidence_url: string | null;
+  followers: number | null; followers_display: string | null; screenshot_sha256: string | null;
+  searched_on: string | null; search_note: string | null; observer: string;
+};
+
+/**
+ * Reviewed observations of the town hall's social-network accounts (only reviewed rows are ever loaded), with the
+ * date they were read (`asOf`, reference for « relevé ancien »: a cached function may read the clock, a page may not).
+ */
+export async function getChannels(code: string): Promise<{ observations: ChannelObservation[]; asOf: string }> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("data");
+  const observations = check(
+    await supabase.from("com_channel_observations")
+      .select("id,platform,observed_on,account_url,account_name,official,official_basis,official_evidence_url,last_post_date," +
+        "posts_last_90_days,council_meetings_streamed,council_stream_evidence_url,followers,followers_display," +
+        "screenshot_sha256,searched_on,search_note,observer")
+      .eq("commune_code", code).order("observed_on", { ascending: false }),
+    "channels",
+  ) as unknown as ChannelObservation[];
+  return { observations, asOf: new Date().toISOString() };
+}
