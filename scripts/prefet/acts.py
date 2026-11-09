@@ -41,6 +41,18 @@ def theme(title):
     return "autre"
 
 
+# The issuing service is the heading above the act in the Sommaire, « <issuer> / <service> ». When that heading wraps,
+# only its last line is read (« Secrétariat », « des affaires juridiques / »). Such a fragment would name the wrong
+# service, so the service is kept only when the heading looks whole: « X / Y », starting with a capital, not ending with
+# « / », and not a wrapped tail like « aux sports / DRAJES » or « Martinique / Service … » (end of « … de Martinique »).
+WHOLE_SERVICE = re.compile(r"^(?!Martinique /)[A-ZÀ-Ý].* / .*[^/\s]$")
+
+
+def service(s):
+    s = (s or "").strip()
+    return s if WHOLE_SERVICE.match(s) else None
+
+
 def build_acts(rows_by_year):
     """{year: raw rows} -> (pref_acts rows, errors). The same act can be published in two bulletins (rectified
     edition): one row per (act, bulletin), so both stay traceable."""
@@ -54,8 +66,11 @@ def build_acts(rows_by_year):
             if not re.fullmatch(r"\d{4}-\d\d-\d\d", r["act_date"] or ""):
                 errors.append(f"acts: {key}: bad date {r['act_date']!r}")
                 continue
+            if not re.fullmatch(r"\d{4}-\d{4}", r["bulletin"] or ""):  # the counts view reads the year from it
+                errors.append(f"acts: {key}: bulletin number not read from the file name {r['bulletin']!r}")
+                continue
             out.append({"id": key, "act_id": r["act_id"], "act_date": r["act_date"], "published": r["published"] or None,
-                        "bulletin": r["bulletin"], "service": r["service"] or None, "title": r["title"],
+                        "bulletin": r["bulletin"], "service": service(r["service"]), "title": r["title"],
                         "pages": int(r["pages"]), "page": int(r["page"]), "pdf_url": r["pdf_url"],
                         "theme": theme(r["title"]), "source_id": f"raa-{year}"})
     return out, errors
