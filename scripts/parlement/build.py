@@ -14,6 +14,7 @@ import collections, csv, datetime, html, json, pathlib, re, sys, unicodedata
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))  # our own code dir (python -I drops it)
 import votes  # noqa: E402
+import yaml  # noqa: E402  PyYAML (data/parlement/*.yaml, as scripts/core/media.py)
 
 sys.stdout.reconfigure(encoding="utf-8")
 csv.field_size_limit(1 << 30)
@@ -663,6 +664,19 @@ if errors:
 
 # --- write ------------------------------------------------------------------------------------------------------------
 OUT.mkdir(parents=True, exist_ok=True)
+# --- person_links: the same person in another domain, reviewed by JM (data/parlement/person_links.yaml) ------------
+# Only links from this domain's own people (load_supabase rule); the other id must exist on the shared project (FK).
+person_links = []
+_pl = yaml.safe_load((ROOT / "data" / "parlement" / "person_links.yaml").read_text(encoding="utf-8"))
+for link in _pl["links"]:
+    if link["person_id"] not in persons:
+        errors.append(f"person_links: {link['person_id']} is not a person of this build")
+    if link["same_as"].startswith("parl-"):
+        errors.append(f"person_links: {link['same_as']} is a parlement person (links point to other domains)")
+    person_links.append({"person_id": link["person_id"], "same_as": link["same_as"], "evidence_url": link["evidence_url"],
+                         "evidence_label": link["evidence_label"], "verified_by": _pl["verified_by"],
+                         "verified_at": str(_pl["verified_at"])})
+
 tables = {
     "sources": sources, "institutions": institutions, "bodies": bodies, "seats": seats,
     "persons": sorted(persons.values(), key=lambda p: p["id"]),
@@ -678,6 +692,7 @@ tables = {
     "parl_interest_declarations": sorted(declarations, key=lambda d: d["id"]),
     "parl_interest_items": interest_items,
     "parl_data_gaps": sorted(gaps, key=lambda g: g["id"]),
+    "person_links": sorted(person_links, key=lambda l: (l["person_id"], l["same_as"])),
 }
 for name, rows in tables.items():
     (OUT / f"{name}.json").write_text(json.dumps(rows, ensure_ascii=False, indent=1), encoding="utf-8")

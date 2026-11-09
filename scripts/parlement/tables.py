@@ -23,6 +23,8 @@ TABLES = {
     "parl_interest_declarations": "id",
     "parl_interest_items": "id",
     "parl_data_gaps": "id",
+    # core: same person in another domain, reviewed (migration 20261109180000_core_person_links.sql)
+    "person_links": "person_id,same_as",
     # official portraits: python -I scripts/core/media.py --domain parlement [--upload]
     "media": "id",
 }

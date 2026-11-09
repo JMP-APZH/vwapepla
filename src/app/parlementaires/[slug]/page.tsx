@@ -6,12 +6,13 @@ import { Portrait } from "@/components/card/Portrait";
 import { AmendmentsBlock, QuestionsBlock, VotesBlock } from "@/components/parlement/ActivityBlocks";
 import { DataGapsBlock } from "@/components/parlement/DataGaps";
 import { InterestsBlock } from "@/components/parlement/InterestsBlock";
+import { OtherOfficesBlock } from "@/components/parlement/OtherOffices";
 import { MandateBlock } from "@/components/parlement/MandateBlock";
 import { PastTermsBlock } from "@/components/parlement/PastTerms";
 import { getMedia, getSources } from "@/lib/core/data";
 import { date } from "@/lib/core/format";
 import { amendmentsNotLoaded, gapsFor, voteLines } from "@/lib/parlement/activity";
-import { getAmendments, getDataGaps, getDeclarations, getInterestItems, getMemberships, getPeople, getPerson, getQuestions, getSelectedScrutins, getToday, getVotes } from "@/lib/parlement/data";
+import { getAmendments, getDataGaps, getDeclarations, getInterestItems, getMemberships, getOtherOffices, getPeople, getPerson, getQuestions, getSelectedScrutins, getToday, getVotes } from "@/lib/parlement/data";
 import { currentCommittee, currentGroup, seatLabel, termPeriod } from "@/lib/parlement/members";
 import { currentRows, currentTerm, formerLabel, membershipsIn, pastTerms, termSummary } from "@/lib/parlement/terms";
 import { fill, upperFirst } from "@/lib/parlement/text";
@@ -40,10 +41,10 @@ export default async function MemberPage({ params }: PageProps<"/parlementaires/
   const latest = p.terms[0];
   const chamber = latest.chamber;
   const an = chamber === "AN";
-  const [sources, media, memberships, own, questions, declarations, items, today, votes, allGaps, ...selected] = await Promise.all([
+  const [sources, media, memberships, own, questions, declarations, items, today, votes, allGaps, others, ...selected] = await Promise.all([
     getSources(), getMedia(an ? "assemblee-nationale" : "senat"), getMemberships(p.personId),
     getAmendments(p.personId, "premier_signataire"), getQuestions(p.personId), getDeclarations(p.personId),
-    getInterestItems(p.personId), getToday(), getVotes(p.personId), getDataGaps(),
+    getInterestItems(p.personId), getToday(), getVotes(p.personId), getDataGaps(), getOtherOffices(p.personId),
     ...p.terms.map((t) => getSelectedScrutins(t)),
   ]);
   const src = (ids: (string | null | undefined)[]) =>
@@ -112,6 +113,7 @@ export default async function MemberPage({ params }: PageProps<"/parlementaires/
       </>}
       <PastTermsBlock summaries={summaries} sex={p.sex} slug={p.slug} amendmentsMissing={amendmentsNotLoaded(allGaps)} title={(m ? parlement.pastTermsTitle : parlement.termsTitle).fr}
                       sources={src([an ? "an-deputes" : "senat-mandats-senat", ...activitySources.filter((id) => !id.includes("-17"))])} />
+      <OtherOfficesBlock offices={others} sources={src(others.map((o) => o.sourceId))} />
       <InterestsBlock declarations={declarations} items={m ? items : []} former={!m}
                       sources={src(["hatvp-liste", ...(m && items.length ? ["hatvp-declarations-972"] : [])])} />
     </CardShell>
