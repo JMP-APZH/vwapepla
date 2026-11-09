@@ -8,7 +8,15 @@ python -I scripts/core/download_sources.py --domain parlement --only <job>   # o
 python -I scripts/parlement/build.py                                          # data/build/parlement/<table>.json + checks
 python -I scripts/core/media.py --domain parlement [--upload]                  # official portraits (data/parlement/media/portraits.yaml)
 python -I scripts/core/load_supabase.py --domain parlement                    # upsert (secret key in .env.local)
+python -I scripts/parlement/prune.py [--dry-run]                              # delete B2's own rows the build no longer has
+python -I scripts/parlement/weekly.py [--dry-run]                             # all of the above, weekly (Q10)
 ```
+- `weekly.py`: current-term jobs every run; closed-legislature archives only when missing from the manifest; amendments
+  last; then build (its checks stop the run), load, prune. Exit 1 if a current-term download failed (previous file used);
+  a missing archive is only reported (stated data gap).
+- `prune.py`: the loader only upserts, so rows that disappear from the build (e.g. a renamed data gap) stay online.
+  Deletes them from the `parl_*` tables only, children first; stops without deleting anything if a table would lose
+  more than 5 % of its rows (10 rows always allowed).
 - `sources.py`: the jobs (`JOBS`). National files are streamed and filtered on Martinique's members:
   - AN JSON zips of the XVIIth legislature and the archives of the XIVth-XVIth (`an-<dataset>-<legislature>`;
     `_an_records` reads one-file-per-record zips, a single small JSON file, or, for the XIVth amendments and written
