@@ -27,6 +27,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - run: pip install pyyaml # data/parlement/*.yaml (build.py)
       # Raw files (gitignored) are kept between runs: the closed legislatures' archives (up to 650 MB zips on a slow
       # server) are downloaded once; current-term files are downloaded again every week anyway.
       - uses: actions/cache@v4
