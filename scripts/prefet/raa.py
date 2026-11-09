@@ -18,9 +18,11 @@ PDF_LINK = re.compile(r'href="(/contenu/telechargement/[^"]+?\.pdf)"(.*?)</a>', 
 META = re.compile(r"PDF\s*-\s*([\d,]+)\s*([KMG]o|[KMG]b)\s*-\s*(\d\d/\d\d/\d{4})", re.I)
 
 
-# The site cuts off clients that ask too fast (seen on 5 Nov 2026: blocked for minutes after ~200 quick page loads).
-# So: one request at a time, PAUSE seconds between requests, and long waits when it stops answering.
-PAUSE = 2.0
+# The site cuts off clients that ask too fast (seen on 5 Nov 2026: blocked for minutes after ~200 quick page loads;
+# on 9 Nov a whole year failed on one listing page). So: one request at a time, PAUSE seconds between requests, long
+# waits when it stops answering, listing pages of past years kept on disk (a re-run does not ask for them again), and a
+# page or bulletin that still fails is skipped, the year finished, then reported as incomplete (re-run to complete it).
+PAUSE = 4.0
 BACKOFF = (30, 60, 120, 300, 600)  # seconds
 
 
@@ -84,15 +86,32 @@ def year_folders():
     return out
 
 
-def crawl(folder):
-    """Every PDF under `folder`: [{url, name, size_mb, published (YYYY-MM-DD), page}] (deduplicated by URL)."""
-    seen, todo, pdfs = set(), [folder], {}
+def listing(path, page_cache=None):
+    """One listing page; kept in `page_cache` (a folder) when given, so a re-run reads it from disk."""
+    cached = page_cache / (re.sub(r"[^a-zA-Z0-9_-]", "_", path)[-150:] + ".html") if page_cache else None
+    if cached and cached.exists():
+        return cached.read_text(encoding="utf-8")
+    s = get(SITE + urllib.parse.quote(path, safe="/()%"))
+    if cached:
+        cached.parent.mkdir(parents=True, exist_ok=True)
+        cached.write_text(s, encoding="utf-8")
+    return s
+
+
+def crawl(folder, page_cache=None):
+    """Every PDF under `folder`: ([{url, name, size_mb, published (YYYY-MM-DD), page}] deduplicated by URL,
+    [listing pages that could not be read])."""
+    seen, todo, pdfs, failed = set(), [folder], {}, []
     while todo:
         path = todo.pop()
         if path in seen:
             continue
         seen.add(path)
-        s = get(SITE + urllib.parse.quote(path, safe="/()%"))
+        try:
+            s = listing(path, page_cache)
+        except Exception as e:  # noqa: BLE001 — site still refusing after the waits: skip the page, report it
+            failed.append(f"{path}: {type(e).__name__}")
+            continue
         for href, rest in PDF_LINK.findall(s):
             m = META.search(html.unescape(re.sub(r"<[^>]+>", " ", rest)))
             url = SITE + urllib.parse.quote(html.unescape(href), safe="/%")  # 2016 names: « RAA - N° 02-2016-016.pdf »
@@ -105,7 +124,7 @@ def crawl(folder):
             href = html.unescape(href)
             if href not in seen:
                 todo.append(href)
-    return list(pdfs.values())
+    return list(pdfs.values()), failed
 
 
 # --- Sommaire --------------------------------------------------------------------------------------------------------
@@ -158,10 +177,14 @@ def bulletin_number(name):
 
 
 def index_year(year, folder, cache_dir, log=print):
-    """Acts of one year's bulletins (cached per bulletin). Returns (acts, bulletins, problems)."""
+    """Acts of one year's bulletins (cached per bulletin). Returns (acts, bulletins, problems).
+    Raises after going through the whole year if a listing page or a bulletin could not be read: the year is then not
+    recorded as done, and a re-run completes it (pages of past years and bulletins already read come from disk)."""
+    import datetime
     cache_dir.mkdir(parents=True, exist_ok=True)
-    bulletins = crawl(folder)
-    acts, problems = [], []
+    past = year < datetime.date.today().year  # a past year's listing pages no longer change
+    bulletins, failed = crawl(folder, cache_dir.parent / "pages" if past else None)
+    acts, problems, unread = [], [], list(failed)
     for b in sorted(bulletins, key=lambda b: b["url"]):
         key = re.sub(r"[^a-zA-Z0-9_-]", "_", b["url"].split("/telechargement/")[-1])[:150]
         cached = cache_dir / f"{key}.json"
@@ -174,7 +197,7 @@ def index_year(year, folder, cache_dir, log=print):
                     patient(lambda: download(b["url"], pdf), b["name"])
                     found = sommaire(pdf)
                 except Exception as e:  # noqa: BLE001 — one unreadable bulletin must not stop the year
-                    problems.append(f"{b['name']}: {e}")
+                    unread.append(f"{b['name']}: {e}")
                     continue
             cached.write_text(json.dumps(found, ensure_ascii=False), encoding="utf-8")
             log(f"     {b['name']}: {len(found)} acts")
@@ -183,4 +206,7 @@ def index_year(year, folder, cache_dir, log=print):
         for a in found:
             acts.append({**a, "bulletin": bulletin_number(b["name"]) or b["name"], "published": b["published"],
                          "pdf_url": b["url"], "listing_page": b["page"]})
+    if unread:
+        raise RuntimeError(f"RAA {year} incomplete ({len(bulletins)} bulletins found, {len(acts)} acts read so far); "
+                           "not read, re-run to complete:" + "".join("\n  " + u for u in unread))
     return acts, bulletins, problems
