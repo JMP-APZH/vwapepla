@@ -49,11 +49,19 @@ export default async function Methodologie() {
             sont comparés au rapport de la Chambre régionale des comptes (2026). Tolérance : 1 %, ou 50 000 € pour les petits
             montants. Le texte de ce rapport (p. 56) donne une dette 2021 différente de son propre tableau en annexe (p. 80) ;
             la fiche affiche les montants de l&apos;annexe, identiques à l&apos;OFGL, et le signale.
+            Les chiffres sont aussi comparés aux comptes administratifs votés par l&apos;Assemblée (2022-2025, budget principal) :
+            mêmes montants que la DGFiP, l&apos;écart avec l&apos;OFGL venant de montants comptés bruts par le compte administratif.
+          </li>
+          <li>
+            Prévisionnel : les budgets primitifs votés par l&apos;Assemblée (2024-2026, budget principal) sont lus page par page
+            et affichés à part, marqués « Prévisionnel », à côté du compte administratif (réalisé) mais jamais sur la même
+            série ; les budgets supplémentaires, décisions modificatives et rapports d&apos;orientations budgétaires sont liés.
           </li>
           <li>
             « Fiscalité spécifique ultramarine » = compte 734 de la nomenclature M57 (ce que la Chambre régionale des comptes
             appelle « produits liés à l&apos;octroi de mer »). « Octroi de mer » désigne uniquement l&apos;octroi de mer régional
-            (compte 73432). Série à partir de 2018 : la nomenclature M57 a été renumérotée cette année-là.
+            (compte 73432). Pour 2016-2017, avant la renumérotation de la nomenclature M57 en 2018, chaque ligne est rattachée
+            à l&apos;ancien compte de même libellé (octroi de mer régional = compte 7374 « Taxe additionnelle à l&apos;octroi de mer »).
           </li>
           <li>
             Élus : l&apos;Assemblée d&apos;après le Répertoire national des élus (RNE). Le RNE ne liste qu&apos;une partie du Conseil

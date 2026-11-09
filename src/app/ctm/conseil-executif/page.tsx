@@ -5,7 +5,8 @@ import { Portrait } from "@/components/card/Portrait";
 import { MemberItem } from "@/components/ctm/People";
 import { getSources } from "@/lib/core/data";
 import { date } from "@/lib/core/format";
-import { getListMembers, getLists, getMandates, getSections } from "@/lib/ctm/data";
+import { getActs, getListMembers, getLists, getMandates, getSections } from "@/lib/ctm/data";
+import { ActsSummary } from "@/components/ctm/Acts";
 import { EXECUTIF, inBothBodies, members, oddDates, T2021 } from "@/lib/ctm/people";
 import { ctm } from "@/i18n";
 
@@ -14,8 +15,8 @@ export const metadata: Metadata = { title: ctm.executifTitle.fr };
 // Conseil exécutif: RNE lists only part of it; the other members come from the HATVP declarations and are marked
 // "non vérifié" until the election délibération is archived (JM, 5 Nov 2026). Portfolios: not published yet.
 export default async function ExecutifPage() {
-  const [mandates, sections, listMembers, lists, sources] = await Promise.all([
-    getMandates(), getSections(), getListMembers(), getLists(), getSources()]);
+  const [mandates, sections, listMembers, lists, sources, acts] = await Promise.all([
+    getMandates(), getSections(), getListMembers(), getLists(), getSources(), getActs()]);
   const list = members(mandates, sections, listMembers, lists, T2021, EXECUTIF);
   const president = list.find((m) => m.role === "president");
   const fromRne = list.filter((m) => m.sourceId === "ctm:rne-membres-assemblees").length;
@@ -49,6 +50,8 @@ export default async function ExecutifPage() {
       <FactBlock title={ctm.executifCompositionTitle.fr} sources={src(list.map((m) => m.sourceId))} year="2021-2028">
         <ul className="mt-2 divide-y divide-slate-100">{list.map((m) => <MemberItem key={m.personId} m={m} />)}</ul>
       </FactBlock>
+      <ActsSummary title={ctm.actsExecutifTitle.fr} body="conseil_executif" acts={acts}
+                   sources={src(acts.filter((a) => a.body === "conseil_executif").map((a) => a.source_id))} />
     </CardShell>
   );
 }

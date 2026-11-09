@@ -2,7 +2,8 @@ import { cacheLife, cacheTag } from "next/cache";
 import { check } from "@/lib/core/data";
 import { supabase } from "@/lib/core/supabase";
 import type { Term } from "./terms";
-import { QUESTIONS, type Question, type VoteSummary } from "./vote-questions";
+import { siteDistributions, type SiteVoteResults, type SiteVoteRow } from "./vote-questions";
+import { criteriaResults, type CommuneVoteCriterion, type CriteriaResults, type CriteriaSummaryRow } from "./criteria-votes";
 
 // Commune domain (B1): typed, cached reads of the com_* tables. Data changes about once a year (new OFGL release / forecast entry):
 // everything is cached for days and pre-rendered; a redeploy or revalidateTag("data") refreshes it.
@@ -139,19 +140,45 @@ export async function getTerms(): Promise<Term[]> {
 }
 
 /**
- * Visitor-vote summary for one commune's website (opinion layer). Averages are hidden by the SQL function below
- * 20 votes. Cached a few minutes (radio traffic hits the cache, not the database); a new vote calls updateTag.
+ * Visitor votes on one commune's website (opinion layer), as a distribution per question (no average). The SQL
+ * function hides the counts below 20 votes and during pre-election closures. Cached a few minutes (radio traffic hits
+ * the cache, not the database); a new vote calls updateTag(`votes-${code}`).
  */
-export async function getVoteSummary(code: string): Promise<VoteSummary[]> {
+export async function getVoteSummary(code: string): Promise<SiteVoteResults> {
   "use cache";
   cacheLife("minutes");
   cacheTag(`votes-${code}`);
-  const rows = check(await supabase.rpc("com_site_vote_summary", { p_commune: code }), "vote summary") as
-    { question: Question; votes: number | string; average: number | string | null }[];
-  return QUESTIONS.map((q) => {
-    const r = rows.find((x) => x.question === q);
-    return { question: q, votes: Number(r?.votes ?? 0), average: r?.average == null ? null : Number(r.average) };
-  });
+  const [rows, closed] = await Promise.all([
+    supabase.rpc("com_site_vote_distribution", { p_commune: code }),
+    supabase.rpc("com_votes_closed", { p_commune: code }),
+  ]);
+  return siteDistributions(check(rows, "com_site_vote_distribution") as SiteVoteRow[], check(closed, "com_votes_closed") === true);
+}
+
+/** Criteria of the visitor votes on the commune's action (validated by JM, 7 Nov 2026). */
+export async function getCommuneVoteCriteria(): Promise<CommuneVoteCriterion[]> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("data");
+  return check(
+    await supabase.from("com_vote_criteria")
+      .select("key,label_fr,competence,others,commune_role_fr,ref_status,display_order").order("display_order"),
+    "com_vote_criteria",
+  ) as CommuneVoteCriterion[];
+}
+
+/**
+ * Results of the votes on the commune's action, current term (opinion layer). The SQL function hides the counts
+ * below 20 rated votes and during pre-election closures. Cached a few minutes; a new vote calls
+ * updateTag(`criteria-votes-${code}`).
+ */
+export async function getCriteriaVoteResults(code: string, keys: string[]): Promise<CriteriaResults> {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag(`criteria-votes-${code}`);
+  const rows = check(await supabase.rpc("com_criteria_vote_summary", { p_commune: code }), "com_criteria_vote_summary") as
+    CriteriaSummaryRow[];
+  return criteriaResults(rows, keys);
 }
 
 export type AuditCriterion = {
@@ -188,4 +215,33 @@ export async function getSiteAudit(code: string): Promise<SiteAudit | null> {
     "site audit items",
   ) as AuditItem[];
   return { ...audits[0], items };
+}
+
+export type ChannelObservation = {
+  id: string; platform: "facebook" | "instagram" | "tiktok" | "youtube" | "whatsapp_channel"; observed_on: string;
+  account_url: string | null; account_name: string | null; official: "yes" | "no" | "doubtful" | null;
+  official_basis: "linked_from_site" | "platform_verified" | "town_hall_confirmed" | "none" | null;
+  official_evidence_url: string | null; last_post_date: string | null; posts_last_90_days: number | null;
+  council_meetings_streamed: "yes" | "no" | "unknown" | null; council_stream_evidence_url: string | null;
+  followers: number | null; followers_display: string | null; screenshot_sha256: string | null;
+  searched_on: string | null; search_note: string | null; observer: string;
+};
+
+/**
+ * Reviewed observations of the town hall's social-network accounts (only reviewed rows are ever loaded), with the
+ * date they were read (`asOf`, reference for « relevé ancien »: a cached function may read the clock, a page may not).
+ */
+export async function getChannels(code: string): Promise<{ observations: ChannelObservation[]; asOf: string }> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("data");
+  const observations = check(
+    await supabase.from("com_channel_observations")
+      .select("id,platform,observed_on,account_url,account_name,official,official_basis,official_evidence_url,last_post_date," +
+        "posts_last_90_days,council_meetings_streamed,council_stream_evidence_url,followers,followers_display," +
+        "screenshot_sha256,searched_on,search_note,observer")
+      .eq("commune_code", code).order("observed_on", { ascending: false }),
+    "channels",
+  ) as unknown as ChannelObservation[];
+  return { observations, asOf: new Date().toISOString() };
 }

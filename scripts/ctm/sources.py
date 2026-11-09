@@ -10,7 +10,7 @@ Who is who (checked on the portals, 3 Nov 2026):
 """
 import csv, html, pathlib, re, time, urllib.parse, urllib.request
 
-from fetching import LICENCE, fetch, file_job, portal_job  # scripts/core (put on sys.path by download_sources.py)
+from fetching import LICENCE, fetch, file_job, portal_job, portal_title  # scripts/core (put on sys.path by download_sources.py)
 
 NO_LICENCE = "aucune licence indiquée"  # what the source states; never assume Licence Ouverte
 
@@ -298,6 +298,17 @@ JOBS += [{"folder": folder, "id": ds, "url": url or f"{DG}/{ds}/", "title": (lam
           "licence": NO_LICENCE if "2021" in ds else LICENCE}  # 2021 datasets: licence "non spécifiée" on data.gouv.fr
          for folder, ds, url, title, purpose in ELECTIONS]
 
+# M57 functional nomenclature (area codes and official labels), as published by OFGL in its functional base of the
+# départements (the CTM is not in that base; only the labels are taken). Used for spending by area.
+_FONC = "ofgl-base-departements-fonctionnelle"
+JOBS += [{"folder": "ofgl", "id": "ofgl-fonctions-m57-libelles",
+          "url": f"{OFGL}/{_FONC}/exports/csv?" + urllib.parse.urlencode(
+              {"select": "fonction,nom_fonction", "group_by": "fonction,nom_fonction", "where": 'nomen like "M57"',
+               "delimiter": ";"}),
+          "title": lambda: portal_title(OFGL, _FONC), "page": "https://data.ofgl.fr/explore/dataset/" + _FONC + "/",
+          "credit": "OFGL", "purpose": "Codes and labels of the M57 functional nomenclature (spending by area).",
+          "scope": "", "encoding": "utf-8-sig", "fetcher": None}]
+
 # --- Documents archived as published (PDF) ---------------------------------------------------------------------------
 JOBS += [file_job("crc", "crc-ctm-2026-rapport-observations-definitives",
                   "https://www.ccomptes.fr/sites/default/files/2026-09/RAN2026-0326A.pdf",
@@ -306,6 +317,33 @@ JOBS += [file_job("crc", "crc-ctm-2026-rapport-observations-definitives",
                   "https://www.ccomptes.fr/", "Chambre régionale des comptes",
                   "Benchmark for the reconciliation (CAF brute, debt, fiscalité ultramarine 734, satellites).",
                   licence=NO_LICENCE, ext="pdf")]
+
+# Comptes administratifs of the main budget, as voted by the Assemblée (PDF as published on the CTM's website).
+# (year, délibération, WordPress Download Manager id, download page). Used for check R6 (CA vs OFGL).
+CA = [(2022, "23-418-1", 26834, "delib-n23-418-1-adoption-du-compte-administratif-exercice-2022"),
+      (2023, "24-97-1", 15152, "delib-n24-97-1-compte-administratif-2023-budget-principal-2"),
+      (2024, "25-148-1", 24021, "delib-n25-148-1-compte-administratif-de-la-ctm-annee-2024"),
+      (2025, "26-147-1", 31906, "delib-n26-147-1-compte-administratif-2025-budget-principal")]
+JOBS += [file_job("ca", f"ctm-ca-{year}", f"{SITE}/?wpdmdl={wpdm}",
+                  f"Délibération n° {delib} — compte administratif {year}, budget principal de la CTM",
+                  f"{SITE}/download/{slug}/", "Collectivité Territoriale de Martinique",
+                  f"Compte administratif {year} (budget principal) voted by the Assemblée: check R6 against OFGL.",
+                  licence=NO_LICENCE, ext="pdf") for year, delib, wpdm, slug in CA]
+
+# Forecast layer (« Prévisionnel », never mixed with actuals): budgets primitifs of the main budget and orientation
+# reports (ROB), as voted by the Assemblée. (year, type, délibération, wpdm id, download page slug).
+FORECAST = [(2024, "BP", "24-49-1", 8481, "delib-n24-49-1-budget-primitif-ctm-2024-budget-principal"),
+            (2025, "BP", "24-322-1", 19718, "delib-n24-322-1-budget-primitif-ctm-2025-budget-principal"),
+            (2026, "BP", "25-376-1", 28754, "delib-n25-376-1-budget-primitif-budget-principal-exercice-2026"),
+            (2024, "ROB", "24-02-1", 5321, "delib-n24-02-1-debat-orientations-budgetaires-ctm-2024"),
+            (2025, "ROB", "24-253-1", 18993, "delib-n24-253-1-orientations-budgetaires-ctm-2025"),
+            (2026, "ROB", "25-315-1", 27839, "delib-n25-315-1-orientations-budgetaires-exercice-2026")]
+_FORECAST_TITLE = {"BP": "budget primitif {y}, budget principal de la CTM", "ROB": "rapport d'orientations budgétaires {y}"}
+JOBS += [file_job("forecast", f"ctm-{kind.lower()}-{year}", f"{SITE}/?wpdmdl={wpdm}",
+                  f"Délibération n° {delib} — " + _FORECAST_TITLE[kind].format(y=year), f"{SITE}/download/{slug}/",
+                  "Collectivité Territoriale de Martinique",
+                  f"Forecast layer ({kind} {year}), shown as « Prévisionnel », never mixed with actuals.",
+                  licence=NO_LICENCE, ext="pdf") for year, kind, delib, wpdm, slug in FORECAST]
 
 # Not archived (5 Nov 2026): the convocation decrees 2015-939 and 2021-483 and the loi 2021-191 (end of the 2021 term,
 # March 2028). Their copies on prefecture sites answer HTTP 401 to scripted downloads; to add from Légifrance.

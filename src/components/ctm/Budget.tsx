@@ -26,7 +26,7 @@ export function BreakdownBlock({ title, year, total, parts, extra, sources }: {
             <tr className="border-b border-slate-200 font-semibold">
               <td className="py-1.5 pr-2">{total.label}</td>
               <td className="py-1.5 pr-2 text-right tabular-nums">{meur(total.amount)}</td>
-              <td className="py-1.5 pr-2 text-right tabular-nums">{perHab(total.perHab)}</td>
+              <td className="py-1.5 pr-2 text-right tabular-nums whitespace-nowrap">{perHab(total.perHab)}</td>
               <td className="py-1.5 text-right" />
             </tr>
             {parts.map((p) => (
@@ -38,7 +38,7 @@ export function BreakdownBlock({ title, year, total, parts, extra, sources }: {
                   </div>
                 </td>
                 <td className="py-1.5 pr-2 text-right tabular-nums">{meur(p.amount)}</td>
-                <td className="py-1.5 pr-2 text-right tabular-nums">{perHab(p.perHab)}</td>
+                <td className="py-1.5 pr-2 text-right tabular-nums whitespace-nowrap">{perHab(p.perHab)}</td>
                 <td className="py-1.5 text-right tabular-nums text-slate-600">{pct(p.share)}</td>
               </tr>
             ))}
@@ -46,7 +46,7 @@ export function BreakdownBlock({ title, year, total, parts, extra, sources }: {
               <tr key={p.key} className="border-b border-slate-100 text-slate-700">
                 <td className="py-1.5 pr-2 italic">{p.label}</td>
                 <td className="py-1.5 pr-2 text-right tabular-nums">{meur(p.amount)}</td>
-                <td className="py-1.5 pr-2 text-right tabular-nums">{perHab(p.perHab)}</td>
+                <td className="py-1.5 pr-2 text-right tabular-nums whitespace-nowrap">{perHab(p.perHab)}</td>
                 <td className="py-1.5 text-right" />
               </tr>
             ))}

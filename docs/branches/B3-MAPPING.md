@@ -79,3 +79,77 @@ the comptes individuels match exactly. The remaining differences (+0.1 % and −
 - R5 Every OFGL aggregate published for the CTM budget principal, 2019–2025 (65–67 per year), recomputed from the DGFiP
   balance accounts with OFGL's formula file: all match (tolerance 1 % or €50,000).
 - Join checks: 2012 comptes individuels / OFGL bp; 2019 balances / nature-fonction.
+
+## E. Spending by area of responsibility (sprint 3, 7 Nov 2026)
+
+Source: DGFiP nature-fonction balances, CTM budget principal, definitive balance, 2018–2025 (`scripts/ctm/pipeline/functions.py`).
+Area labels: OFGL, M57 functional nomenclature (`ofgl-fonctions-m57-libelles`, codes 0–8; 9 is « fonction en réserve »).
+
+- `fonction` = functional chapter + area code: `93x…` operating spending of area x, `90x…` investment of area x;
+  `94…` / `92…` not broken down by area (stored as `nv`, e.g. `943` interest).
+- Operating spending: real accounts of class 6 (without 68, 675, 676), net debit.
+- Investment: OFGL's definition of « Dépenses d'équipement » + « Subventions d'équipement versées »: debits on 20, 21, 23
+  minus credits on 236, 237, 238.
+- Area 4 « Santé et action sociale »: OFGL's label adds « (hors APA, RSA…) » because OFGL splits them out; in the M57
+  chart, APA (43) and RSA (44) are sub-areas of 4, and they are included here.
+- Starts in 2018: the M57 chart was renumbered that year.
+
+Reconciliation (`reconcile.py`): R9 operating spending, all areas + `nv` = OFGL « Dépenses de fonctionnement » bp;
+R10 investment, all areas = OFGL « Dépenses d'équipement » + « Subventions d'équipement versées » bp. Both match to the
+euro, 2018–2025.
+
+## F. Acts (sprint 3)
+
+Indexes of the CTM's website: 1,809 délibérations of the Assemblée, 4,304 arrêtés délibérés of the Conseil exécutif
+(344 without number). Stored title: the published title without its act number, with the **names of private
+individuals masked** (after Monsieur / Madame / M. / Mme / Mlle; 987 titles). The full act stays on the CTM's page.
+No session date, vote or topic: not in the index.
+
+## G. Comptes administratifs voted by the Assemblée (sprint 4, 7 Nov 2026)
+
+Sources: the main-budget CAs as published by the CTM (PDF with a text layer, archived by the downloader):
+2022 délib. 23-418-1, 2023 délib. 24-97-1, 2024 délib. 25-148-1, 2025 délib. 26-147-1. Read by
+`scripts/ctm/pipeline/ca.py` from the standard M57 pages **C1** (équilibre financier – investissement) and **C2**
+(équilibre financier – fonctionnement), real and mixed operations. Each figure keeps its PDF page. C2 check: income −
+spending = the printed balance.
+
+Check R6 (`reconcile.py`), tolerance 1 % or €50,000:
+
+| CA line | Compared with | Result |
+|---|---|---|
+| Real operating spending (C2, I) | DGFiP gross: debits on real class-6 accounts + debits on class 7 (atténuations de produits, 739) | 2022–2024 to the euro |
+| Real operating income (C2, II) | DGFiP gross: credits on real class-7 accounts + credits on class 6 (atténuations de charges) | 2022–2024 within €0.17M |
+| Real operating balance (C2, II − I) | OFGL « Epargne brute » bp | +0.13 %, 0.00 %, +0.28 % |
+| Real investment spending minus chapter 923 | OFGL « Dépenses d'investissement hors remb » bp | within 0.03 % |
+| Chapter 923 spending | OFGL « Remboursements d'emprunts hors GAD » bp | within 0.10 % |
+| Chapter 923 income | OFGL « Emprunts hors GAD » bp (+ account 1068 in 2022–2023) | within 0.06 % |
+
+Why the CA's operating totals are higher than OFGL's (about €4–5M on each side): the CA counts gross amounts, while
+OFGL nets the credits on spending accounts and the debits on income accounts. The balance is the same.
+In 2022 and 2023 the CA's chapter 923 income also includes the capitalised surplus (account 1068: €10.2M and €17.4M);
+from 2024 it is shown on its own line.
+
+2025: OFGL / DGFiP balances are provisional. The CA has €7.3M more operating spending than the provisional balances
+(balance €32.2M against €39.5M). Reported, not failing, until the final balances are published.
+
+## H. Forecast layer: budgets primitifs and orientation reports (sprint 5, 7 Nov 2026)
+
+« Prévisionnel », never mixed with actuals (CLAUDE.md). Main budget only.
+
+| Year | Budget primitif | Orientation report (ROB) |
+|---|---|---|
+| 2024 | délib. 24-49-1 | délib. 24-02-1 |
+| 2025 | délib. 24-322-1 | délib. 24-253-1 (mostly a scan) |
+| 2026 | délib. 25-376-1 | délib. 25-315-1 |
+
+- **Budgets primitifs** (`scripts/ctm/pipeline/bp.py`): standard M57 pages **D1** (équilibre financier du budget –
+  investissement) and **D2** (– fonctionnement), real operations, "RAR N-1 + vote de l'exercice". Same lines as the CA
+  (§G). The planned operating balance is computed as income − spending, since the BP prints no balance. Each figure
+  keeps its page.
+- **Orientation reports:** narrative documents, linked only. Their explicit figures differ from year to year (2024 p. 94:
+  "une CAF brute de 125 M€ et un emprunt de 150 M€, l'investissement 2024 devrait s'élever à 393 M€"; 2026: no figure
+  for the year; 2025: scanned), so no figure is extracted.
+- **Check F1 (`reconcile.py`, consistency only):** 9 lines read per BP; the investment total = chapter 90 + chapter 923
+  spending (2026: +€0.4M, within tolerance).
+- Planned vs realised is shown side by side on the card (BP vs CA), never as one series. The BP is amended during the
+  year by the budget supplémentaire and the decisions modificatives, so a gap is not an error in itself.

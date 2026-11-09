@@ -5,7 +5,7 @@
 export const MIN_VOTES = 20;
 export const LEVELS = [1, 2, 3, 4, 5] as const;
 export type Level = (typeof LEVELS)[number];
-export type VoteStatus = "ok" | "already_voted" | "rate_limited" | "invalid" | "error";
+export type VoteStatus = "ok" | "already_voted" | "rate_limited" | "invalid" | "check_failed" | "error";
 
 export type VoteCriterion = {
   key: string; label_fr: string; description_fr: string; competence: "etat" | "partagee"; others: string[];

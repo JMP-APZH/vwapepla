@@ -1,0 +1,49 @@
+name: Weekly parlement rebuild
+
+# Q10 (JM, 5 Nov 2026): the deputies' and senators' cards are rebuilt every week from the official open data.
+# scripts/parlement/weekly.py downloads the current-term sources (closed legislatures' archives only when missing),
+# runs the build (its checks stop the run before anything is loaded), loads Supabase and removes B2's own stale rows.
+# The site picks the new data up within a day (cacheLife "days").
+# Needs the repository secret SUPABASE_SECRET_KEY (Settings > Secrets and variables > Actions), set by JM.
+
+on:
+  schedule:
+    - cron: '0 4 * * 0' # Sunday 04:00 UTC = 00:00 in Martinique
+  workflow_dispatch: # manual run from the GitHub UI
+
+permissions:
+  contents: read
+
+concurrency:
+  group: weekly-parlement
+  cancel-in-progress: false
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pyyaml # data/parlement/*.yaml (build.py)
+      # Raw files (gitignored) are kept between runs: the closed legislatures' archives (up to 650 MB zips on a slow
+      # server) are downloaded once; current-term files are downloaded again every week anyway.
+      - uses: actions/cache@v4
+        with:
+          path: data/raw/parlement
+          key: parlement-raw-${{ github.run_id }}
+          restore-keys: parlement-raw-
+      - name: Write .env.local (public URL from .env, secret key from the repository secret)
+        env:
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+        run: |
+          test -n "$SUPABASE_SECRET_KEY" || { echo "Repository secret SUPABASE_SECRET_KEY is not set"; exit 1; }
+          URL=$(grep '^NEXT_PUBLIC_SUPABASE_URL=' .env | cut -d= -f2-)
+          printf 'SUPABASE_URL=%s\nSUPABASE_SECRET_KEY=%s\n' "$URL" "$SUPABASE_SECRET_KEY" > .env.local
+      - name: Download, build, load, prune
+        run: python -I scripts/parlement/weekly.py
+      - name: Remove .env.local
+        if: always()
+        run: rm -f .env.local

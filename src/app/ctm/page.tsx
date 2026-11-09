@@ -2,11 +2,17 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CardHeader, CardShell, Caveat, MissingInfo, RightOfReply } from "@/components/card/Card";
 import { Portrait } from "@/components/card/Portrait";
+import { AreaSpending } from "@/components/ctm/Areas";
+import { CompteAdministratif } from "@/components/ctm/Ca";
+import { ForecastBudget, PlannedVsActual } from "@/components/ctm/Forecast";
 import { BeforeCtm, BreakdownBlock, FiscaliteUltramarine, SavingsDebt } from "@/components/ctm/Budget";
 import { getSources } from "@/lib/core/data";
 import { date, int } from "@/lib/core/format";
 import { beforeCtm, breakdown, CTM, get, index, referenceYear, series, sourceIds } from "@/lib/ctm/budget";
-import { getActuals, getMetricDefs } from "@/lib/ctm/data";
+import { caComparison, caYears } from "@/lib/ctm/ca";
+import { getActuals, getCaLines, getForecast, getFunctional, getMetricDefs } from "@/lib/ctm/data";
+import { AMENDMENTS, bpDoc, bpYears, forecastRows, plannedVsActual, plannedYears } from "@/lib/ctm/forecast";
+import { areasForYear } from "@/lib/ctm/functions";
 import { ctm } from "@/i18n";
 
 export const metadata: Metadata = { title: ctm.cardTitle.fr };
@@ -19,7 +25,8 @@ const FUM = ["fum_total", "fum_octroi_de_mer", "fum_carburants", "fum_autres", "
 // The Collectivité: budget facts of the institution (B3 neutrality charter, docs/branches/B3-DISCOVERY.md §4): no score,
 // no ranking; every block sourced; the Région and the Département before 2016 shown side by side, never summed.
 export default async function CtmPage() {
-  const [rows, defs, sources] = await Promise.all([getActuals(), getMetricDefs(), getSources()]);
+  const [rows, defs, sources, functional, caLines, forecast] = await Promise.all([
+    getActuals(), getMetricDefs(), getSources(), getFunctional(), getCaLines(), getForecast()]);
   const idx = index(rows);
   const year = referenceYear(rows) ?? 2024;
   const ctmYears = [...new Set(rows.filter((r) => r.entity_siren === CTM).map((r) => r.year))].sort();
@@ -52,6 +59,23 @@ export default async function CtmPage() {
   const beforeSources = sourceIds(rows.filter((r) => r.year < 2016));
   const population = get(idx, CTM, year, "population")?.amount;
 
+  // Forecast layer (« Prévisionnel »): latest BP alone, then BP beside CA for the years with both; separate columns.
+  const fdoc = (y: number, type: "BP" | "ROB") => {
+    const d = type === "BP" ? bpDoc(forecast.docs, y) : forecast.docs.find((x) => x.doc_type === "ROB" && x.fiscal_year === y);
+    return d ? { deliberation: d.deliberation, pdfUrl: sources.get(d.source_id)?.url ?? null } : null;
+  };
+  const amendments = (y: number) => (AMENDMENTS[y] ?? [])
+    .map((n) => forecast.amendments.find((a) => a.id === `assemblee:${n}`)).filter((a) => a != null);
+  const bpLast = bpYears(forecast.docs)[0];
+  const planned = plannedYears(forecast.docs, caLines).map((y) => {
+    const first = caLines.find((l) => l.year === y)!;
+    return { year: y, rows: plannedVsActual(forecast.docs, forecast.figures, caLines, y), bp: fdoc(y, "BP")!,
+             ca: { deliberation: first.deliberation, pdfUrl: sources.get(first.source_id)?.url ?? null },
+             rob: fdoc(y, "ROB"), amendments: amendments(y) };
+  });
+  const forecastSources = (ys: number[]) => src([...forecast.docs.filter((d) => ys.includes(d.fiscal_year)).map((d) => d.source_id),
+    ...(forecast.amendments.length ? ["ctm:ctm-deliberations-assemblee"] : [])]);
+
   return (
     <CardShell
       header={
@@ -74,7 +98,7 @@ export default async function CtmPage() {
         <Link href="/ctm/assemblee" className="rounded-xl border border-slate-200 bg-white p-4 text-sm font-medium hover:border-slate-400">{ctm.tileAssemblee.fr} →</Link>
         <Link href="/ctm/conseil-executif" className="rounded-xl border border-slate-200 bg-white p-4 text-sm font-medium hover:border-slate-400">{ctm.tileExecutif.fr} →</Link>
       </nav>
-      <MissingInfo items={[ctm.missingEndOfTerm.fr, ctm.missingCa.fr, ctm.missingCompetences.fr]} />
+      <MissingInfo items={[ctm.missingEndOfTerm.fr, ctm.missingCompetences.fr]} />
       <h2 className="border-t border-slate-200 pt-4 text-sm font-semibold uppercase tracking-wide text-slate-500">
         {ctm.budgetTitle.fr}{ctm.budgetTitle.kr && <span className="font-normal normal-case"> · {ctm.budgetTitle.kr}</span>}
       </h2>
@@ -84,9 +108,28 @@ export default async function CtmPage() {
                       sources={src(sourceIds([spending.total, ...spending.parts]))} />
       <BreakdownBlock title={ctm.investTitle.fr} year={year} total={invest[0]} parts={invest.slice(1, 3)} extra={invest.slice(3)}
                       sources={src(sourceIds(invest))} />
+      <AreaSpending year={year} lines={areasForYear(functional, year)} rows={functional}
+                    sources={src([...new Set(functional.map((f) => f.source_id)), "ctm:ofgl-fonctions-m57-libelles"])} />
       <SavingsDebt savings={savings} debt={debt} capacity={capacity} range={range} provisionalYear={provisional}
                    crcUrl={sources.get(CRC)?.url ?? null}
                    sources={src([...sourceIds(rows.filter((r) => r.entity_siren === CTM && ["epargne_brute", "encours_dette"].includes(r.metric_key)))])} />
+      <CompteAdministratif
+        years={caYears(caLines).map((y) => {
+          const first = caLines.find((l) => l.year === y)!;
+          return { year: y, rows: caComparison(caLines, idx, y), deliberation: first.deliberation,
+                   pdfUrl: sources.get(first.source_id)?.url ?? null,
+                   provisional: rows.some((r) => r.entity_siren === CTM && r.year === y && r.provisional) };
+        })}
+        sources={src([...new Set(caLines.map((l) => l.source_id)), "ctm:ofgl-base-regions-consolidee"])} />
+      {bpLast != null && (
+        <ForecastBudget year={bpLast} rows={forecastRows(forecast.docs, forecast.figures, bpLast)} bp={fdoc(bpLast, "BP")!}
+                        rob={fdoc(bpLast, "ROB")} amendments={amendments(bpLast)} sources={forecastSources([bpLast])} />
+      )}
+      {planned.length > 0 && (
+        <PlannedVsActual years={planned} missing={planned.some((p) => p.year === 2024) ? [ctm.missingDm1_2024.fr] : []}
+                         sources={[...forecastSources(planned.map((p) => p.year)),
+                                   ...src([...new Set(caLines.filter((l) => planned.some((p) => p.year === l.year)).map((l) => l.source_id))])]} />
+      )}
       <FiscaliteUltramarine rows={fumRows} labels={FUM.map((key) => ({ key, label: label(key) }))}
                             range={`${fumRows[0]?.year}-${fumRows.at(-1)?.year}`} sources={src(fumSources)} />
       <BeforeCtm tables={before} sources={src(beforeSources)} />

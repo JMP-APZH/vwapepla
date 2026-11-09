@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BudgetBreakdown, type BudgetYear } from "@/components/communes/BudgetBreakdown";
+import { ChannelsBlock } from "@/components/communes/ChannelsBlock";
 import { CouncilList } from "@/components/communes/CouncilList";
 import { Hero } from "@/components/communes/Hero";
 import { Caveat, CardHeader, CardShell, FactBlock, MissingInfo, OpinionBlock, RightOfReply } from "@/components/card/Card";
 import { Portrait } from "@/components/card/Portrait";
 import { SiteChecklist } from "@/components/communes/SiteChecklist";
 import { SiteVotes } from "@/components/communes/SiteVotes";
+import { CriteriaVotes } from "@/components/communes/CriteriaVotes";
 import { TermsChart, type ChartPoint } from "@/components/communes/TermsChart";
 import { TermsComparison } from "@/components/communes/TermsComparison";
 import {
@@ -16,11 +18,13 @@ import {
 import { dgfipStratum, nationalLine, type NationalLine } from "@/lib/communes/national";
 import {
   getCommuneActuals, getCommuneBySlug, getCommunes, getCommuneYears, getCouncil, getMayor, getMetrics, getPastMayors,
-  getAuditCriteria, getSiteAudit, getTerms, getVoteSummary, getYearActuals,
+  getAuditCriteria, getChannels, getCommuneVoteCriteria, getCriteriaVoteResults, getSiteAudit, getTerms, getVoteSummary,
+  getYearActuals,
 } from "@/lib/communes/data";
 import { getMedia, getSources } from "@/lib/core/data";
 import { OFFICIAL_SITES, SITES_SOURCE } from "@/lib/communes/sites";
 import { summarizeTerms } from "@/lib/communes/terms";
+import { channelStatus, PLATFORM_LABEL } from "@/lib/communes/channels";
 import { BLOCKS, blockLines, blockValues } from "@/lib/communes/breakdown";
 import { functionTitle, mayorsOfTerm, missingDeputyRanks } from "@/lib/communes/council";
 import { computeHero, heroKeys, heroValue } from "@/lib/communes/headline";
@@ -48,7 +52,11 @@ export default async function CommunePage({ params }: PageProps<"/communes/[slug
     getMedia(`commune-${commune.code}`), getTerms(), getPastMayors(commune.code), getCommuneActuals(commune.code), getMetrics(),
     getCommuneYears(),
   ]);
-  const [siteAudit, auditCriteria] = await Promise.all([getSiteAudit(commune.code), getAuditCriteria()]);
+  const [siteAudit, auditCriteria, channelData, voteCriteria] = await Promise.all([
+    getSiteAudit(commune.code), getAuditCriteria(), getChannels(commune.code), getCommuneVoteCriteria(),
+  ]);
+  const channels = channelData.observations;
+  const channelStat = channelStatus(channels, new Date(channelData.asOf));
   const portrait = media.find((m) => m.kind === "mayor_portrait");
   const councilPhoto = media.find((m) => m.kind === "council_photo");
   const summaries = summarizeTerms(terms, history);
@@ -130,6 +138,11 @@ export default async function CommunePage({ params }: PageProps<"/communes/[slug
       return gaps.length ? [`Comptes : aucune donnée publiée pour ${gaps.join(", ")}.`] : [];
     })(),
     ...(DATA_NOTES[commune.code] ?? []),
+    ...(channels.length === 0 ? [communes.channelsMissing.fr]
+      : (() => {
+        const todo = channelStat.filter((c) => c.kind === "not_observed").map((c) => PLATFORM_LABEL[c.platform]);
+        return todo.length ? [`Réseaux sociaux de la mairie : pas encore relevés sur ${todo.join(", ")}.`] : [];
+      })()),
   ];
 
   return (
@@ -160,6 +173,13 @@ export default async function CommunePage({ params }: PageProps<"/communes/[slug
       caveats={<Caveat>{communes.caveatEpci.fr}</Caveat>}
       rightOfReply={<RightOfReply text={communes.rightOfReplyText.fr} subject={`Droit de réponse — ${commune.name}`} />}
     >
+      {voteCriteria.length > 0 && (
+        <a href="#avis-commune"
+           className="flex min-h-11 items-center justify-between gap-3 rounded-xl border border-violet-200 bg-violet-50/60 px-4 py-2 text-sm text-violet-950">
+          <span>{communes.critShortcut.fr}</span>
+          <span aria-hidden className="text-lg">↓</span>
+        </a>
+      )}
       {OFFICIAL_SITES[commune.code] && (
         <a href="#site-mairie"
            className="flex min-h-11 items-center justify-between gap-3 rounded-xl border border-violet-200 bg-violet-50/60 px-4 py-2 text-sm text-violet-950">
@@ -231,6 +251,11 @@ export default async function CommunePage({ params }: PageProps<"/communes/[slug
         </p>
       </FactBlock>
 
+      {/* Opinion layer: visitors' views on the commune's action, per criterion (current term), apart from the facts. */}
+      {voteCriteria.length > 0 && <OpinionBlock>
+        <CommuneVotes code={commune.code} epciName={me?.epci_name ?? null} />
+      </OpinionBlock>}
+
       {/* Town-hall website: the fact (listed site, official directory) then the opinion layer, kept apart. */}
       <section id="site-mairie" className="scroll-mt-4 space-y-3">
         <h2 className="text-xl font-semibold tracking-tight">{communes.siteTitle.fr}</h2>
@@ -249,6 +274,7 @@ export default async function CommunePage({ params }: PageProps<"/communes/[slug
           consulté le {new Date(SITES_SOURCE.retrieved).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}.
         </p>
         <SiteChecklist audit={siteAudit} criteria={auditCriteria} />
+        {channels.length > 0 && <ChannelsBlock status={channelStat} />}
         {OFFICIAL_SITES[commune.code] && (
           <OpinionBlock>
             <Votes code={commune.code} />
@@ -261,4 +287,11 @@ export default async function CommunePage({ params }: PageProps<"/communes/[slug
 
 async function Votes({ code }: { code: string }) {
   return <SiteVotes code={code} summary={await getVoteSummary(code)} />;
+}
+
+async function CommuneVotes({ code, epciName }: { code: string; epciName: string | null }) {
+  const criteria = await getCommuneVoteCriteria();
+  if (!criteria.length) return null; // criteria not loaded yet
+  const results = await getCriteriaVoteResults(code, criteria.map((c) => c.key));
+  return <CriteriaVotes code={code} criteria={criteria} results={results} epciName={epciName} />;
 }

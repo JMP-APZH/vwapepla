@@ -1,0 +1,119 @@
+# Visitor votes on the commune's action, by criterion (B1 Step 5). The 12 criteria (wording and competence) were
+# VALIDATED BY JM AS PROPOSED on 7 Nov 2026, in writing. Design and decisions: docs/branches/B1-VOTES.md.
+# Build only after the CLAUDE.md amendment (shared PR #34) is merged. ref_status stays to_confirm until each
+# competence statement is checked against the law; any correction goes back to JM before going live.
+#
+# Question stem, identical for every criterion: « Comment évaluez-vous l'action de la commune sur … ? »
+# Never about a named person; never about the budget (CLAUDE.md principle 2).
+# competence: commune = the commune acts alone or mainly; partagee = shared, `others` lists who else (EPCI, CTM, État).
+# commune_role_fr: what the commune does on it, shown next to the question. ref_status: to_confirm until each
+# competence statement is checked against the CGCT / EPCI statutes (Légifrance, EPCI websites).
+
+scale:
+  levels:
+    1: Très insatisfaisante
+    2: Plutôt insatisfaisante
+    3: Ni satisfaisante ni insatisfaisante
+    4: Plutôt satisfaisante
+    5: Très satisfaisante
+  no_opinion: Je ne sais pas
+min_votes: 20
+label_fr: Avis des visiteurs, non représentatif
+
+criteria:
+  - key: accueil_demarches
+    label_fr: l'accueil en mairie et les démarches (état civil, horaires, délais)
+    competence: commune
+    others: []
+    commune_role_fr: La mairie tient l'état civil et accueille les habitants pour leurs démarches (le maire agit ici comme agent de l'État).
+    ref_status: to_confirm
+
+  - key: ecoles
+    label_fr: les écoles maternelles et élémentaires (bâtiments, cantine, temps périscolaire)
+    competence: partagee
+    others: [État]
+    commune_role_fr: La commune construit et entretient les écoles, gère la cantine et le périscolaire ; l'État nomme et paie les enseignants.
+    ref_status: to_confirm
+
+  - key: petite_enfance
+    label_fr: l'accueil de la petite enfance (crèches, relais petite enfance)
+    competence: commune
+    others: []
+    commune_role_fr: La commune crée ou soutient les crèches et le relais petite enfance (avec le soutien de la CAF).
+    ref_status: to_confirm
+
+  - key: action_sociale
+    label_fr: l'action sociale (CCAS, aide aux personnes âgées et aux familles)
+    competence: partagee
+    others: [CTM]
+    commune_role_fr: Le CCAS de la commune aide les habitants en difficulté ; la CTM verse le RSA et l'APA.
+    ref_status: to_confirm
+
+  - key: proprete_voirie
+    label_fr: la propreté et l'entretien des rues communales
+    competence: partagee
+    others: [EPCI]
+    commune_role_fr: La commune entretient et nettoie la voirie communale ; la collecte des déchets relève de l'intercommunalité.
+    ref_status: to_confirm
+
+  - key: tranquillite
+    label_fr: l'éclairage public et la tranquillité publique
+    competence: partagee
+    others: [État]
+    commune_role_fr: Le maire exerce la police municipale et la commune gère l'éclairage public ; police et gendarmerie relèvent de l'État.
+    ref_status: to_confirm
+
+  - key: sport_associations
+    label_fr: les équipements sportifs et le soutien aux associations
+    competence: commune
+    others: []
+    commune_role_fr: La commune gère les stades et salles, et subventionne les associations.
+    ref_status: to_confirm
+
+  - key: culture_patrimoine
+    label_fr: la culture et le patrimoine (médiathèque, fêtes, patrimoine local)
+    competence: partagee
+    others: [CTM]
+    commune_role_fr: La commune gère médiathèque, salles et fêtes communales ; la CTM soutient aussi la culture et le patrimoine.
+    ref_status: to_confirm
+
+  - key: urbanisme_logement
+    label_fr: l'urbanisme et le logement (plan local d'urbanisme, permis de construire)
+    competence: partagee
+    others: [EPCI, État]
+    commune_role_fr: La commune élabore son plan local d'urbanisme et le maire délivre les permis de construire ; l'intercommunalité et l'État interviennent sur l'habitat.
+    ref_status: to_confirm
+
+  - key: prevention_risques
+    label_fr: la prévention des risques (cyclones, séismes, inondations) et l'information des habitants sur ces risques
+    competence: partagee
+    others: [État]
+    commune_role_fr: Le maire établit le plan communal de sauvegarde et informe les habitants ; l'État fixe les plans de prévention des risques.
+    ref_status: to_confirm
+
+  - key: information_habitants
+    label_fr: l'information des habitants (site, réseaux sociaux, bulletin municipal, affichage)
+    competence: commune
+    others: []
+    commune_role_fr: La commune informe les habitants de ses décisions et de ses services.
+    ref_status: to_confirm
+
+  - key: ecoute_participation
+    label_fr: l'écoute et la participation des habitants (réunions de quartier, consultations)
+    competence: commune
+    others: []
+    commune_role_fr: La commune peut organiser des réunions publiques, des conseils de quartier et des consultations.
+    ref_status: to_confirm
+
+# Not asked (the commune has no or little say; the block names who is in charge instead):
+not_asked:
+  - topic: Eau potable et assainissement
+    in_charge: EPCI
+  - topic: Collecte et traitement des déchets
+    in_charge: EPCI
+  - topic: Transports en commun
+    in_charge: CTM (Martinique Transport)
+  - topic: Collèges et lycées
+    in_charge: CTM
+  - topic: Gestion de l'argent public de la commune
+    in_charge: "— (non posé : pas de note du budget d'un maire, principe 2)"

@@ -18,6 +18,7 @@ TABLES = {
     "com_audit_criteria": "key",
     "com_site_audits": "id",
     "com_site_audit_items": "audit_id,criterion_key",
+    "com_channel_observations": "id",
     "com_commune_years": "commune_code,year",
     "com_metric_definitions": "key",
     "com_actuals": "commune_code,year,metric_key",
@@ -25,4 +26,6 @@ TABLES = {
     "com_entity_actuals": "siren,year,agregat",
     "com_forecast_documents": "id",
     "com_forecast_figures": "document_id,metric_key",
+    "com_vote_criteria": "key",
+    "com_vote_closures": "id",
 }

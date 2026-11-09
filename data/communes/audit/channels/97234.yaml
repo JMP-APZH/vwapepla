@@ -1,0 +1,43 @@
+# Réseaux sociaux de la mairie — BROUILLON pré-rempli le 2026-11-02 à partir des liens publiés
+# sur le site officiel (https://www.ville-bellefontaine.fr/). À compléter par un observateur (guide : docs/branches/B1-CHANNELS-GUIDE.md),
+# puis relu par JM. Rien n'est publié avant observed_on + reviewed_by.
+commune: '97234'
+observations:
+- platform: facebook
+  account_url: https://www.facebook.com/bellefontaine972
+  account_name: null
+  official: 'yes'
+  official_basis: linked_from_site
+  official_evidence_url: https://www.ville-bellefontaine.fr/
+  link_seen_on: '2026-11-02'
+  last_post_date: null
+  posts_last_90_days: null
+  council_meetings_streamed: null
+  council_stream_evidence_url: null
+  followers: null
+  followers_display: null
+  screenshot: null
+  screenshot_sha256: null
+  observer: null
+  observed_on: null
+  reviewed_by: null
+  note: null
+- platform: instagram
+  account_url: https://www.instagram.com/bellefontaine_972
+  account_name: null
+  official: 'yes'
+  official_basis: linked_from_site
+  official_evidence_url: https://www.ville-bellefontaine.fr/
+  link_seen_on: '2026-11-02'
+  last_post_date: null
+  posts_last_90_days: null
+  council_meetings_streamed: null
+  council_stream_evidence_url: null
+  followers: null
+  followers_display: null
+  screenshot: null
+  screenshot_sha256: null
+  observer: null
+  observed_on: null
+  reviewed_by: null
+  note: null

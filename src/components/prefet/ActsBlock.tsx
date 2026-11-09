@@ -15,7 +15,7 @@ export function ActsBlock({ counts, latest, sources }: { counts: ActCount[]; lat
         <table className="w-full min-w-[40rem] text-sm">
           <thead>
             <tr className="border-b border-slate-200 text-left text-xs text-slate-500">
-              <th className="py-1 pr-2 font-medium">Année</th>
+              <th className="py-1 pr-2 font-medium">{prefet.actsYear.fr}</th>
               {shown.map((th) => <th key={th.key} className="py-1 pr-2 text-right font-medium">{th.label}</th>)}
               <th className="py-1 text-right font-medium">{prefet.actsTotal.fr}</th>
             </tr>
