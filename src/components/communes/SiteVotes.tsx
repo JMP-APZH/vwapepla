@@ -3,33 +3,54 @@
 import { useActionState } from "react";
 import { Turnstile } from "@/components/card/Turnstile";
 import { castSiteVote, type VoteState } from "@/app/communes/[slug]/actions";
-import { MIN_VOTES, QUESTIONS, type VoteSummary } from "@/lib/communes/vote-questions";
+import { LEVELS, QUESTIONS, type SiteDistribution, type SiteVoteResults } from "@/lib/communes/vote-questions";
 import { communes } from "@/i18n";
 
-const avg = new Intl.NumberFormat("fr-FR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const pct = new Intl.NumberFormat("fr-FR", { style: "percent", maximumFractionDigits: 0 });
+const levelLabel = (l: number) => (l === 1 ? communes.votesLevel1.fr : l === 5 ? communes.votesLevel5.fr : String(l));
+
+function Distribution({ d }: { d: SiteDistribution }) {
+  if (!d.counts) {
+    return <p className="text-xs text-slate-500">{d.total} {communes.votesCount.fr} — {communes.votesNotEnough.fr}</p>;
+  }
+  return (
+    <ul className="mt-1 space-y-1 text-xs" aria-label={communes.votesDistribution.fr}>
+      {LEVELS.map((l) => (
+        <li key={l} className="grid grid-cols-[minmax(0,7rem)_1fr_auto] items-center gap-2">
+          <span className="truncate text-slate-700">{levelLabel(l)}</span>
+          <div className="h-2.5 rounded bg-violet-100">
+            <div className="h-2.5 rounded bg-violet-700" style={{ width: `${(d.counts![l] / d.total) * 100}%` }} />
+          </div>
+          <span className="tabular-nums text-slate-600">{d.counts![l]} · {pct.format(d.counts![l] / d.total)}</span>
+        </li>
+      ))}
+      <li className="text-slate-500">{d.total} {communes.votesCount.fr}</li>
+    </ul>
+  );
+}
 
 /** Opinion layer, kept apart from the facts: visitor ratings of the town hall's website (shown from 20 votes). */
-export function SiteVotes({ code, summary }: { code: string; summary: VoteSummary[] }) {
+export function SiteVotes({ code, summary }: { code: string; summary: SiteVoteResults }) {
   const [state, action, pending] = useActionState<VoteState, FormData>(castSiteVote, { status: null });
   const done = state.status === "ok" || state.status === "already_voted";
   return (
     <section className="rounded-xl border border-violet-200 bg-violet-50/60 p-4" aria-labelledby="votes-title">
       <h3 id="votes-title" className="font-semibold text-violet-950">{communes.votesTitle.fr}</h3>
 
-      <dl className="mt-2 space-y-1.5 text-sm">
-        {summary.map((s) => (
-          <div key={s.question} className="flex items-baseline justify-between gap-3">
-            <dt className="min-w-0 text-slate-700">{communes[`q_${s.question}`].fr}</dt>
-            <dd className="shrink-0 tabular-nums text-slate-900">
-              {s.votes >= MIN_VOTES && s.average != null
-                ? <><span className="font-semibold">{avg.format(s.average)}</span> / 5 <span className="text-xs text-slate-500">({s.votes} avis)</span></>
-                : <span className="text-xs text-slate-500">{communes.votesNotEnough.fr} ({s.votes} / {MIN_VOTES})</span>}
-            </dd>
-          </div>
-        ))}
-      </dl>
+      {summary.closed ? (
+        <p role="status" className="mt-2 rounded-lg bg-amber-50 p-2 text-sm text-amber-900">{communes.votesClosed.fr}</p>
+      ) : (
+        <div className="mt-2 space-y-3 text-sm">
+          {summary.results.map((d) => (
+            <div key={d.question}>
+              <p className="text-slate-800">{communes[`q_${d.question}`].fr}</p>
+              <Distribution d={d} />
+            </div>
+          ))}
+        </div>
+      )}
 
-      {done ? (
+      {summary.closed ? null : done ? (
         <p role="status" className="mt-3 text-sm text-violet-900">{communes[`votes_${state.status!}`].fr}</p>
       ) : (
         <form action={action} className="mt-4 space-y-3 border-t border-violet-200 pt-3">

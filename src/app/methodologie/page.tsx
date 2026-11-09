@@ -53,6 +53,11 @@ export default async function Methodologie() {
             mêmes montants que la DGFiP, l&apos;écart avec l&apos;OFGL venant de montants comptés bruts par le compte administratif.
           </li>
           <li>
+            Prévisionnel : les budgets primitifs votés par l&apos;Assemblée (2024-2026, budget principal) sont lus page par page
+            et affichés à part, marqués « Prévisionnel », à côté du compte administratif (réalisé) mais jamais sur la même
+            série ; les budgets supplémentaires, décisions modificatives et rapports d&apos;orientations budgétaires sont liés.
+          </li>
+          <li>
             « Fiscalité spécifique ultramarine » = compte 734 de la nomenclature M57 (ce que la Chambre régionale des comptes
             appelle « produits liés à l&apos;octroi de mer »). « Octroi de mer » désigne uniquement l&apos;octroi de mer régional
             (compte 73432). Pour 2016-2017, avant la renumérotation de la nomenclature M57 en 2018, chaque ligne est rattachée
