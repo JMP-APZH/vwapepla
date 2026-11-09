@@ -4,6 +4,7 @@ import { supabase } from "@/lib/core/supabase";
 import type { Act } from "./acts";
 import type { Actual, MetricDef } from "./budget";
 import type { CaLine } from "./ca";
+import { AMENDMENTS, type ForecastDoc, type ForecastFigure } from "./forecast";
 import type { FunctionalRow } from "./functions";
 import type { ElectoralList, ListMember, MandateRow, SectionRow } from "./people";
 
@@ -112,4 +113,23 @@ export async function getCaLines(): Promise<CaLine[]> {
     await supabase.from("ctm_ca_lines").select("year,budget,line_key,label,amount,page,deliberation,source_id").order("year").limit(PAGE),
     "ctm_ca_lines",
   ) as CaLine[];
+}
+
+/** Forecast layer: budgets primitifs and orientation reports (documents), BP lines (figures), and the Assemblée's acts that
+ *  amend each BP during the year (budget supplémentaire, decisions modificatives), for their links. */
+export async function getForecast(): Promise<{ docs: ForecastDoc[]; figures: ForecastFigure[]; amendments: Act[] }> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("data");
+  const ids = Object.values(AMENDMENTS).flat().map((n) => `assemblee:${n}`);
+  const [docs, figures, amendments] = await Promise.all([
+    supabase.from("ctm_forecast_documents").select("id,fiscal_year,doc_type,deliberation,title,source_id").order("id"),
+    supabase.from("ctm_forecast_figures").select("document_id,line_key,label,amount,page,quote").order("document_id"),
+    supabase.from("ctm_acts").select("id,body,number,year,title,page_url,source_id").in("id", ids).order("id"),
+  ]);
+  return {
+    docs: check(docs, "ctm_forecast_documents") as ForecastDoc[],
+    figures: check(figures, "ctm_forecast_figures") as ForecastFigure[],
+    amendments: check(amendments, "ctm_acts") as Act[],
+  };
 }
