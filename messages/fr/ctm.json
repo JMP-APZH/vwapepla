@@ -123,5 +123,20 @@
   "caNoteGross": "Le compte administratif compte les montants bruts ; l'OFGL déduit les remboursements reçus sur des comptes de dépenses et les reversements sur des comptes de recettes. L'écart est le même en dépenses et en recettes, l'épargne brute est donc identique. Ces montants bruts correspondent exactement aux comptes de la DGFiP.",
   "caNote1068": "En 2022 et 2023, le chapitre 923 du compte administratif inclut aussi l'excédent des années précédentes affecté à l'investissement (compte 1068) ; il est présenté à part à partir de 2024.",
   "caNoteProvisional": "{year} : les chiffres de l'OFGL sont provisoires (balances définitives de la DGFiP attendues en fin d'année) ; le compte administratif voté fait foi en attendant.",
-  "caNoteLink": "Chaque montant renvoie à la page du compte administratif publié par la CTM."
+  "caNoteLink": "Chaque montant renvoie à la page du compte administratif publié par la CTM.",
+  "forecastBadge": "Prévisionnel",
+  "forecastTitle": "Budget prévisionnel {year} voté par l'Assemblée",
+  "forecastIntro": "Le budget primitif est la prévision votée par l'Assemblée de Martinique en début d'exercice (budget principal). Ce sont des montants prévus, pas des dépenses ou recettes réalisées.",
+  "forecastColAmount": "Prévu au budget primitif",
+  "forecastAmended": "Le budget primitif est modifié en cours d'année par le budget supplémentaire et les décisions modificatives votés par l'Assemblée :",
+  "forecastOrientation": "Débat d'orientation budgétaire préalable : rapport d'orientations budgétaires {year} (délibération n° {n}).",
+  "forecastNoteLink": "Chaque montant renvoie à la page du budget primitif publié par la CTM (pages « Équilibre financier du budget », opérations réelles). L'épargne brute prévue est calculée : recettes moins dépenses réelles de fonctionnement prévues.",
+  "plannedTitle": "Prévu et réalisé",
+  "plannedIntro": "Pour chaque année, le budget primitif voté (prévu) et le compte administratif voté (réalisé), côte à côte. Les deux documents sont ceux de l'Assemblée, budget principal.",
+  "plannedColPlanned": "Prévu (budget primitif)",
+  "plannedColActual": "Réalisé (compte administratif)",
+  "plannedColDiff": "Écart réalisé − prévu",
+  "plannedCaveat": "Le budget primitif est modifié en cours d'année (budget supplémentaire, décisions modificatives) ; un écart entre le prévu et le réalisé n'est donc pas une erreur en soi. Les décisions modificatives de chaque année sont liées sous le tableau.",
+  "plannedAmendments": "Budget modifié en {year} par :",
+  "missingDm1_2024": "La décision modificative n° 1 de 2024 (budget principal) n'a pas été trouvée dans l'index des actes de la CTM."
 }
