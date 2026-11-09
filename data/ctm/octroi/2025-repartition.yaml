@@ -1,0 +1,47 @@
+# Délibération n° 25-198-2 du 25 juillet 2025 (Assemblée de Martinique), scanned PDF without text layer:
+# transcribed from the page image, to spot-check against the PDF (job ctm-octroi-repartition-2025).
+source: ctm-octroi-repartition-2025
+deliberation: 25-198-2
+figures:
+  - key: part_population
+    label: Part du produit répartie entre les communes au prorata de leur population
+    value: 85
+    unit: "%"
+    page: 2
+    quote: "85% entre les communes au prorata de leur population"
+  - key: part_egale
+    label: Part du produit répartie à parts égales entre toutes les communes
+    value: 10
+    unit: "%"
+    page: 2
+    quote: "10% à parts égales entre toutes les communes"
+  - key: part_potentiel_fiscal
+    label: Part du produit réservée aux communes dont le potentiel fiscal par habitant est inférieur à la moyenne régionale
+    value: 5
+    unit: "%"
+    page: 2
+    quote: "5% aux communes dont le potentiel fiscal par habitant est inférieur au potentiel fiscal moyen régional de l'exercice précédent"
+  - key: entree_en_vigueur
+    label: Année d'entrée en vigueur des nouveaux critères
+    value: 2026
+    unit: année
+    page: 2
+    quote: "Ce dispositif entrera en vigueur le 1er janvier 2026"
+  - key: votes_pour
+    label: Voix pour
+    value: 41
+    unit: voix
+    page: 2
+    quote: "à la majorité des suffrages exprimés, avec 41 voix pour, 2 voix contre et 2 abstentions"
+  - key: votes_contre
+    label: Voix contre
+    value: 2
+    unit: voix
+    page: 2
+    quote: "à la majorité des suffrages exprimés, avec 41 voix pour, 2 voix contre et 2 abstentions"
+  - key: abstentions
+    label: Abstentions
+    value: 2
+    unit: voix
+    page: 2
+    quote: "à la majorité des suffrages exprimés, avec 41 voix pour, 2 voix contre et 2 abstentions"

@@ -24,4 +24,6 @@ TABLES = {
     "ctm_ca_lines": "year,budget,line_key",  # migration <ts>_ctm_ca_lines.sql
     "ctm_forecast_documents": "id",  # migration <ts>_ctm_forecast.sql
     "ctm_forecast_figures": "document_id,line_key",
+    "ctm_octroi_acts": "act_id",  # migration <ts>_ctm_octroi.sql
+    "ctm_octroi_figures": "deliberation,line_key",
 }

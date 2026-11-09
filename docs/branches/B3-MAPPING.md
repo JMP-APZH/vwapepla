@@ -153,3 +153,25 @@ from 2024 it is shown on its own line.
   spending (2026: +€0.4M, within tolerance).
 - Planned vs realised is shown side by side on the card (BP vs CA), never as one series. The BP is amended during the
   year by the budget supplémentaire and the decisions modificatives, so a gap is not an error in itself.
+
+## I. Octroi de mer: the CTM and the communes (sprint 6, 9 Nov 2026)
+Mechanism (loi n° 2004-639 du 2 juillet 2004, art. 47–48): customs collect the octroi de mer; the Assemblée de Martinique
+votes the rates, the exemptions and the split between the communes; the communes receive a guaranteed share (dotation
+globale garantie), the remainder goes to the regional development and employment fund (FRDE); the CTM keeps its own
+octroi de mer régional.
+
+| Figure on `/ctm/octroi-de-mer` | Source | 2024 |
+|---|---|---|
+| Octroi de mer received by the 34 communes | `com_actuals.octroi_de_mer` (team B1: DGFiP M14 7373 / M57 73431, all budgets), read-only | €253.5M |
+| Octroi de mer régional of the CTM | `ctm_actuals.fum_octroi_de_mer` (73432, §B) | €92.9M |
+| Split rule between communes, from 1 Jan 2026: 85 % population, 10 % equal shares, 5 % communes below the regional average fiscal potential per inhabitant | délib. 25-198-2, p. 2 (scan, transcribed in `data/ctm/octroi/2025-repartition.yaml`) | — |
+| Normal rate of the octroi de mer régional raised from 2.5 % to 3 % | délib. 24-300-2, p. 2 (scan, `data/ctm/octroi/2024-perequation.yaml`) | — |
+
+- The two amounts are shown side by side, never summed (the FRDE and the customs' collection costs are not in either).
+- Acts: the Assemblée's acts whose title mentions the octroi de mer (31, 2023–2026), classified by rules on the title
+  (`scripts/ctm/pipeline/octroi.py`); « autre » when the title does not say what the act decides.
+- Checks: O1 communes' 2023 total = AFD €244.0M, 34 communes every year; O2 the three shares of 25-198-2 sum to 100 %;
+  O3 every classified act is in `ctm_acts`.
+- Missing: FRDE amounts (no FRDE account in the CTM's DGFiP balances 2019–2025); octroi de mer collected by customs
+  (no recent open data); guaranteed share per commune (25-198-2 states the rule, not the amounts); acts before 2023.
+- Rate tables (26-148-1, 992 pages, one line per customs code): linked only.
