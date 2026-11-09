@@ -3,6 +3,7 @@ import { check } from "@/lib/core/data";
 import { supabase } from "@/lib/core/supabase";
 import type { Amendment, DataGap, Question, Scrutin, Vote } from "./activity";
 import type { Declaration, InterestItem } from "./interests";
+import { otherOffices, type LinkRow, type OtherOffice } from "./links";
 import { AN_BODY, SEN_BODY, toMembers, toPeople, type MandateDetail, type MandateRow, type Member, type Membership, type Person, type Term } from "./members";
 
 // Parlement domain (B2): typed, cached reads of the core mandates (two bodies) and the parl_* tables. Data is rebuilt
@@ -173,4 +174,19 @@ export async function getToday(): Promise<string> {
   cacheLife("days");
   cacheTag("data");
   return new Date().toISOString().slice(0, 10);
+}
+
+/** Offices of the same person in other domains (core person_links, reviewed by JM), with the link to their card. */
+export async function getOtherOffices(personId: string): Promise<OtherOffice[]> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("data");
+  const [rows, communes] = await Promise.all([
+    supabase.from("person_links").select("same_as,evidence_url,evidence_label,verified_by,verified_at,"
+      + "other:persons!person_links_same_as_fkey(mandates(start_date,end_date,source_id,seats(label_fr,body_id,bodies(name,institution_id,institutions(name)))))")
+      .eq("person_id", personId).order("same_as"),
+    supabase.from("com_communes").select("code,slug"),
+  ]);
+  const slugs = new Map((check(communes, "com_communes") as { code: string; slug: string }[]).map((c) => [c.code, c.slug]));
+  return otherOffices(check(rows, "person_links") as unknown as LinkRow[], slugs);
 }

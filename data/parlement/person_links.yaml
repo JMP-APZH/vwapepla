@@ -1,0 +1,69 @@
+# Same person in another domain (core table person_links, migration 20261109180000_core_person_links.sql).
+# Candidates listed by scripts/parlement/links.py (same name and sex), each confirmed by JM on 9 Nov 2026.
+# evidence_url: the page showing the other office (Sénat list of local offices for senators; Répertoire national des
+# élus for mayors and councillors). Built into data/build/parlement/person_links.json by build.py.
+verified_by: JM
+verified_at: 2026-11-09
+links:
+  # Senators: the Sénat itself lists the local office (data.senat.fr, mandats locaux)
+  - person_id: "parl-sen:11109J"
+    same_as: "com-97210:ANTISTE:Maurice"
+    evidence_url: https://www.senat.fr/senateur/antiste_maurice11109j.html
+    evidence_label: "Sénat, mandats locaux : maire du François"
+  - person_id: "parl-sen:21096Q"
+    same_as: "com-97230:BUVAL:Frédéric"
+    evidence_url: https://www.senat.fr/senateur/buval_frederic21096q.html
+    evidence_label: "Sénat, mandats locaux : maire de La Trinité"
+  - person_id: "parl-sen:19295A"
+    same_as: "ctm:CONCONNE:Catherine"
+    evidence_url: https://www.senat.fr/senateur/conconne_catherine19295a.html
+    evidence_label: "Sénat, mandats locaux : conseillère de l'Assemblée de Martinique"
+  # Deputies: the AN data does not list local offices; the other office comes from the Répertoire national des élus
+  - person_id: "parl-an:PA610634"
+    same_as: "com-97228:AZEROT:Bruno Nestor"
+    evidence_url: https://www.data.gouv.fr/datasets/repertoire-national-des-elus-1/
+    evidence_label: "Répertoire national des élus : maire de Sainte-Marie"
+  - person_id: "parl-an:PA610634"
+    same_as: "ctm:AZEROT:Bruno Nestor"
+    evidence_url: https://www.data.gouv.fr/datasets/repertoire-national-des-elus-1/
+    evidence_label: "Répertoire national des élus : conseiller à l'Assemblée de Martinique"
+  - person_id: "parl-an:PA842211"
+    same_as: "com-97209:BELLAY:Beatrice"
+    evidence_url: https://www.data.gouv.fr/datasets/repertoire-national-des-elus-1/
+    evidence_label: "Répertoire national des élus : conseillère municipale de Fort-de-France"
+  - person_id: "parl-an:PA795828"
+    same_as: "ctm:HAJJAR:Johnny"
+    evidence_url: https://www.data.gouv.fr/datasets/repertoire-national-des-elus-1/
+    evidence_label: "Répertoire national des élus : conseiller à l'Assemblée de Martinique (2015-2021)"
+  - person_id: "parl-an:PA337483"
+    same_as: "com-97209:LETCHIMY:Serge"
+    evidence_url: https://www.data.gouv.fr/datasets/repertoire-national-des-elus-1/
+    evidence_label: "Répertoire national des élus : maire de Fort-de-France (2008-2010)"
+  - person_id: "parl-an:PA337483"
+    same_as: "ctm:LETCHIMY:Serge"
+    evidence_url: https://www.data.gouv.fr/datasets/repertoire-national-des-elus-1/
+    evidence_label: "Répertoire national des élus : président du Conseil exécutif de Martinique"
+  - person_id: "parl-an:PA720988"
+    same_as: "ctm:MANIN:Josette"
+    evidence_url: https://www.data.gouv.fr/datasets/repertoire-national-des-elus-1/
+    evidence_label: "Répertoire national des élus : conseillère à l'Assemblée de Martinique"
+  - person_id: "parl-an:PA2075"
+    same_as: "ctm:MARIE-JEANNE:Alfred"
+    evidence_url: https://www.data.gouv.fr/datasets/repertoire-national-des-elus-1/
+    evidence_label: "Répertoire national des élus : conseiller à l'Assemblée de Martinique (2015-2021)"
+  - person_id: "parl-an:PA795820"
+    same_as: "com-97219:NADEAU:Marcellin"
+    evidence_url: https://www.data.gouv.fr/datasets/repertoire-national-des-elus-1/
+    evidence_label: "Répertoire national des élus : maire du Prêcheur (2008-2022)"
+  - person_id: "parl-an:PA795820"
+    same_as: "ctm:NADEAU:Marcellin"
+    evidence_url: https://www.data.gouv.fr/datasets/repertoire-national-des-elus-1/
+    evidence_label: "Répertoire national des élus : conseiller à l'Assemblée de Martinique"
+  - person_id: "parl-an:PA610654"
+    same_as: "ctm:NILOR:Jean-Philippe"
+    evidence_url: https://www.data.gouv.fr/datasets/repertoire-national-des-elus-1/
+    evidence_label: "Répertoire national des élus : conseiller à l'Assemblée de Martinique"
+  - person_id: "parl-an:PA720992"
+    same_as: "com-97222:WILLIAM:Jiovanny"
+    evidence_url: https://www.data.gouv.fr/datasets/repertoire-national-des-elus-1/
+    evidence_label: "Répertoire national des élus : conseiller municipal du Robert"
