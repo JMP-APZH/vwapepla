@@ -26,3 +26,12 @@ Rules (ownership, shared files, rebase, ports): CLAUDE.md, "Parallel work". Scop
 2. Migration `20261103160000_core_drop_compat_views.sql`, applied after that release: drops the views with the old names
    (`communes`, `actuals`, `officeholders`…), the old RPC names (`cast_site_vote`, `site_vote_summary`) and
    `media.commune_code` (`institution_id` becomes NOT NULL). No CASCADE: it fails safely if anything still depends on them.
+
+## Same person in several domains: `person_links` (core)
+Person ids are built per domain, so a senator who was a mayor exists twice (`parl-sen:21096Q`,
+`com-97230:BUVAL:Frédéric`). `person_links` (migration `20261109180000_core_person_links.sql`, decided by JM on
+5 Nov 2026, B2-DISCOVERY Q1) records that two ids are the same human. Each link is a **reviewed fact**: an official page
+showing both offices (`evidence_url`, `evidence_label`), who checked it and when. It is never inferred from a name,
+because namesakes exist. One row per pair, whichever side writes it. A domain loads only the links whose `person_id` is one
+of its own people (`scripts/<domain>/tables.py`, checked by `scripts/core/load_supabase.py`). Whether and how a card
+shows the link (e.g. « Autres mandats présentés sur Vwapepla ») is each team's choice.

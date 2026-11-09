@@ -3,6 +3,8 @@
 The tables of a domain, in load order, are listed in scripts/<domain>/tables.py (TABLES = {table: conflict target}).
 A domain may load core tables (no prefix) and its own prefixed tables only (communes: com_, parlement: parl_, ctm: ctm_,
 prefet: pref_).
+person_links: a domain writes only the links whose person_id is one of its own people (reviewed facts, see
+the migration *_core_person_links.sql).
 
 Needs in .env.local (never committed): SUPABASE_URL, SUPABASE_SECRET_KEY (Dashboard > Project Settings > API Keys > Secret).
 Run: python -I scripts/core/load_supabase.py --domain communes [table ...]
@@ -11,7 +13,7 @@ import importlib.util, json, pathlib, sys, urllib.error, urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 PREFIX = {"communes": "com_", "parlement": "parl_", "ctm": "ctm_", "prefet": "pref_"}
-CORE = {"sources", "institutions", "bodies", "seats", "persons", "mandates", "terms", "media"}
+CORE = {"sources", "institutions", "bodies", "seats", "persons", "mandates", "terms", "media", "person_links"}
 BATCH = 1000
 
 
