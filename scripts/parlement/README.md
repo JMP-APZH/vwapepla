@@ -14,6 +14,9 @@ python -I scripts/parlement/weekly.py [--dry-run]                             # 
 - `weekly.py`: current-term jobs every run; closed-legislature archives only when missing from the manifest; amendments
   last; then build (its checks stop the run), load, prune. Exit 1 if a current-term download failed (previous file used);
   a missing archive is only reported (stated data gap).
+- `links.py`: candidate `person_links` (same name and sex as a person of another domain), printed with the evidence to
+  check (Sénat list of local offices, official page). Writes nothing; links JM validates go to
+  `data/parlement/person_links.yaml`.
 - `prune.py`: the loader only upserts, so rows that disappear from the build (e.g. a renamed data gap) stay online.
   Deletes them from the `parl_*` tables only, children first; stops without deleting anything if a table would lose
   more than 5 % of its rows (10 rows always allowed).
