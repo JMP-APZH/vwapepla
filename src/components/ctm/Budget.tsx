@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { Caveat, FactBlock } from "@/components/card/Card";
 import type { Source } from "@/lib/core/data";
@@ -102,6 +103,7 @@ export function FiscaliteUltramarine({ rows, labels, range, sources }: {
     <FactBlock title={<>{ctm.fumTitle.fr} {range}</>} sources={sources} year={range}>
       <p className="mt-1 text-sm text-slate-600">{ctm.fumIntro.fr}</p>
       <p className="mt-1 text-xs text-slate-500">{ctm.fumMissing2016.fr}</p>
+      <p className="mt-1 text-sm"><Link href="/ctm/octroi-de-mer" className="underline">{ctm.octroiTile.fr} →</Link></p>
       <div className="mt-2 overflow-x-auto">
         <table className="w-full min-w-[36rem] text-sm">
           <thead>
