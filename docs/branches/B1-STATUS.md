@@ -47,9 +47,11 @@ Legend: ✅ live in production · 🟡 built, waiting for data or review · ❌ 
    were fixed: the widget loads; JM's vote on deployment `dpl_HkcETtt6…` got « n'a pas pu être enregistré » because that
    build had no secret (Vercel request log: no call to Cloudflare). To repeat on a build made after the secret was set.
    The automated browser gets no Turnstile token (bot detection), so JM casts the test vote himself.
-3. `com_site_vote_summary` still exists; `main` no longer calls it → drop by an additive migration (planned).
-4. Two local migration files have a different timestamp from the applied version: `20261103120000_core_people_and_com_prefix`
-   (applied 20261103093422) and `20261105130000_com_channels` (applied 20261105114152). No effect on the database.
+3. `com_site_vote_summary` still exists; `main` and `dev` no longer call it. Migration
+   `20261110120000_com_drop_site_vote_summary.sql` written as a draft, **NOT applied**: waits for JM's go.
+4. Migration file names: `com_channels` renamed to its applied version (20261105114152). Several files of other teams and
+   `core_` files also differ from their applied versions (e.g. `20261103120000_core_people_and_com_prefix`, applied
+   20261103093422). This has no effect on the database; it is left to the coordinator.
 5. AFD 2021 debt-2019 gap (+3.4%), WARN in `reconcile_afd.py`, not explained on the Méthodologie page.
 6. No legal review (JM, 10 Nov): closure dates come from the decree convening the voters of each election; the
    competence statements are checked against the CGCT and the EPCI statutes by the team.
