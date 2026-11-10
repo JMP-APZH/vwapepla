@@ -306,12 +306,13 @@ List page `/parlementaires`: 4 deputies by circonscription + 2 senators, alphabe
 3. **`person_links`** core table (Q1 = A, decided) — core migration, separate PR to `dev`.
 4. **Weekly rebuild** (Q10): scheduled workflow in `.github/**`, separate PR to `dev`.
 5. `bodies.kind` / `terms.body_kind` values `legislature`, `senat`: free text today, no change needed; document them.
-7. **`SourceNote` wording** (`src/components/card/SourceNote.tsx`): it always prints « exercice(s) {year} », a budget
+7. ~~**`SourceNote` wording**~~ **done: PR #88, merged 10 Nov 2026** (`periodLabel`; B2 passes `""`). (`src/components/card/SourceNote.tsx`): it always prints « exercice(s) {year} », a budget
    term; parliament blocks pass « XVIIe législature » or « mandat en cours ». Proposal: an optional `periodLabel` prop
    (default « exercice »). Same issue for the préfet card (« exercices JORF »).
-8. **`terms` for legislatures** (core): `first_full_year` / `last_full_year` are required and mean budget years; B2
+8. ~~**`terms` for legislatures** (core)~~ **dropped (JM, 10 Nov 2026)**: the legislature is already in the seat ids and
+   `parl_mandate_details`; no core migration.: `first_full_year` / `last_full_year` are required and mean budget years; B2
    leaves `mandates.term_id` empty rather than invent values. Proposal: make them nullable, or a separate period table.
-9. **Méthodologie link** (`src/app/methodologie/`): a link to `/parlementaires/methode` (rule V1 published there).
+9. ~~**Méthodologie link**~~ **done: PR #87, merged 10 Nov 2026**. (`src/app/methodologie/`): a link to `/parlementaires/methode` (rule V1 published there).
 6. `messages/*/common.json`: nothing needed now (nav label "Parlementaires" already exists).
 
 ---
