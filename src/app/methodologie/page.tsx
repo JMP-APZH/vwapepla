@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getSources } from "@/lib/core/data";
 import { PROVISIONAL_YEARS, REFERENCE_YEAR } from "@/lib/communes/config";
+import { CONTACT_EMAIL } from "@/lib/core/config";
 import { date } from "@/lib/core/format";
 import { common, communes } from "@/i18n";
 
@@ -73,6 +74,39 @@ export default async function Methodologie() {
             publiée ; pour 2021, elle est déduite des candidatures du 1er tour. Les groupes politiques de l&apos;Assemblée ne
             sont pas indiqués tant que la CTM ne publie pas les déclarations de groupe. Les listes sont présentées dans
             l&apos;ordre de leur numéro, jamais classées.
+          </li>
+        </ul>
+      </section>
+      <section className="space-y-2">
+        <h2 className="text-lg font-semibold">Données personnelles</h2>
+        <ul className="list-disc space-y-1 pl-5 text-slate-700">
+          <li>
+            Vwapepla informe le public sur l&apos;exercice de fonctions publiques : élus (maires et conseils municipaux,
+            parlementaires, CTM) et responsables nommés de l&apos;État (préfet, sous-préfets, secrétaire général, directeur
+            de cabinet). Base légale : traitement à des fins journalistiques et d&apos;information du public (article 85 du
+            RGPD, article 80 de la loi Informatique et libertés).
+          </li>
+          <li>
+            Ce qui est publié : nom, fonction et dates, tels qu&apos;ils figurent dans les sources officielles (Journal
+            officiel, Répertoire national des élus, résultats électoraux, déclarations publiées par la HATVP) ; le parcours
+            dans les fonctions publiques, d&apos;après les décrets de nomination ; le lieu de naissance seulement quand une
+            biographie officielle l&apos;indique ; une photo officielle, toujours créditée à sa source.
+          </li>
+          <li>
+            Ce qui n&apos;est jamais publié : la date de naissance, la vie privée, l&apos;origine ou l&apos;appartenance
+            ethnique, ni aucune information déduite d&apos;une photo. Une fiche décrit une fonction, jamais la valeur
+            d&apos;une personne : pas de note, pas de classement.
+          </li>
+          <li>
+            Avis des visiteurs : aucune adresse IP n&apos;est conservée. Un identifiant anonyme, calculé avec une clé secrète
+            qui change chaque mois, sert seulement à limiter les votes à un par sujet et par mois ; il est effacé après 60
+            jours. Le vote est protégé contre les robots par Cloudflare Turnstile.
+          </li>
+          <li>
+            Rectification, droit de réponse ou retrait d&apos;une photo : écrivez à{" "}
+            <a href={`mailto:${CONTACT_EMAIL}`} className="underline">{CONTACT_EMAIL}</a>, ou utilisez le lien « Droit de
+            réponse » de chaque fiche. Une erreur avérée est corrigée dans le script d&apos;import, pour ne pas revenir à la
+            mise à jour suivante.
           </li>
         </ul>
       </section>
