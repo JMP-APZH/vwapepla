@@ -5,12 +5,14 @@ import { Portrait } from "@/components/card/Portrait";
 import { AreaSpending } from "@/components/ctm/Areas";
 import { CompteAdministratif } from "@/components/ctm/Ca";
 import { ForecastBudget, PlannedVsActual } from "@/components/ctm/Forecast";
+import { LegalFramework } from "@/components/ctm/Legal";
 import { BeforeCtm, BreakdownBlock, FiscaliteUltramarine, SavingsDebt } from "@/components/ctm/Budget";
 import { getSources } from "@/lib/core/data";
 import { date, int } from "@/lib/core/format";
 import { beforeCtm, breakdown, CTM, get, index, referenceYear, series, sourceIds } from "@/lib/ctm/budget";
 import { caComparison, caYears } from "@/lib/ctm/ca";
 import { getActuals, getCaLines, getForecast, getFunctional, getMetricDefs } from "@/lib/ctm/data";
+import { byTopic } from "@/lib/ctm/textes";
 import { AMENDMENTS, bpDoc, bpYears, forecastRows, plannedVsActual, plannedYears } from "@/lib/ctm/forecast";
 import { areasForYear } from "@/lib/ctm/functions";
 import { ctm } from "@/i18n";
@@ -133,6 +135,7 @@ export default async function CtmPage() {
       <FiscaliteUltramarine rows={fumRows} labels={FUM.map((key) => ({ key, label: label(key) }))}
                             range={`${fumRows[0]?.year}-${fumRows.at(-1)?.year}`} sources={src(fumSources)} />
       <BeforeCtm tables={before} sources={src(beforeSources)} />
+      <LegalFramework groups={byTopic()} />
     </CardShell>
   );
 }

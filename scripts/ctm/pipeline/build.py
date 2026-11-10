@@ -18,6 +18,7 @@ from ca import LINES as CA_LINES, read_ca  # noqa: E402
 from sources import CA as CA_DOCS, FORECAST as FORECAST_DOCS  # noqa: E402
 from bp import LINES as BP_LINES, read_bp  # noqa: E402
 from octroi import classify as octroi_kinds, read_figures as octroi_figures_from  # noqa: E402
+from textes import validate as validate_texts  # noqa: E402
 from sources import NATURE_FONCTION  # noqa: E402  (yearly nature-fonction dataset ids)
 
 sys.stdout.reconfigure(encoding="utf-8")
@@ -403,6 +404,11 @@ octroi_figures = [{**{k: v for k, v in f.items() if k != "source_job"}, "source_
 print(f"octroi de mer: {len(octroi_acts)} acts of the Assemblée "
       f"({dict(collections.Counter(a['kind'] for a in octroi_acts))}), {len(octroi_figures)} transcribed figures")
 
+# --- legal framework: curated Légifrance links (no table: committed JSON imported by the pages) -----------------------
+legal_texts, legal_errors = validate_texts(ROOT / "data" / "ctm" / "textes.yaml")
+errors += legal_errors
+print(f"legal texts: {len(legal_texts)} ({sum(t['checked'] is not None for t in legal_texts)} opened by a person)")
+
 # --- report and write ------------------------------------------------------------------------------------------------
 print("2012 overlap (DGFiP comptes individuels vs OFGL budget principal):")
 for o in overlap:
@@ -436,3 +442,6 @@ OUT.mkdir(parents=True, exist_ok=True)
 for name, rows in out.items():
     (OUT / f"{name}.json").write_text(json.dumps(rows, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"{name:24s} {len(rows):6d}")
+(ROOT / "src" / "lib" / "ctm" / "textes.json").write_text(json.dumps(legal_texts, ensure_ascii=False, indent=1) + "\n",
+                                                          encoding="utf-8")
+print(f"{'src/lib/ctm/textes.json':24s} {len(legal_texts):6d}")
