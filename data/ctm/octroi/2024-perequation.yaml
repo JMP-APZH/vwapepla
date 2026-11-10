@@ -1,0 +1,35 @@
+# Délibération n° 24-300-2 du 28 novembre 2024 (Assemblée de Martinique), scanned PDF without text layer:
+# transcribed from the page images, to spot-check against the PDF (job ctm-octroi-perequation-2024).
+source: ctm-octroi-perequation-2024
+deliberation: 24-300-2
+figures:
+  - key: omr_taux_normal_avant
+    label: Taux normal de l'octroi de mer régional avant la délibération
+    value: 2.5
+    unit: "%"
+    page: 2
+    quote: "porte le taux normal de l'octroi de mer régional de 2,5% à 3%, pour tous les produits soumis à 2,5% dans le tarif actuel"
+  - key: omr_taux_normal
+    label: Taux normal de l'octroi de mer régional fixé par la délibération
+    value: 3
+    unit: "%"
+    page: 2
+    quote: "porte le taux normal de l'octroi de mer régional de 2,5% à 3%, pour tous les produits soumis à 2,5% dans le tarif actuel"
+  - key: votes_pour
+    label: Voix pour
+    value: 35
+    unit: voix
+    page: 3
+    quote: "avec 35 voix pour 8 voix contre et 1 élu qui ne prend pas part au vote"
+  - key: votes_contre
+    label: Voix contre
+    value: 8
+    unit: voix
+    page: 3
+    quote: "avec 35 voix pour 8 voix contre et 1 élu qui ne prend pas part au vote"
+  - key: ne_prend_pas_part
+    label: Élus ne prenant pas part au vote
+    value: 1
+    unit: voix
+    page: 3
+    quote: "avec 35 voix pour 8 voix contre et 1 élu qui ne prend pas part au vote"
