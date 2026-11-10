@@ -12,7 +12,7 @@ export function OtherOfficesBlock({ offices, sources }: { offices: OtherOffice[]
   if (offices.length === 0) return null;
   const evidence = [...new Map(offices.map((o) => [o.evidenceUrl + o.evidenceLabel, o])).values()];
   return (
-    <FactBlock title={parlement.otherOfficesTitle.fr} sources={sources} year={parlement.otherOfficesPeriod.fr}>
+    <FactBlock title={parlement.otherOfficesTitle.fr} sources={sources} periodLabel="" year={parlement.otherOfficesPeriod.fr}>
       <p className="mt-1 text-sm text-slate-600">{parlement.otherOfficesIntro.fr}</p>
       <ul className="mt-3 space-y-1 text-sm">
         {offices.map((o) => (
