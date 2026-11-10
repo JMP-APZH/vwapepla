@@ -10,15 +10,16 @@ const hero = (i: number, value: number | null, median: number | null, kind: "str
 describe("ogFigures", () => {
   it("formats the hero trio like the card, with plain spaces", () => {
     const [rate, debt, equip] = ogFigures([hero(0, 0.0717, 0.066), hero(1, 5.66, 3.1), hero(2, 341.2, 296)]);
-    expect(rate).toEqual({ label: "Taux d'épargne brute", value: "7,2 %", median: "médiane de 5 communes de même taille : 6,6 %" });
+    expect(rate).toEqual({ label: "Taux d'épargne brute", value: "7,2 %", unit: "", median: "médiane de 5 communes de même taille : 6,6 %" });
     expect(debt.value).toBe("5,7 ans");
-    expect(equip.value).toBe("341 € / hab.");
+    expect(equip.value + equip.unit).toBe("341 € / hab.");
     expect(equip.median).toBe("médiane de 5 communes de même taille : 296 € / hab.");
     for (const f of [rate, debt, equip]) expect(f.value + f.median).not.toMatch(/[  ]/);
   });
   it("keeps « non calculable » (never 0) and names the Martinique group", () => {
     const [debt] = ogFigures([hero(1, null, 3.1, "martinique")]);
     expect(debt.value).toBe("non calculable");
+    expect(debt.unit).toBe("");
     expect(debt.median).toBe("médiane de 5 communes de Martinique : 3,1 ans");
   });
   it("plainSpaces replaces narrow and no-break spaces only", () => {

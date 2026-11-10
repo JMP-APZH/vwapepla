@@ -25,13 +25,16 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         <div style={{ display: "flex", fontSize: 64, fontWeight: 700, marginTop: 12, lineHeight: 1.1 }}>
           {commune ? `Commune ${deCommune(commune.name)}` : "Commune"}
         </div>
-        <div style={{ display: "flex", fontSize: 28, color: "#475569", marginTop: 8 }}>Trois chiffres clés, comptes {year}</div>
+        <div style={{ display: "flex", fontSize: 28, color: "#475569", marginTop: 20 }}>Trois chiffres clés, comptes {year}</div>
         <div style={{ display: "flex", gap: 24, marginTop: 40 }}>
           {figures.map((f) => (
             <div key={f.label} style={{ display: "flex", flexDirection: "column", flex: 1, background: "#ffffff",
                                         border: "2px solid #e2e8f0", borderRadius: 20, padding: "24px 28px" }}>
               <div style={{ display: "flex", fontSize: 26, color: "#475569" }}>{f.label}</div>
-              <div style={{ display: "flex", fontSize: 52, fontWeight: 700, marginTop: 10 }}>{f.value}</div>
+              <div style={{ display: "flex", alignItems: "baseline", marginTop: 10 }}>
+                <span style={{ fontSize: 52, fontWeight: 700 }}>{f.value}</span>
+                {f.unit && <span style={{ fontSize: 26, color: "#475569", marginLeft: 6 }}>{f.unit.trim()}</span>}
+              </div>
               <div style={{ display: "flex", fontSize: 20, color: "#64748b", marginTop: 12 }}>{f.median}</div>
             </div>
           ))}

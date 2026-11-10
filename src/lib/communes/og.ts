@@ -4,23 +4,25 @@ import type { HeroValue } from "./headline";
 import { debtYears, pctDec } from "./format";
 import { eur } from "@/lib/core/format";
 
-export type OgFigure = { label: string; value: string; median: string };
+export type OgFigure = { label: string; value: string; unit: string; median: string }; // unit: " / hab." or ""
 
 /** fr-FR formats use narrow / no-break spaces; the image font may not have them, so they become plain spaces. */
 export function plainSpaces(s: string): string {
   return s.replace(/[  ]/g, " ");
 }
 
-function show(h: HeroValue, v: number | null): string {
-  const s = h.figure.kind === "ratio" ? pctDec(v) : h.figure.kind === "years" ? debtYears(v) : eur(v);
-  return plainSpaces(v != null && h.figure.kind === "per_hab" ? `${s} / hab.` : s);
+function bare(h: HeroValue, v: number | null): string {
+  return plainSpaces(h.figure.kind === "ratio" ? pctDec(v) : h.figure.kind === "years" ? debtYears(v) : eur(v));
 }
+const unit = (h: HeroValue, v: number | null) => (v != null && h.figure.kind === "per_hab" ? " / hab." : "");
+const show = (h: HeroValue, v: number | null) => bare(h, v) + unit(h, v);
 
 /** One line per hero figure; `null` stays « non calculable », never 0. The median names its group size. */
 export function ogFigures(values: HeroValue[]): OgFigure[] {
   return values.map((h) => ({
     label: h.figure.label,
-    value: show(h, h.value),
+    value: bare(h, h.value),
+    unit: unit(h, h.value),
     median: `médiane de ${h.reference.size} communes${h.reference.kind === "stratum" ? " de même taille" : " de Martinique"} : ${show(h, h.median)}`,
   }));
 }
