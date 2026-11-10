@@ -4,7 +4,7 @@
 // One posting = one person appointed by one decree. A sous-préfet appointed « de La Trinité et de Saint-Pierre » holds
 // two seats with the same decree: one posting, two seats.
 
-export type SeatKey = "prefet" | "secretaire_general" | "directeur_cabinet" | "sous_prefet-2" | "sous_prefet-3" | "sous_prefet-4";
+export type SeatKey = "prefet" | "secretaire_general" | "directeur_cabinet" | "sous_prefet-2" | "sous_prefet-3" | "sous_prefet-4" | "charge_mission";
 
 export type MandateRow = {
   person_id: string; seat_id: string; start_date: string; function_start: string | null; end_date: string | null;
@@ -33,7 +33,7 @@ export type Posting = {
   sourceId: string; sourceUrl: string | null; coverage: Coverage;
 };
 
-export const SEAT_ORDER: SeatKey[] = ["prefet", "secretaire_general", "directeur_cabinet", "sous_prefet-2", "sous_prefet-4", "sous_prefet-3"];
+export const SEAT_ORDER: SeatKey[] = ["prefet", "secretaire_general", "directeur_cabinet", "sous_prefet-2", "sous_prefet-4", "sous_prefet-3", "charge_mission"];
 
 export function seatKey(seatId: string): SeatKey {
   return seatId.split(":").at(-1) as SeatKey;
@@ -51,6 +51,7 @@ export function postLabel(seats: SeatKey[], sex: "F" | "M" | null): string {
     case "sous_prefet-2": return `${sp} de La Trinité`;
     case "sous_prefet-3": return `${sp} du Marin`;
     case "sous_prefet-4": return `${sp} de Saint-Pierre`;
+    case "charge_mission": return f ? "Sous-préfète chargée de mission auprès du préfet" : "Sous-préfet chargé de mission auprès du préfet";
     default: return "Poste";
   }
 }
@@ -58,6 +59,7 @@ export function postLabel(seats: SeatKey[], sex: "F" | "M" | null): string {
 const ROLE_SLUG: Record<SeatKey, string> = {
   prefet: "prefet", secretaire_general: "secretaire-general", directeur_cabinet: "directeur-cabinet",
   "sous_prefet-2": "sous-prefet", "sous_prefet-3": "sous-prefet", "sous_prefet-4": "sous-prefet",
+  charge_mission: "sous-prefet-charge-mission",
 };
 
 function ascii(s: string): string {

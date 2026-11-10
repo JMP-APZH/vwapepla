@@ -9,13 +9,14 @@ const SEAT_TITLE: Record<SeatKey, string> = {
   prefet: "Préfet de la région Martinique", secretaire_general: "Secrétaire général de la préfecture",
   directeur_cabinet: "Directeur de cabinet du préfet", "sous_prefet-2": "Sous-préfet de La Trinité",
   "sous_prefet-4": "Sous-préfet de Saint-Pierre", "sous_prefet-3": "Sous-préfet du Marin",
+  charge_mission: "Sous-préfet chargé de mission",
 };
 
 function Period({ p }: { p: Posting }) {
   return <>{p.end ? `${date(p.start)} – ${date(p.end)}` : `${prefet.since.fr} ${date(p.start)}`}</>;
 }
 
-/** Who holds the six posts today, then every posting found per post since 2007 (each linked to its own card). */
+/** Who holds the seven posts today, then every posting found per post since 2007 (each linked to its own card). */
 export function PostingsOverview({ postings, sources, today }: { postings: Posting[]; sources: Source[]; today: string }) {
   return (
     <FactBlock title={prefet.postings.fr} sources={sources} year={`2007–${today.slice(0, 4)}`}>

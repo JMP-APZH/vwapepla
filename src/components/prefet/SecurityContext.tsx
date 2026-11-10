@@ -9,7 +9,7 @@ const pc = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 1 });
 const r = (s: CrimeStat | undefined) => (s?.rate_per_1000 == null ? "—" : rate.format(s.rate_per_1000));
 const v = (x: number | null | undefined) => (x == null ? "—" : `${pc.format(x)} %`);
 
-/** Recorded crime per 1,000 inhabitants: Martinique first and last year, Guadeloupe and France the last year. */
+/** Recorded crime per 1,000 inhabitants: Martinique first and last year; Guadeloupe, Guyane, La Réunion and France the last year. */
 export function CrimeBlock({ years, groups, sources }: {
   years: [number, number]; groups: { label: string; lines: CrimeLine[] }[]; sources: Source[];
 }) {
@@ -18,20 +18,22 @@ export function CrimeBlock({ years, groups, sources }: {
     <FactBlock title={prefet.crimeTitle.fr} sources={sources} year={`${y0}–${y1}`}>
       <p className="mt-1 text-sm text-slate-600">{prefet.crimeIntro.fr}</p>
       <div className="mt-3 overflow-x-auto">
-        <table className="w-full min-w-[34rem] text-sm">
+        <table className="w-full min-w-[46rem] text-sm">
           <thead>
             <tr className="border-b border-slate-200 text-left text-xs text-slate-500">
               <th className="py-1 pr-2 font-medium">{prefet.crimeIndicator.fr}</th>
               <th className="py-1 pr-2 text-right font-medium">Martinique {y0}</th>
               <th className="py-1 pr-2 text-right font-medium">Martinique {y1}</th>
               <th className="py-1 pr-2 text-right font-medium">Guadeloupe {y1}</th>
+              <th className="py-1 pr-2 text-right font-medium">Guyane {y1}</th>
+              <th className="py-1 pr-2 text-right font-medium">La Réunion {y1}</th>
               <th className="py-1 text-right font-medium">France {y1}</th>
             </tr>
           </thead>
           {groups.map((g) => (
             <tbody key={g.label}>
               <tr>
-                <th colSpan={5} className="pt-3 pb-1 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">{g.label}</th>
+                <th colSpan={7} className="pt-3 pb-1 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">{g.label}</th>
               </tr>
               {g.lines.map((l) => (
                 <tr key={l.indicator} className="border-b border-slate-100">
@@ -44,6 +46,8 @@ export function CrimeBlock({ years, groups, sources }: {
                   <td className="py-1.5 pr-2 text-right tabular-nums text-slate-600">{r(l.first)}</td>
                   <td className="py-1.5 pr-2 text-right tabular-nums font-medium">{r(l.last)}</td>
                   <td className="py-1.5 pr-2 text-right tabular-nums text-slate-600">{r(l.guadeloupe)}</td>
+                  <td className="py-1.5 pr-2 text-right tabular-nums text-slate-600">{r(l.guyane)}</td>
+                  <td className="py-1.5 pr-2 text-right tabular-nums text-slate-600">{r(l.reunion)}</td>
                   <td className="py-1.5 text-right tabular-nums text-slate-600">{r(l.france)}</td>
                 </tr>
               ))}

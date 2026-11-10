@@ -49,6 +49,7 @@ SEATS = [
     ("sous_prefet", 2, "Sous-préfet de La Trinité", "La Trinité"),
     ("sous_prefet", 3, "Sous-préfet du Marin", "Le Marin"),
     ("sous_prefet", 4, "Sous-préfet de Saint-Pierre", "Saint-Pierre"),
+    ("charge_mission", None, "Sous-préfet chargé de mission auprès du préfet de la région Martinique", None),  # JM, 10 Nov 2026
 ]
 institutions = [{"id": INSTITUTION, "kind": "prefecture", "name": "Préfecture de la Martinique", "code": None}]
 bodies = [{"id": BODY, "institution_id": INSTITUTION, "kind": "corps_prefectoral", "name": "Corps préfectoral"}]
@@ -69,7 +70,7 @@ if "jorf-nominations-972" in MANIFEST and "jorf-parcours" in MANIFEST:
         print(f"postings {seat['label_fr']}:")
         for m in rows:
             print(f"   {m['start_date']} -> {m['end_date'] or 'en fonction'}  {m['person_id']}")
-    # the six current holders: at most one open posting per seat
+    # the seven current holders: at most one open posting per seat
     for seat in seats:
         open_ = [m for m in mandates if m["seat_id"] == seat["id"] and m["end_date"] is None]
         if len(open_) > 1:
