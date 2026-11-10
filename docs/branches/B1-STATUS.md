@@ -74,6 +74,14 @@ Legend: ✅ live in production · 🟡 built, waiting for data or review · ❌ 
 | Forecast path `data/forecast/` → `data/communes/forecast/` | `CLAUDE.md` | Forecast layer |
 | Maybe: a default OG image for the site | `src/app/opengraph-image.tsx` (root) | Share preview outside `/communes` |
 
-## 6. Next (plan for JM's approval)
-See the plan of 10 Nov 2026: drop `com_site_vote_summary`; JM's audit review; channel observations; OG share image per
-commune; competence statements.
+## 6. This session (10 Nov 2026, plan approved by JM)
+| Item | Where | Waiting for |
+|---|---|---|
+| Drop `com_site_vote_summary` | PR #81: draft migration `20261110120000_com_drop_site_vote_summary.sql`, **NOT applied** | JM's go to apply, then merge |
+| Website-audit review | Private artifact « Relecture des audits de sites » (`review_page.py`, with an « Aller vite » box) | JM's review on the phone, then paste |
+| Channel observations | PR #83: observer page (`channels_page.py`, private artifact « Relevé des réseaux sociaux des mairies ») + `apply_channels.py`; 9 empty files; duplicate draft removed | Observers named by JM; then the batches, JM's review and his go to load |
+| Share image per commune | PR #82: `opengraph-image` + `twitter-image`, hero trio 2024 with the group median and the card's notes | Merge (CI green on the first commit; preview checked for Le Lamentin and Le Robert) |
+| Competence statements | PR #84: table in `B1-VOTES.md`: 8 confirmed, 3 corrections proposed (petite enfance + CTM, risques + EPCI/GEMAPI, éclairage via SMEM), CCAS wording, EPCI statutes still open | JM's OK on the corrections; then YAML `confirmed` + `ref_urls`, and a reload with his go |
+| State grants block (from B4) | Not started | A separate plan after JM's OK |
+
+Not run locally (memory limits): `npm test`, `next build`, the dev server; CI runs them on every PR.
