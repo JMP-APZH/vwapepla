@@ -36,7 +36,7 @@ Caveats: functional spending breakdown (education, culture…) only mandatory �
 - GDPR art. 9: user votes/comments can reveal political opinions → legal basis, minimisation.
 - Loi 1881 (defamation): sourced facts, careful wording, moderation + takedown procedure.
 - Electoral periods: strict neutrality.
-- Short legal review recommended.
+- Short legal review recommended. *(JM, 10 Nov 2026: no legal review; objections go through the right of reply — CLAUDE.md principle 5.)*
 
 ## 6. Partner: SEM radio (only active partner)
 RCI = possible future communication channel only (no contact today).
