@@ -37,17 +37,22 @@ Sister projects of the same author: prix-martinique.org (cost of living, live) a
    (principle 2); never a comparison or ranking between communes. For **all** visitor votes (1)–(3): monthly-salted
    voter hash and « one vote per criterion per month » (a daily salt cannot enforce a 30-day limit); Cloudflare
    Turnstile checked server-side before any write, through a shared helper (widget loaded only when the form is
-   opened); voter hash erased after 60 days; votes closed during official pre-election periods (dates to confirm in the
-   legal review).
+   opened); voter hash erased after 60 days; votes closed during official pre-election periods (dates from the decree
+   convening the voters of each election).
    *Amendment (JM, 5 Nov 2026) — editorial layer « Le regard de Vwapepla »*, distinct from facts and from visitor
    opinions: its own block and style, outside `FactBlock`, never in a chart or card header; signed (author or « la
    rédaction de Vwapepla ») and dated, with update date and a visible correction log; every factual claim links to a
    sourced fact already on the site (no figure appears only in an editorial), opinions written as opinions; public role
    only, nothing on private life, origin, ethnicity or appearance; right of reply published next to the text; reviewed
-   by a second person and covered by the pre-launch legal review (loi 1881); partner content (e.g. SEM radio) keeps the
-   partner's editorial line separate; frozen for elected officeholders during official campaign periods (to confirm in
-   the legal review); stored in its own `<prefix>_editorials` table(s), never mixed with fact tables.
+   by a second person before publication (loi 1881 applies: every factual claim sourced, opinions written as opinions);
+   partner content (e.g. SEM radio) keeps the partner's editorial line separate; frozen for elected officeholders during
+   official campaign periods (dates from the decree convening the voters); stored in its own `<prefix>_editorials`
+   table(s), never mixed with fact tables.
 5. **Right of reply.** Each card has a visible "Droit de réponse" contact path for the officeholder (MVP2: mailto/form, no workflow).
+   *Decision (JM, 10 Nov 2026):* **no legal review** before launch, for the whole site (no budget). Any person or
+   institution with an objection uses the right of reply (or the contact on the Méthodologie page); a confirmed error is
+   fixed in the import script, a photo is removed on request (`media.removed_at`). The rules on personal data are stated
+   on the Méthodologie page (« Données personnelles »).
 6. **Reproducibility.** Data import is a script, re-runnable, idempotent, versioned. Never hand-edit figures in the database.
 
 ## Stack (confirmed by JM, 31 Oct 2026)
@@ -114,7 +119,7 @@ Scope of the other domains: `docs/branches/B2.md` … `B4.md` and their discover
   three terms compared (full budget years only; 2008–14 partial), town-hall website checklist + visitor votes.
   Checklist themes (JM): basic site, follow/challenge public money, information on the commune and work done,
   status updates for residents, participative democracy. Missing or doubtful information is always stated on the card.
-  Photos are reused from town-hall sites with credit + takedown (JM's decision; check in the pre-launch legal review).
+  Photos are reused from town-hall sites with credit + takedown (JM's decision; no legal review, see principle 5).
 
 ## Working rules for Claude Code
 - Start in plan mode for any new feature; propose the plan, wait for approval.
