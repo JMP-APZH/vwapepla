@@ -1,4 +1,6 @@
-# Draft amendment to CLAUDE.md — NOT APPLIED (awaiting JM's approval)
+# Draft amendment to CLAUDE.md — APPLIED (JM, 5 Nov 2026)
+
+> **Applied.** JM approved both changes on 5 Nov 2026. They are in CLAUDE.md principle 4 (PR #23): the editorial layer « Le regard de Vwapepla » and visitor votes on the State's action. CLAUDE.md is the reference; this file is kept only as history.
 
 Prepared by B4 on 3 Nov 2026 at JM's request. Once approved, it goes into CLAUDE.md through its own small PR to `dev`
 (CLAUDE.md is a shared file), never inside a B4 feature PR. Two changes: (A) an editorial layer under principle 4,
