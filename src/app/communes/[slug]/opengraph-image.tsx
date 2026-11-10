@@ -35,6 +35,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
                 <span style={{ fontSize: 52, fontWeight: 700 }}>{f.value}</span>
                 {f.unit && <span style={{ fontSize: 26, color: "#475569", marginLeft: 6 }}>{f.unit.trim()}</span>}
               </div>
+              {f.note && <div style={{ display: "flex", fontSize: 20, color: "#7f1d1d", marginTop: 6 }}>{f.note}</div>}
               <div style={{ display: "flex", fontSize: 20, color: "#64748b", marginTop: 12 }}>{f.median}</div>
             </div>
           ))}

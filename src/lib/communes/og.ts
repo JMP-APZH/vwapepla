@@ -3,8 +3,10 @@
 import type { HeroValue } from "./headline";
 import { debtYears, pctDec } from "./format";
 import { eur } from "@/lib/core/format";
+import { VERY_LONG_DEBT_YEARS } from "./config";
 
-export type OgFigure = { label: string; value: string; unit: string; median: string }; // unit: " / hab." or ""
+// unit: " / hab." or ""; note: the short explanation the card gives for a capacité that is not computable or very long.
+export type OgFigure = { label: string; value: string; unit: string; median: string; note: string | null };
 
 /** fr-FR formats use narrow / no-break spaces; the image font may not have them, so they become plain spaces. */
 export function plainSpaces(s: string): string {
@@ -23,6 +25,9 @@ export function ogFigures(values: HeroValue[]): OgFigure[] {
     label: h.figure.label,
     value: bare(h, h.value),
     unit: unit(h, h.value),
+    note: h.figure.kind !== "years" ? null
+      : h.value == null ? "épargne brute négative ou nulle cette année-là"
+      : h.value > VERY_LONG_DEBT_YEARS ? "épargne brute très faible cette année-là" : null,
     median: `médiane de ${h.reference.size} communes${h.reference.kind === "stratum" ? " de même taille" : " de Martinique"} : ${show(h, h.median)}`,
   }));
 }
