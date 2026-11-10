@@ -9,6 +9,12 @@
    Communes without a listed website have no file yet (Macouba lists a Facebook page in the Service-Public directory:
    to be added by an observer with `official_basis: town_hall_confirmed` or after checking).
 4. Reviewer: JM only (`REVIEWERS = {"JM"}` in `build_channels.py`).
+5. (10 Nov 2026) Observer page and batch script added:
+   - `scripts/communes/audit/channels_page.py` builds the page (private artifact);
+   - `apply_channels.py` applies a pasted batch.
+   The 9 communes without a website now have an empty file, so they appear on the page; Macouba's Facebook page from the
+   Service-Public directory is still to find. A duplicate YouTube draft of Les Anses-d'Arlet (same handle, different
+   case) was removed. Still to decide: who observes (initials).
 
 Facts only: dated team observations, each with its evidence. No score, no ranking, no scraping, no unofficial API.
 The repo is public: screenshots never go into git (only their path and sha256).

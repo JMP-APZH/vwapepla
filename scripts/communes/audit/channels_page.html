@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Relevé des réseaux sociaux des mairies</title>
+<style>
+:root { --ink: #0f172a; --muted: #475569; --line: #cbd5e1; --bg: #f8fafc; --surface: #fff; --accent: #4c1d95; --ok: #166534; --warn: #92400e; }
+* { box-sizing: border-box; }
+body { margin: 0; font: 16px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink); background: var(--bg); }
+header, main { max-width: 760px; margin: 0 auto; padding: 12px 16px; }
+h1 { font-size: 1.35rem; margin: 8px 0; }
+.lede { color: var(--muted); font-size: .92rem; }
+.bar { position: sticky; top: 0; z-index: 2; background: var(--surface); border-bottom: 1px solid var(--line); }
+.bar-in { max-width: 760px; margin: 0 auto; padding: 8px 16px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+select, input, textarea { font: inherit; color: inherit; border: 1px solid var(--line); border-radius: 8px; padding: 8px; background: var(--surface); min-height: 44px; }
+input[type=radio] { min-height: auto; }
+button { font: inherit; min-height: 44px; border-radius: 8px; border: 1px solid var(--accent); padding: 8px 14px; background: var(--surface); color: var(--accent); cursor: pointer; }
+button.primary { background: var(--accent); color: #fff; }
+.who { display: flex; gap: 8px; flex-wrap: wrap; }
+.who label { display: flex; flex-direction: column; font-size: .85rem; color: var(--muted); }
+.commune { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; margin: 16px 0; padding: 12px; }
+.commune h2 { margin: 0 0 4px; font-size: 1.1rem; }
+.plat { border-top: 1px solid var(--line); padding: 10px 0; }
+.plat h3 { margin: 0; font-size: 1rem; display: flex; justify-content: space-between; gap: 8px; }
+.state { font-size: .8rem; font-weight: 600; }
+.state.done { color: var(--ok); } .state.todo { color: var(--muted); } .state.miss { color: var(--warn); }
+.grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 8px; }
+@media (min-width: 560px) { .grid { grid-template-columns: 1fr 1fr; } }
+.grid label { display: flex; flex-direction: column; font-size: .85rem; color: var(--muted); }
+.full { grid-column: 1 / -1; }
+.choice { display: flex; gap: 12px; flex-wrap: wrap; font-size: .9rem; color: var(--ink); }
+.choice label { flex-direction: row; align-items: center; gap: 4px; color: var(--ink); }
+.hint { font-size: .8rem; color: var(--muted); margin: 6px 0 0; }
+.miss-list { font-size: .8rem; color: var(--warn); margin: 6px 0 0; }
+.hidden { display: none !important; }
+dialog { border: 1px solid var(--line); border-radius: 12px; width: min(92vw, 640px); padding: 16px; }
+dialog textarea { width: 100%; height: 50vh; font: .8rem/1.4 ui-monospace, monospace; }
+.row { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; margin-top: 10px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Relevé des réseaux sociaux des mairies</h1>
+  <p class="lede">Des faits relevés à la main, sans note ni classement. Ouvre chaque compte dans ton navigateur habituel (aucun outil automatique), note ce que tu vois le jour même, et fais une capture d'écran de la page du compte. Les comptes déjà connus viennent des liens publiés sur le site officiel de la mairie.</p>
+  <details class="lede"><summary><strong>Mode d'emploi</strong></summary>
+    <ol>
+      <li>Indique tes initiales et la date du relevé (en haut).</li>
+      <li>Pour chaque réseau : « Compte trouvé » et les champs, ou « Aucun compte trouvé » et où tu as cherché.</li>
+      <li>Dernière publication : celle du compte lui-même (ni épinglée, ni partagée). Publications sur 90 jours : compte-les à la main ; un album = 1. Impossible à compter ? Laisse vide et explique dans la note.</li>
+      <li>Conseil municipal diffusé : « oui » si au moins une séance a été diffusée (en direct ou en vidéo) sur les 12 derniers mois, avec le lien d'un exemple.</li>
+      <li>Capture d'écran de la page du compte (nom, abonnés, dernières publications), enregistrée sous le nom indiqué sous chaque réseau. Elle ne va jamais dans le dépôt public.</li>
+      <li>Touche « Copier mon relevé » et colle le texte dans la conversation avec Claude (envoie les captures à part). Copie à la fin de chaque séance : selon le navigateur, tes saisies ne sont pas toujours gardées.</li>
+    </ol>
+  </details>
+</header>
+<div class="bar"><div class="bar-in">
+  <div class="who">
+    <label>Initiales <input id="observer" maxlength="6" size="6" autocomplete="off"></label>
+    <label>Date du relevé <input id="observed_on" type="date"></label>
+  </div>
+  <select id="jump" aria-label="Aller à une commune"></select>
+  <button type="button" class="primary" id="copy">Copier mon relevé</button>
+  <span class="hint" id="progress"></span>
+</div></div>
+<main id="list"></main>
+<dialog id="out">
+  <p id="out-msg" style="margin-top:0">Copie ce texte et colle-le dans la conversation avec Claude.</p>
+  <textarea id="out-text" readonly></textarea>
+  <div class="row">
+    <button type="button" id="clear">Effacer tout mon relevé</button>
+    <button type="button" class="primary" id="close">Fermer</button>
+  </div>
+</dialog>
+<script>
+const DATA = /*DATA*/null;
+const KEY = "vwapepla-channels-v1";
+const NAMES = {facebook: "Facebook", instagram: "Instagram", tiktok: "TikTok", youtube: "YouTube", whatsapp_channel: "Chaîne WhatsApp"};
+const BASIS = {linked_from_site: "lien sur le site de la mairie", platform_verified: "badge vérifié du réseau", town_hall_confirmed: "confirmé par la mairie", none: "aucune preuve"};
+let state = {}; try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { state = {}; }
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
+const $ = (id) => document.getElementById(id);
+function el(tag, attrs = {}, ...kids) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (v == null || v === false) continue;
+    if (k.startsWith("on")) n.addEventListener(k.slice(2), v); else n.setAttribute(k, v === true ? "" : v);
+  }
+  for (const c of kids.flat()) if (c != null) n.append(c);
+  return n;
+}
+const today = new Date().toISOString().slice(0, 10);
+$("observer").value = state._observer || "";
+$("observed_on").value = state._date || today;
+$("observer").addEventListener("input", (e) => { state._observer = e.target.value.trim().toUpperCase(); save(); refresh(); });
+$("observed_on").addEventListener("change", (e) => { state._date = e.target.value; save(); render(); });
+
+function entry(c, p) {
+  const k = c.code + "/" + p;
+  if (!state[k]) {
+    const pre = c.prefill[p] || {};
+    state[k] = {status: "", account_url: pre.account_url || "", official: pre.official || "", official_basis: pre.official_basis || "",
+                official_evidence_url: pre.official_evidence_url || ""};
+  }
+  return state[k];
+}
+/** What is still missing for a completed observation (same rules as build_channels.py). */
+function missing(e) {
+  const m = [];
+  if (e.status === "found") {
+    if (!e.account_url) m.push("lien du compte");
+    if (!e.official) m.push("officiel : oui / non / douteux");
+    if (e.official === "yes" && (!e.official_basis || e.official_basis === "none")) m.push("preuve du caractère officiel");
+    if (e.official_basis === "linked_from_site" && !e.official_evidence_url) m.push("page du site où figure le lien");
+    if (e.council === "yes" && !e.council_url) m.push("lien d'une séance diffusée");
+    if (e.posts !== "" && e.posts != null && !/^\d+$/.test(String(e.posts))) m.push("publications : nombre entier");
+    if (e.followers !== "" && e.followers != null && !/^\d+$/.test(String(e.followers))) m.push("abonnés : nombre entier");
+  } else if (e.status === "none") {
+    if (!e.search_note) m.push("où tu as cherché");
+  }
+  return m;
+}
+function shotName(c, p) { return `${c.code}/${$("observed_on").value || today}-${p}.png`; }
+
+function field(e, key, label, attrs = {}) {
+  return el("label", {class: attrs.full ? "full" : null}, label,
+    el(attrs.multiline ? "textarea" : "input", {type: attrs.type || "text", inputmode: attrs.inputmode, value: attrs.multiline ? null : (e[key] || ""),
+      placeholder: attrs.placeholder, oninput: (ev) => { e[key] = ev.target.value.trim(); save(); refresh(); }}, attrs.multiline ? (e[key] || "") : null));
+}
+function radios(e, key, name, options, after = render) {
+  return el("div", {class: "choice", role: "radiogroup"}, Object.entries(options).map(([v, l]) =>
+    el("label", {}, el("input", {type: "radio", name, value: v, checked: e[key] === v,
+      onchange: () => { e[key] = v; save(); after(); }}), l)));
+}
+
+function platCard(c, p) {
+  const e = entry(c, p), pre = c.prefill[p] || {}, id = c.code + "-" + p;
+  const box = el("div", {class: "plat", id: "p-" + id});
+  const again = () => { box.replaceWith(platCard(c, p)); refresh(); };
+  box.append(el("h3", {}, NAMES[p], el("span", {class: "state", id: "s-" + id})));
+  if (pre.observed_on) box.append(el("p", {class: "hint"}, `Déjà relevé le ${pre.observed_on} : un nouveau relevé s'ajoute, l'ancien est gardé.`));
+  if (pre.account_url) box.append(el("p", {class: "hint"}, "Compte pré-rempli (", BASIS[pre.official_basis] || "à vérifier", ") : ",
+    el("a", {href: pre.account_url, target: "_blank", rel: "noopener"}, pre.account_url)));
+  box.append(radios(e, "status", "st-" + id, {found: "Compte trouvé", none: "Aucun compte trouvé", "": "Pas encore regardé"}, again));
+  if (e.status === "found") {
+    box.append(el("div", {class: "grid"},
+      field(e, "account_url", "Lien du compte", {full: true, type: "url"}),
+      field(e, "account_name", "Nom affiché du compte"),
+      el("label", {}, "Compte officiel de la mairie ?", radios(e, "official", "of-" + id, {yes: "oui", doubtful: "douteux", no: "non"}, again)),
+      el("label", {class: "full"}, "Pourquoi officiel ?", radios(e, "official_basis", "ob-" + id, BASIS, again)),
+      e.official_basis === "linked_from_site" ? field(e, "official_evidence_url", "Page du site de la mairie où figure le lien", {full: true, type: "url"}) : null,
+      field(e, "last_post", "Dernière publication du compte", {type: "date"}),
+      field(e, "posts", "Publications sur les 90 derniers jours", {inputmode: "numeric", placeholder: "vide si impossible à compter"}),
+      el("label", {class: "full"}, "Conseil municipal diffusé (12 derniers mois) ?", radios(e, "council", "co-" + id, {yes: "oui", no: "non", unknown: "pas pu vérifier"}, again)),
+      e.council === "yes" ? field(e, "council_url", "Lien d'une séance diffusée", {full: true, type: "url"}) : null,
+      field(e, "followers_display", "Abonnés, tel qu'affiché", {placeholder: "ex. 12 k"}),
+      field(e, "followers", "Abonnés, nombre entier", {inputmode: "numeric", placeholder: "ex. 12000"}),
+      field(e, "note", "Note (connecté ou non, difficulté…)", {full: true, multiline: true})));
+    box.append(el("p", {class: "hint"}, "Capture d'écran à enregistrer sous : ", el("code", {}, "data/raw/communes/channels-evidence/" + shotName(c, p))));
+  } else if (e.status === "none") {
+    box.append(el("div", {class: "grid"}, field(e, "search_note", "Où as-tu cherché ?", {full: true, multiline: true,
+      placeholder: "Recherche « Mairie de … » et « Ville de … » sur le réseau ; aucun lien sur le site officiel."})));
+  }
+  box.append(el("p", {class: "miss-list", id: "m-" + id}));
+  return box;
+}
+
+function render() {
+  const list = $("list"); list.replaceChildren();
+  const jump = $("jump"); jump.replaceChildren(el("option", {value: ""}, "Aller à une commune…"));
+  for (const c of DATA.communes) {
+    jump.append(el("option", {value: c.code}, c.name));
+    const card = el("section", {class: "commune", id: "c-" + c.code},
+      el("h2", {}, c.name),
+      c.site ? el("p", {class: "hint"}, "Site officiel : ", el("a", {href: c.site, target: "_blank", rel: "noopener"}, c.site))
+             : el("p", {class: "hint"}, "Pas de site internet officiel listé dans l'annuaire Service-Public."));
+    for (const p of DATA.platforms) card.append(platCard(c, p));
+    list.append(card);
+  }
+  refresh();
+}
+function refresh() {
+  let done = 0, total = 0;
+  for (const c of DATA.communes) for (const p of DATA.platforms) {
+    const e = entry(c, p), id = c.code + "-" + p, m = missing(e), s = $("s-" + id), ml = $("m-" + id);
+    total++;
+    if (!e.status) { s.textContent = "à faire"; s.className = "state todo"; ml.textContent = ""; continue; }
+    if (m.length) { s.textContent = "incomplet"; s.className = "state miss"; ml.textContent = "Manque : " + m.join(" · "); continue; }
+    done++; s.textContent = "prêt"; s.className = "state done"; ml.textContent = "";
+  }
+  $("progress").textContent = `${done} relevé(s) prêt(s) sur ${total}`;
+}
+$("jump").addEventListener("change", (e) => { if (e.target.value) $("c-" + e.target.value).scrollIntoView(); });
+
+function output() {
+  const who = (state._observer || "").trim(), day = $("observed_on").value || today, lines = ["vwapepla-channels v1"];
+  for (const c of DATA.communes) for (const p of DATA.platforms) {
+    const e = entry(c, p);
+    if (!e.status || missing(e).length) continue;
+    const o = {commune: c.code, platform: p, observer: who, observed_on: day};
+    if (e.status === "none") Object.assign(o, {account_url: null, searched_on: day, search_note: e.search_note});
+    else Object.assign(o, {account_url: e.account_url, account_name: e.account_name || null, official: e.official,
+      official_basis: e.official_basis || null, official_evidence_url: e.official_basis === "linked_from_site" ? e.official_evidence_url : null,
+      last_post_date: e.last_post || null, posts_last_90_days: e.posts ? Number(e.posts) : null,
+      council_meetings_streamed: e.council || null, council_stream_evidence_url: e.council === "yes" ? e.council_url : null,
+      followers: e.followers ? Number(e.followers) : null, followers_display: e.followers_display || null,
+      screenshot: shotName(c, p), note: e.note || null});
+    lines.push(JSON.stringify(o));
+  }
+  return lines;
+}
+const dlg = $("out");
+$("copy").addEventListener("click", async () => {
+  const lines = output();
+  if (!(state._observer || "").trim()) { $("out-msg").textContent = "Indique d'abord tes initiales (en haut)."; $("out-text").value = ""; dlg.showModal(); return; }
+  const text = lines.join("\n");
+  $("out-text").value = text; dlg.showModal();
+  try { await navigator.clipboard.writeText(text); $("out-msg").textContent = `Copié (${lines.length - 1} relevé(s)). Colle ce texte dans la conversation avec Claude.`; }
+  catch (e) { $("out-msg").textContent = "Sélectionne et copie ce texte, puis colle-le dans la conversation avec Claude."; }
+});
+$("close").addEventListener("click", () => dlg.close());
+let armed = false;
+$("clear").addEventListener("click", (e) => {
+  if (!armed) { armed = true; e.target.textContent = "Toucher encore pour tout effacer"; return; }
+  state = {_observer: state._observer, _date: state._date}; save(); armed = false; e.target.textContent = "Effacer tout mon relevé"; dlg.close(); render();
+});
+render();
+</script>
+</body>
+</html>
