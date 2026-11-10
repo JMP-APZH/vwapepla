@@ -3,7 +3,7 @@
 import type { DptCredit } from "./credits";
 
 export type CrimeStat = {
-  geo: "972" | "971" | "FR"; year: number; indicator: string; unit: string; count: number | null;
+  geo: "972" | "971" | "973" | "974" | "FR"; year: number; indicator: string; unit: string; count: number | null;
   rate_per_1000: number | null; computed: boolean; source_id: string;
 };
 export type ContextFigure = {
@@ -25,10 +25,10 @@ export const CRIME_GROUPS: { label: string; indicators: string[] }[] = [
 
 export type CrimeLine = {
   indicator: string; unit: string; first: CrimeStat | undefined; last: CrimeStat | undefined;
-  guadeloupe: CrimeStat | undefined; france: CrimeStat | undefined;
+  guadeloupe: CrimeStat | undefined; guyane: CrimeStat | undefined; reunion: CrimeStat | undefined; france: CrimeStat | undefined;
 };
 
-/** One line per indicator: Martinique first and last year, Guadeloupe and France the last year. */
+/** One line per indicator: Martinique first and last year; Guadeloupe, Guyane, La Réunion and France the last year. */
 export function crimeLines(rows: CrimeStat[]): { years: [number, number] | null; groups: { label: string; lines: CrimeLine[] }[] } {
   const mq = rows.filter((r) => r.geo === "972" && r.rate_per_1000 != null);
   if (!mq.length) return { years: null, groups: [] };
@@ -40,7 +40,8 @@ export function crimeLines(rows: CrimeStat[]): { years: [number, number] | null;
       label: g.label,
       lines: g.indicators.filter((ind) => get("972", ind, last)).map((ind) => ({
         indicator: ind, unit: get("972", ind, last)!.unit, first: get("972", ind, first), last: get("972", ind, last),
-        guadeloupe: get("971", ind, last), france: get("FR", ind, last),
+        guadeloupe: get("971", ind, last), guyane: get("973", ind, last), reunion: get("974", ind, last),
+        france: get("FR", ind, last),
       })),
     })),
   };

@@ -36,6 +36,25 @@ export async function getGrants(): Promise<Grant[]> {
   ) as Grant[];
 }
 
+/**
+ * State investment grants (DGCL lists: DETR, DSIL, DSID… 2018–2025) received by ONE commune, for the commune card
+ * (offered to B1, JM's decision of 10 Nov 2026). `insee` = '97209'. Grants to EPCI or the CTM are not included; rows
+ * whose commune was deduced (not published) carry `mapping_note`, to show. Source rows: `source_id` (one per DGCL file).
+ */
+export async function getCommuneGrants(insee: string): Promise<Grant[]> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("data");
+  if (!/^972\d\d$/.test(insee)) return [];
+  return check(
+    await supabase.from("pref_investment_grants")
+      .select("id,year,scheme,beneficiary_name,beneficiary_key,mapping_note,project,cost_ht,grant_amount,rate,source_id")
+      .eq("beneficiary_key", `commune-${insee}`)
+      .order("year").order("id").limit(1000),
+    "pref_investment_grants",
+  ) as Grant[];
+}
+
 /** Commune names and slugs (read-only, from the communes domain) to name grant beneficiaries and link their cards. */
 export async function getCommuneNames(): Promise<Map<string, { name: string; slug: string }>> {
   "use cache";

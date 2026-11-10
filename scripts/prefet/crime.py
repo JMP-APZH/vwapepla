@@ -1,12 +1,13 @@
 """Recorded crime (SSMSI) and social context (INSEE) for the préfet card. Pure functions, used by build.py.
 
-Crime: Martinique = the département file (972) as published. Comparisons: Guadeloupe (région 01) as published, and
+Crime: Martinique = the département file (972) as published. Comparisons: Guadeloupe (région 01), Guyane (03) and
+La Réunion (04) as published (JM, 10 Nov 2026), and
 France = sum of the published regional counts, divided by the sum of their populations (or dwellings for burglaries,
 as the SSMSI does), x 1,000. The method is checked first: recomputing Martinique's published rate from its own count and
 population must give the same value (gate, 0.001 per 1,000).
 """
-GEO = {"972": "Martinique", "971": "Guadeloupe", "FR": "France (somme des régions)"}
-REGION = {"01": "971"}  # régions file code -> geo key, for the published comparisons
+GEO = {"972": "Martinique", "971": "Guadeloupe", "973": "Guyane", "974": "La Réunion", "FR": "France (somme des régions)"}
+REGION = {"01": "971", "03": "973", "04": "974"}  # régions file code -> geo key, for the published comparisons
 SOURCE_DEP, SOURCE_REG = "ssmsi-delinquance-departements", "ssmsi-delinquance-regions"
 
 

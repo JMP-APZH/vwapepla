@@ -142,15 +142,16 @@ describe("security and social context", () => {
     geo, year, indicator, unit: "Victime", count: rate * 100, rate_per_1000: rate, computed: geo === "FR", source_id: "ssmsi",
   });
 
-  it("shows Martinique first and last year next to Guadeloupe and France the last year", () => {
+  it("shows Martinique first and last year next to Guadeloupe, Guyane, La Réunion and France the last year", () => {
     const { years, groups } = crimeLines([
-      s("972", 2016, "Homicides", 0.05), s("972", 2025, "Homicides", 0.11), s("971", 2025, "Homicides", 0.12),
+      s("972", 2016, "Homicides", 0.05), s("972", 2025, "Homicides", 0.11), s("971", 2025, "Homicides", 0.12), s("974", 2025, "Homicides", 0.07),
       s("FR", 2025, "Homicides", 0.01), s("972", 2025, "Usage de stupéfiants (AFD)", 3.7),
     ]);
     expect(years).toEqual([2016, 2025]);
     const line = groups[0].lines[0];
     expect([line.first?.rate_per_1000, line.last?.rate_per_1000, line.guadeloupe?.rate_per_1000, line.france?.rate_per_1000])
       .toEqual([0.05, 0.11, 0.12, 0.01]);
+    expect([line.reunion?.rate_per_1000, line.guyane]).toEqual([0.07, undefined]);
     expect(groups.flatMap((g) => g.lines.map((l) => l.indicator))).not.toContain("Usage de stupéfiants (AFD)");
   });
 
