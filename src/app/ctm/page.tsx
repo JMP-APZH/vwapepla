@@ -99,6 +99,7 @@ export default async function CtmPage() {
       <nav className="grid gap-3 sm:grid-cols-2">
         <Link href="/ctm/assemblee" className="rounded-xl border border-slate-200 bg-white p-4 text-sm font-medium hover:border-slate-400">{ctm.tileAssemblee.fr} →</Link>
         <Link href="/ctm/conseil-executif" className="rounded-xl border border-slate-200 bg-white p-4 text-sm font-medium hover:border-slate-400">{ctm.tileExecutif.fr} →</Link>
+        <Link href="/ctm/octroi-de-mer" className="rounded-xl border border-slate-200 bg-white p-4 text-sm font-medium hover:border-slate-400 sm:col-span-2">{ctm.octroiTile.fr} →</Link>
       </nav>
       <MissingInfo items={[ctm.missingEndOfTerm.fr, ctm.missingCompetences.fr]} />
       <h2 className="border-t border-slate-200 pt-4 text-sm font-semibold uppercase tracking-wide text-slate-500">
