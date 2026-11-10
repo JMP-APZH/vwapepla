@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { getSources } from "@/lib/core/data";
 import { PROVISIONAL_YEARS, REFERENCE_YEAR } from "@/lib/communes/config";
 import { CONTACT_EMAIL } from "@/lib/core/config";
@@ -76,6 +77,15 @@ export default async function Methodologie() {
             l&apos;ordre de leur numéro, jamais classées.
           </li>
         </ul>
+      </section>
+      <section className="space-y-2">
+        <h2 className="text-lg font-semibold">Députés et sénateurs</h2>
+        <p className="text-slate-700">
+          Données ouvertes de l&apos;Assemblée nationale (depuis la XIVe législature, juin 2012) et du Sénat (depuis le
+          renouvellement d&apos;octobre 2011). La règle de choix des votes présentés sur les fiches, les données que les
+          sources officielles ne publient pas et la façon dont elles sont signalées sont décrites sur la page{" "}
+          <Link href="/parlementaires/methode" className="underline">méthode des fiches parlementaires</Link>.
+        </p>
       </section>
       <section className="space-y-2">
         <h2 className="text-lg font-semibold">Données personnelles</h2>
