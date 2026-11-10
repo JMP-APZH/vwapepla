@@ -175,3 +175,12 @@ octroi de mer régional.
 - Missing: FRDE amounts (no FRDE account in the CTM's DGFiP balances 2019–2025); octroi de mer collected by customs
   (no recent open data); guaranteed share per commune (25-198-2 states the rule, not the amounts); acts before 2023.
 - Rate tables (26-148-1, 992 pages, one line per customs code): linked only.
+
+## J. Legal framework (« Cadre légal », sprint 7, 10 Nov 2026)
+Curated links to Légifrance (JM, 10 Nov 2026: links, no API, no archived copy) in `data/ctm/textes.yaml`, validated by
+`scripts/ctm/pipeline/textes.py` and written by `build.py` to `src/lib/ctm/textes.json` (committed; no table). Légifrance
+answers scripted requests with a bot challenge (HTTP 403), so URLs come from Légifrance's own pages as indexed by search
+engines, and `checked` is set only when a person has opened the link; until then the card says « lien à vérifier ».
+Texts: loi 2011-884; CGCT livre II (L7211-1 ff.), chapters on the Assemblée (L7222) and the Conseil exécutif (L7224),
+attributions (L7251–L7254); decrees 2015-939 and 2021-483 (convocation); loi 2021-191 art. 1 (term until March 2028);
+loi 2004-639 art. 47–48 (octroi de mer).

@@ -39,7 +39,7 @@
   "beforeScopeNote": "2008-2011 : budget principal seulement (DGFiP, comptes individuels). 2012-2015 : budget principal et budgets annexes consolidés (OFGL).",
   "caveatCompetences": "La CTM exerce à la fois les compétences d'une région et d'un département (RSA, collèges et lycées, routes, développement économique…). Ses montants ne se comparent pas à ceux d'une commune.",
   "caveatM57": "Les comptes de la CTM suivent la nomenclature M57 depuis 2016 ; la Région (M71) et le Département (M52) suivaient d'autres nomenclatures.",
-  "missingEndOfTerm": "Fin de la mandature : mars 2028 selon la loi n° 2021-191 du 22 février 2021 (art. 1) ; le texte n'est pas encore archivé par Vwapepla et la date exacte attend le décret de convocation.",
+  "missingEndOfTerm": "Fin de la mandature : mars 2028 selon la loi n° 2021-191 du 22 février 2021, art. 1 (voir « Cadre légal ») ; la date exacte du scrutin attend le décret de convocation des électeurs.",
   "missingCompetences": "Organismes satellites de la CTM (19 selon la Chambre régionale des comptes) : liste officielle demandée à la CTM, pas encore publiée sur cette fiche.",
   "rightOfReplyCtm": "Le Président du Conseil exécutif et le Président de l'Assemblée de Martinique peuvent demander une rectification ou publier une réponse.",
   "assembleeTitle": "Assemblée de Martinique",
@@ -138,5 +138,11 @@
   "plannedColDiff": "Écart réalisé − prévu",
   "plannedCaveat": "Le budget primitif est modifié en cours d'année (budget supplémentaire, décisions modificatives) ; un écart entre le prévu et le réalisé n'est donc pas une erreur en soi. Les décisions modificatives de chaque année sont liées sous le tableau.",
   "plannedAmendments": "Budget modifié en {year} par :",
-  "missingDm1_2024": "La décision modificative n° 1 de 2024 (budget principal) n'a pas été trouvée dans l'index des actes de la CTM."
+  "missingDm1_2024": "La décision modificative n° 1 de 2024 (budget principal) n'a pas été trouvée dans l'index des actes de la CTM.",
+  "legalTitle": "Cadre légal",
+  "legalIntro": "Les textes officiels qui fondent les informations de cette fiche, sur Légifrance (liens, pas de copie).",
+  "legalTopicInstitution": "La Collectivité et ses organes",
+  "legalTopicElections": "Élections et durée du mandat",
+  "legalTopicOctroi": "Octroi de mer",
+  "legalUnchecked": "Lien à vérifier : pas encore ouvert par l'équipe."
 }
