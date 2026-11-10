@@ -1,0 +1,33 @@
+// Text of the share image of a commune card (opengraph-image): the hero trio of the reference year, each with the
+// median of its named group. Facts only: no vote result, no score, no rank. Same numbers and formats as the card (Hero).
+import type { HeroValue } from "./headline";
+import { debtYears, pctDec } from "./format";
+import { eur } from "@/lib/core/format";
+import { VERY_LONG_DEBT_YEARS } from "./config";
+
+// unit: " / hab." or ""; note: the short explanation the card gives for a capacité that is not computable or very long.
+export type OgFigure = { label: string; value: string; unit: string; median: string; note: string | null };
+
+/** fr-FR formats use narrow / no-break spaces; the image font may not have them, so they become plain spaces. */
+export function plainSpaces(s: string): string {
+  return s.replace(/[  ]/g, " ");
+}
+
+function bare(h: HeroValue, v: number | null): string {
+  return plainSpaces(h.figure.kind === "ratio" ? pctDec(v) : h.figure.kind === "years" ? debtYears(v) : eur(v));
+}
+const unit = (h: HeroValue, v: number | null) => (v != null && h.figure.kind === "per_hab" ? " / hab." : "");
+const show = (h: HeroValue, v: number | null) => bare(h, v) + unit(h, v);
+
+/** One line per hero figure; `null` stays « non calculable », never 0. The median names its group size. */
+export function ogFigures(values: HeroValue[]): OgFigure[] {
+  return values.map((h) => ({
+    label: h.figure.label,
+    value: bare(h, h.value),
+    unit: unit(h, h.value),
+    note: h.figure.kind !== "years" ? null
+      : h.value == null ? "épargne brute négative ou nulle cette année-là"
+      : h.value > VERY_LONG_DEBT_YEARS ? "épargne brute très faible cette année-là" : null,
+    median: `médiane de ${h.reference.size} communes${h.reference.kind === "stratum" ? " de même taille" : " de Martinique"} : ${show(h, h.median)}`,
+  }));
+}
