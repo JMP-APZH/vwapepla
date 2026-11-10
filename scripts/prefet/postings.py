@@ -56,8 +56,12 @@ def parse_title(title):
 
 
 def seats_for(post):
-    """Seat keys of a post as written in a decree title ([] = not one of the six seats on the card)."""
+    """Seat keys of a post as written in a decree title ([] = not one of the seven seats on the card)."""
     p = fold(post)
+    # 7th seat (JM, 10 Nov 2026). Exact post only: « sous-préfète chargée de mission, sous-préfète à la relance, auprès du
+    # préfet … de la Martinique et du préfet … de la Guadeloupe » (2021-2023, both Antilles, held alongside) is not it.
+    if re.fullmatch(r"SOUS-PREFETE? CHARGEE? DE MISSION AUPRES DU PREFET DE (LA )?REGION MARTINIQUE,? PREFET DE LA MARTINIQUE", p):
+        return ["charge_mission"]
     if re.match(r"(PREFET|PREFETE) DE (LA )?REGION MARTINIQUE", p):
         return ["prefet"]
     if re.match(r"SECRETAIRE GENERALE? DE LA PREFECTURE DE LA MARTINIQUE", p):
@@ -100,7 +104,7 @@ def build_postings(nominations, careers, body, source_nom, source_car):
         t["person"] = key
     pid = {k: f"pref:{k[0]}:{k[1].title()}" for k in people}
 
-    # Postings on the six seats: one start per (person, seat, appointment decree).
+    # Postings on the seven seats: one start per (person, seat, appointment decree).
     nomin = [t for t in texts.values() if t["act"] == "nomination" and seats_for(t["post"])]
     ends = [t for t in texts.values() if t["act"] == "cessation" and seats_for(t["post"])]
     other_972 = sorted({t["post"] for t in texts.values() if t["source"] == source_nom and not seats_for(t["post"])

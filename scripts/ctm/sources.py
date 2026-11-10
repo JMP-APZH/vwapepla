@@ -345,6 +345,18 @@ JOBS += [file_job("forecast", f"ctm-{kind.lower()}-{year}", f"{SITE}/?wpdmdl={wp
                   f"Forecast layer ({kind} {year}), shown as « Prévisionnel », never mixed with actuals.",
                   licence=NO_LICENCE, ext="pdf") for year, kind, delib, wpdm, slug in FORECAST]
 
+# Octroi de mer: deliberations of the Assemblée read for the page /ctm/octroi-de-mer (the others are linked from the
+# acts index). (job id, délibération, wpdm id, download page slug, title).
+OCTROI = [("ctm-octroi-repartition-2025", "25-198-2", 25194, "delib-n25-198-2-repartition-produit-octroi-de-mer-entre-communes",
+           "répartition du produit de l'octroi de mer entre les communes"),
+          ("ctm-octroi-tarifs-2026", "26-148-1", 32471, "delib-n26-148-1-actualisation-des-tarifs-octroi-de-mer-2026",
+           "actualisation des tarifs de l'octroi de mer 2026"),
+          ("ctm-octroi-perequation-2024", "24-300-2", 19423, "delib-n24-300-2-perequation-octroi-de-mer-lutte-vie-chere",
+           "péréquation de l'octroi de mer, lutte contre la vie chère")]
+JOBS += [file_job("octroi", ds, f"{SITE}/?wpdmdl={wpdm}", f"Délibération n° {delib} — {title}", f"{SITE}/download/{slug}/",
+                  "Collectivité Territoriale de Martinique", "Octroi de mer decisions of the Assemblée (page /ctm/octroi-de-mer).",
+                  licence=NO_LICENCE, ext="pdf") for ds, delib, wpdm, slug, title in OCTROI]
+
 # Not archived (5 Nov 2026): the convocation decrees 2015-939 and 2021-483 and the loi 2021-191 (end of the 2021 term,
 # March 2028). Their copies on prefecture sites answer HTTP 401 to scripted downloads; to add from Légifrance.
 # Election dates come from the Ministry datasets (description of the 2015 round-2 file: "… du 13 décembre 2015").

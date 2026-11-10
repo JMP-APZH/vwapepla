@@ -206,5 +206,37 @@ for d in (d for d in docs if d["doc_type"] == "BP"):
 print("\nF1 Forecast layer (budgets primitifs): consistency")
 print("\n".join(lines))
 
+# --- O1-O3: octroi de mer (page /ctm/octroi-de-mer) -------------------------------------------------------------------
+# O1 reads the communes' figures (team B1's com_actuals, metric octroi_de_mer) through the public API, read-only.
+import urllib.request  # noqa: E402
+
+env = dict(x.split("=", 1) for x in (ROOT / ".env").read_text(encoding="utf-8").splitlines()
+           if "=" in x and not x.startswith("#"))
+req = urllib.request.Request(
+    f"{env['NEXT_PUBLIC_SUPABASE_URL']}/rest/v1/com_actuals?metric_key=eq.octroi_de_mer&select=commune_code,year,amount",
+    headers={"apikey": env["NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"], "Range": "0-999"})
+with urllib.request.urlopen(req, timeout=60) as r:
+    com = json.loads(r.read())
+lines = []
+by_year = {}
+for row in com:
+    by_year.setdefault(row["year"], []).append(row)
+check("O1 communes: octroi de mer 2023 (DGFiP 7373/73431) vs AFD Observatoire",
+      sum(x["amount"] for x in by_year.get(2023, [])), 244.0e6)
+for y in sorted(by_year):
+    if y >= 2016:
+        check(f"O1 communes {y}: 34 communes", len({x['commune_code'] for x in by_year[y]}), 34, unit="n", tol=0, abs_tol=0)
+ofigs = json.loads((BUILD / "ctm_octroi_figures.json").read_text(encoding="utf-8"))
+shares = {f["line_key"]: f["value"] for f in ofigs if f["deliberation"] == "25-198-2"}
+check("O2 délibération 25-198-2: parts de la répartition = 100 %",
+      sum(shares.get(k, 0) for k in ("part_population", "part_egale", "part_potentiel_fiscal")), 100,
+      unit="n", tol=0, abs_tol=0)
+oacts = json.loads((BUILD / "ctm_octroi_acts.json").read_text(encoding="utf-8"))
+known = {a["id"] for a in json.loads((BUILD / "ctm_acts.json").read_text(encoding="utf-8"))}
+check("O3 actes octroi de mer présents dans ctm_acts", sum(a["act_id"] in known for a in oacts), len(oacts),
+      unit="n", tol=0, abs_tol=0)
+print("\nO1-O3 Octroi de mer: communes (B1 data, read-only), répartition, actes")
+print("\n".join(lines))
+
 print(f"\n{'All checks passed.' if not failed else f'{failed} check(s) FAILED.'}")
 sys.exit(1 if failed else 0)

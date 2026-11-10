@@ -17,6 +17,7 @@ from acts import build_acts  # noqa: E402
 from ca import LINES as CA_LINES, read_ca  # noqa: E402
 from sources import CA as CA_DOCS, FORECAST as FORECAST_DOCS  # noqa: E402
 from bp import LINES as BP_LINES, read_bp  # noqa: E402
+from octroi import classify as octroi_kinds, read_figures as octroi_figures_from  # noqa: E402
 from sources import NATURE_FONCTION  # noqa: E402  (yearly nature-fonction dataset ids)
 
 sys.stdout.reconfigure(encoding="utf-8")
@@ -393,6 +394,15 @@ for year, kind, delib, _wpdm, _slug in FORECAST_DOCS:
                                      "amount": round(value, 2), "page": page, "quote": None})
 print(f"forecast: {len(forecast_docs)} documents, {len(forecast_figures)} figures (budgets primitifs)")
 
+# --- octroi de mer: the Assemblée's decisions (kinds from titles) and figures transcribed from scanned deliberations --
+octroi_acts = octroi_kinds(acts)
+octroi_figures, octroi_errors = octroi_figures_from((ROOT / "data" / "ctm" / "octroi").glob("*.yaml"), MANIFEST)
+errors += octroi_errors
+octroi_figures = [{**{k: v for k, v in f.items() if k != "source_job"}, "source_id": sid(f["source_job"])}
+                  for f in octroi_figures]
+print(f"octroi de mer: {len(octroi_acts)} acts of the Assemblée "
+      f"({dict(collections.Counter(a['kind'] for a in octroi_acts))}), {len(octroi_figures)} transcribed figures")
+
 # --- report and write ------------------------------------------------------------------------------------------------
 print("2012 overlap (DGFiP comptes individuels vs OFGL budget principal):")
 for o in overlap:
@@ -415,6 +425,8 @@ out = {"sources": sources, "institutions": institutions, "bodies": bodies, "seat
        "ctm_ca_lines": sorted(ca_lines, key=lambda c: (c["year"], c["line_key"])),
        "ctm_forecast_documents": sorted(forecast_docs, key=lambda d: d["id"]),
        "ctm_forecast_figures": sorted(forecast_figures, key=lambda f: (f["document_id"], f["line_key"])),
+       "ctm_octroi_acts": sorted(octroi_acts, key=lambda a: a["act_id"]),
+       "ctm_octroi_figures": sorted(octroi_figures, key=lambda f: (f["deliberation"], f["line_key"])),
        "ctm_overlap_2012": overlap, "ctm_fum_overlap_2019": [{"metric_key": k, "balances": a, "nature_fonction": b}
                                                              for k, (a, b) in fum_overlap.items()]}
 if errors:
