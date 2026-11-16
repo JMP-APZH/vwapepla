@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { getSources } from "@/lib/core/data";
 import { PROVISIONAL_YEARS, REFERENCE_YEAR } from "@/lib/communes/config";
 import { CONTACT_EMAIL } from "@/lib/core/config";
@@ -65,6 +66,12 @@ export default async function Methodologie() {
             à l&apos;ancien compte de même libellé (octroi de mer régional = compte 7374 « Taxe additionnelle à l&apos;octroi de mer »).
           </li>
           <li>
+            Octroi de mer des communes (page « L&apos;octroi de mer ») : les montants reçus par les 34 communes (comptes de la
+            DGFiP 7373 / 73431, les mêmes que sur les fiches des communes) sont montrés à côté de l&apos;octroi de mer régional de
+            la CTM, jamais additionnés ; les communes sont listées par ordre alphabétique, sans classement. Les chiffres tirés de
+            délibérations publiées en image sont recopiés avec leur page et la phrase exacte.
+          </li>
+          <li>
             Élus : l&apos;Assemblée d&apos;après le Répertoire national des élus (RNE). Le RNE ne liste qu&apos;une partie du Conseil
             exécutif ; les autres membres viennent des déclarations publiées par la HATVP et restent marqués « non vérifié »
             jusqu&apos;à l&apos;archivage de la délibération d&apos;élection.
@@ -76,6 +83,15 @@ export default async function Methodologie() {
             l&apos;ordre de leur numéro, jamais classées.
           </li>
         </ul>
+      </section>
+      <section className="space-y-2">
+        <h2 className="text-lg font-semibold">Députés et sénateurs</h2>
+        <p className="text-slate-700">
+          Données ouvertes de l&apos;Assemblée nationale (depuis la XIVe législature, juin 2012) et du Sénat (depuis le
+          renouvellement d&apos;octobre 2011). La règle de choix des votes présentés sur les fiches, les données que les
+          sources officielles ne publient pas et la façon dont elles sont signalées sont décrites sur la page{" "}
+          <Link href="/parlementaires/methode" className="underline">méthode des fiches parlementaires</Link>.
+        </p>
       </section>
       <section className="space-y-2">
         <h2 className="text-lg font-semibold">Données personnelles</h2>

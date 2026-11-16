@@ -5,12 +5,14 @@ import { Portrait } from "@/components/card/Portrait";
 import { AreaSpending } from "@/components/ctm/Areas";
 import { CompteAdministratif } from "@/components/ctm/Ca";
 import { ForecastBudget, PlannedVsActual } from "@/components/ctm/Forecast";
+import { LegalFramework } from "@/components/ctm/Legal";
 import { BeforeCtm, BreakdownBlock, FiscaliteUltramarine, SavingsDebt } from "@/components/ctm/Budget";
 import { getSources } from "@/lib/core/data";
 import { date, int } from "@/lib/core/format";
 import { beforeCtm, breakdown, CTM, get, index, referenceYear, series, sourceIds } from "@/lib/ctm/budget";
 import { caComparison, caYears } from "@/lib/ctm/ca";
 import { getActuals, getCaLines, getForecast, getFunctional, getMetricDefs } from "@/lib/ctm/data";
+import { byTopic } from "@/lib/ctm/textes";
 import { AMENDMENTS, bpDoc, bpYears, forecastRows, plannedVsActual, plannedYears } from "@/lib/ctm/forecast";
 import { areasForYear } from "@/lib/ctm/functions";
 import { ctm } from "@/i18n";
@@ -97,6 +99,7 @@ export default async function CtmPage() {
       <nav className="grid gap-3 sm:grid-cols-2">
         <Link href="/ctm/assemblee" className="rounded-xl border border-slate-200 bg-white p-4 text-sm font-medium hover:border-slate-400">{ctm.tileAssemblee.fr} →</Link>
         <Link href="/ctm/conseil-executif" className="rounded-xl border border-slate-200 bg-white p-4 text-sm font-medium hover:border-slate-400">{ctm.tileExecutif.fr} →</Link>
+        <Link href="/ctm/octroi-de-mer" className="rounded-xl border border-slate-200 bg-white p-4 text-sm font-medium hover:border-slate-400 sm:col-span-2">{ctm.octroiTile.fr} →</Link>
       </nav>
       <MissingInfo items={[ctm.missingEndOfTerm.fr, ctm.missingCompetences.fr]} />
       <h2 className="border-t border-slate-200 pt-4 text-sm font-semibold uppercase tracking-wide text-slate-500">
@@ -133,6 +136,7 @@ export default async function CtmPage() {
       <FiscaliteUltramarine rows={fumRows} labels={FUM.map((key) => ({ key, label: label(key) }))}
                             range={`${fumRows[0]?.year}-${fumRows.at(-1)?.year}`} sources={src(fumSources)} />
       <BeforeCtm tables={before} sources={src(beforeSources)} />
+      <LegalFramework groups={byTopic()} />
     </CardShell>
   );
 }

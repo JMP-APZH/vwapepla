@@ -1,7 +1,7 @@
 # B1 — Communication channels of the town halls (Step 4, proposal for JM, 5 Nov 2026)
 
 ## Decisions (JM, 5 Nov 2026) and status
-1. Migration `com_channel_observations`: go → applied (`20261105130000_com_channels.sql`).
+1. Migration `com_channel_observations`: go → applied (`20261105114152_com_channels.sql`, the applied version).
 2. Screenshots in `data/raw/communes/channels-evidence/` (gitignored) for now.
 3. Pre-fill from the official websites: done from the 2 Nov website crawl (no request to any social network): only
    accounts linked from the home page or from at least half of the pages (site-wide header/footer), so links to a
@@ -9,6 +9,12 @@
    Communes without a listed website have no file yet (Macouba lists a Facebook page in the Service-Public directory:
    to be added by an observer with `official_basis: town_hall_confirmed` or after checking).
 4. Reviewer: JM only (`REVIEWERS = {"JM"}` in `build_channels.py`).
+5. (10 Nov 2026) Observer page and batch script added:
+   - `scripts/communes/audit/channels_page.py` builds the page (private artifact);
+   - `apply_channels.py` applies a pasted batch.
+   The 9 communes without a website now have an empty file, so they appear on the page; Macouba's Facebook page from the
+   Service-Public directory is still to find. A duplicate YouTube draft of Les Anses-d'Arlet (same handle, different
+   case) was removed. Still to decide: who observes (initials).
 
 Facts only: dated team observations, each with its evidence. No score, no ranking, no scraping, no unofficial API.
 The repo is public: screenshots never go into git (only their path and sha256).

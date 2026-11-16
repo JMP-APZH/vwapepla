@@ -28,6 +28,41 @@ Build starts once the 12 criteria are validated and #34 is merged.
 - Open: website votes now shown as a distribution
   (`com_site_vote_distribution`, applied 7 Nov 2026; drop `com_site_vote_summary` once main uses the new code); competence statements to check (`ref_status: to_confirm`).
 
+## Competence check (10 Nov 2026): for JM's OK before any change
+I checked the 12 statements in `data/communes/audit/vote_criteria.yaml` against official texts (Légifrance) and public
+documents on the three EPCI. Nothing has been changed in the YAML or the database yet. After JM's OK, the YAML gets
+`ref_status: confirmed` and a `ref_urls` list per criterion, then the criteria are reloaded (with JM's go).
+Result: **8 confirmed, 3 corrections proposed, 1 detail left open** (the EPCI statutes, which I couldn't find online).
+
+| Criterion | Texts | Result |
+|---|---|---|
+| accueil_demarches | CGCT L.2122-27 and L.2122-32 (the maire is the officier d'état civil and acts for the State) | **Confirmed** |
+| ecoles | Code de l'éducation L.212-4 and L.212-5 (the commune owns, builds and maintains its écoles); teachers are paid by the State; school meals and périscolaire are optional commune services | **Confirmed** |
+| petite_enfance | CASF L.214-1-3 (in force 1 Jan 2025): the communes are the « autorités organisatrices de l'accueil du jeune enfant »; relais petite enfance required above 10,000 inhabitants (from 1 Jan 2026). CSP L.2324-1: the crèches are authorised by the président of the département, here the CTM (PMI) | **To correct:** `competence: partagee`, `others: [CTM]`. Proposed wording: « La commune organise l'accueil du jeune enfant (besoins, information des familles, relais petite enfance dans les communes de plus de 10 000 habitants) ; la CTM (PMI) autorise et contrôle les crèches, avec le soutien de la CAF. » |
+| action_sociale | CASF L.123-4: a CCAS is required only from 1,500 inhabitants. RSA and APA are run by the CTM (no recentralisation of the RSA found for Martinique, unlike La Réunion and Guyane) | **Small correction:** « Le CCAS de la commune (obligatoire à partir de 1 500 habitants) aide les habitants en difficulté ; la CTM verse le RSA et l'APA. » |
+| proprete_voirie | CGCT L.5216-5: waste collection is a required competence of the communautés d'agglomération; voirie is optional (« d'intérêt communautaire », defined by each EPCI) | **Confirmed.** Open: whether CACEM, CAESM or CAP Nord took any « voirie d'intérêt communautaire » (statutes not found online). The current wording stays correct either way. |
+| tranquillite | CGCT L.2212-2 (police municipale). Éclairage public: several communes transferred it to the SMEM (Syndicat mixte d'électricité de la Martinique), which runs a renewal programme in 14 communes (AFD project page; SMEM public tenders) | **To correct the wording:** « Le maire exerce la police municipale et la commune gère l'éclairage public, elle-même ou par le SMEM ; police et gendarmerie relèvent de l'État. » |
+| sport_associations | CGCT L.2121-29 (general competence of the commune) | **Confirmed** |
+| culture_patrimoine | CGCT L.2121-29; the CTM also funds culture and heritage | **Confirmed** |
+| urbanisme_logement | Code de l'urbanisme L.153-8 (PLU by the commune unless the EPCI took the competence) and L.422-1 (the maire issues permits where there is a PLU); CGCT L.5216-5 (« équilibre social de l'habitat », required for the EPCI) | **Confirmed.** Open: whether any of the three EPCI took the PLU competence (PLUi). Nothing found online; Les Trois-Îlets revised its own PLU in 2025, which suggests CAESM did not. |
+| prevention_risques | Code de la sécurité intérieure L.731-3 (plan communal de sauvegarde); code de l'environnement L.562-1 (PPR set by the State) and L.211-7 with CGCT L.5216-5: **GEMAPI (flood prevention) is a required EPCI competence since 1 Jan 2018**; DEAL Martinique documents on the GEMAPI of the three EPCI | **To correct:** `others: [EPCI, État]`. Proposed wording: « Le maire établit le plan communal de sauvegarde et informe les habitants ; l'intercommunalité est chargée de la prévention des inondations ; l'État fixe les plans de prévention des risques. » |
+| information_habitants | CGCT L.2141-1 (the inhabitants' right to be informed of the commune's affairs) | **Confirmed** |
+| ecoute_participation | CGCT L.2143-1 (conseils de quartier: optional below 80,000 inhabitants, so optional in all 34 communes) and L.1112-15 (local consultation) | **Confirmed** |
+
+« Not asked » list: waste collection, water and sanitation are required competences of the communautés d'agglomération
+(CGCT L.5216-5, water since 2020); collèges and lycées belong to the CTM. Public transport is run by Martinique Transport (the CTM's
+transport authority): this matches the YAML.
+
+**Sources consulted (10 Nov 2026):**
+- Légifrance, CASF section L.214-1 and following (accueil du jeune enfant);
+- Légifrance, CSP L.2324-1 (https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000048599947);
+- DEAL Martinique, « La compétence GEMAPI en Martinique » (martinique.developpement-durable.gouv.fr);
+- AFD, « Rénover l'éclairage public » (SMEM);
+- for the RSA: RCI and the Banque des Territoires (press, no Légifrance text: no recentralisation decree found).
+
+The other articles are cited by number from the codes, not re-read on Légifrance today. Each one is opened and linked in
+`ref_urls` when the YAML is updated; any discrepancy found then goes back to JM.
+
 ## 1. What visitors are asked
 Stem, identical for every criterion: « Comment évaluez-vous l'action de la commune sur … ? ». About the commune's
 services, **never about a named person** (no mayor or deputy named in a question), and **never about the budget**

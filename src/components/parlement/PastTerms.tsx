@@ -14,7 +14,7 @@ export function PastTermsBlock({ summaries, sex, slug, sources, title, amendment
 }) {
   if (summaries.length === 0) return null;
   return (
-    <FactBlock title={title} sources={sources} year={summaries.length === 1 ? termPeriod(summaries[0].term) : "mandats terminés"}>
+    <FactBlock title={title} sources={sources} periodLabel="" year={summaries.length === 1 ? termPeriod(summaries[0].term) : "mandats terminés"}>
       <p className="mt-1 text-sm text-slate-600">{parlement.pastTermsIntro.fr}</p>
       <ol className="mt-3 space-y-4 text-sm">
         {summaries.map(({ term: t, selected, recorded, amendments: a, questions, groups }) => (

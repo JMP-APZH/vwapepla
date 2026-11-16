@@ -1,0 +1,83 @@
+[
+ {
+  "id": "loi-2011-884",
+  "title": "Loi n° 2011-884 du 27 juillet 2011 relative aux collectivités territoriales de Guyane et de Martinique",
+  "article": null,
+  "url": "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000024403725",
+  "supports": "Création de la Collectivité Territoriale de Martinique, qui succède à la Région et au Département.",
+  "topic": "institution",
+  "checked": null
+ },
+ {
+  "id": "cgct-livre-ctm",
+  "title": "Code général des collectivités territoriales, septième partie, livre II : Collectivité territoriale de Martinique",
+  "article": "Articles L7211-1 et suivants",
+  "url": "https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006070633/LEGISCTA000024405632/",
+  "supports": "Organisation et compétences de la CTM.",
+  "topic": "institution",
+  "checked": null
+ },
+ {
+  "id": "cgct-assemblee",
+  "title": "Code général des collectivités territoriales, chapitre II : L'assemblée de Martinique",
+  "article": "Articles L7222-1 à L7222-31",
+  "url": "https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006070633/LEGISCTA000024405654/",
+  "supports": "Composition et fonctionnement de l'Assemblée de Martinique (51 conseillers).",
+  "topic": "institution",
+  "checked": null
+ },
+ {
+  "id": "cgct-conseil-executif",
+  "title": "Code général des collectivités territoriales, chapitre IV : Le conseil exécutif et le président du conseil exécutif",
+  "article": "Articles L7224-1 à L7224-23",
+  "url": "https://www.legifrance.gouv.fr/codes/id/LEGISCTA000024409961",
+  "supports": "Le Conseil exécutif : un président et huit conseillers exécutifs, élus par l'Assemblée parmi ses membres.",
+  "topic": "institution",
+  "checked": null
+ },
+ {
+  "id": "cgct-attributions",
+  "title": "Code général des collectivités territoriales, titre V : Attributions de la Collectivité territoriale de Martinique",
+  "article": "Articles L7251-1 à L7254-2",
+  "url": "https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006070633/LEGISCTA000024410773/",
+  "supports": "Compétences de la CTM (celles d'une région et d'un département d'outre-mer).",
+  "topic": "institution",
+  "checked": null
+ },
+ {
+  "id": "decret-2015-939",
+  "title": "Décret n° 2015-939 du 30 juillet 2015 portant convocation des collèges électoraux (élection des conseillers à l'Assemblée de Martinique)",
+  "article": null,
+  "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000030959287",
+  "supports": "Première élection de l'Assemblée de Martinique : 6 et 13 décembre 2015.",
+  "topic": "elections",
+  "checked": null
+ },
+ {
+  "id": "decret-2021-483",
+  "title": "Décret n° 2021-483 du 21 avril 2021 portant convocation des collèges électoraux (élection des conseillers à l'assemblée de Martinique)",
+  "article": null,
+  "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000043403678",
+  "supports": "Élection de l'Assemblée en cours : 20 et 27 juin 2021.",
+  "topic": "elections",
+  "checked": null
+ },
+ {
+  "id": "loi-2021-191",
+  "title": "Loi n° 2021-191 du 22 février 2021 portant report, de mars à juin 2021, du renouvellement général des conseils départementaux, des conseils régionaux et des assemblées de Corse, de Guyane et de Martinique",
+  "article": "Article 1",
+  "url": "https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000043168851",
+  "supports": "Les conseillers élus en juin 2021 sont élus jusqu'en mars 2028.",
+  "topic": "elections",
+  "checked": null
+ },
+ {
+  "id": "loi-2004-639",
+  "title": "Loi n° 2004-639 du 2 juillet 2004 relative à l'octroi de mer",
+  "article": "Articles 47 et 48",
+  "url": "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000000253374",
+  "supports": "Le produit de l'octroi de mer va aux communes (dotation globale garantie) ; le solde alimente le fonds régional pour le développement et l'emploi (FRDE).",
+  "topic": "octroi",
+  "checked": null
+ }
+]

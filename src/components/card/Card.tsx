@@ -48,14 +48,14 @@ export function CardHeader({ portrait, title, facts, note }: {
 }
 
 /** A block of figures. `sources` is required: no figure reaches the UI without its source note. */
-export function FactBlock({ title, sources, year, children }: {
-  title: ReactNode; sources: Source[]; year: number | string; children: ReactNode;
+export function FactBlock({ title, sources, year, periodLabel, children }: {
+  title: ReactNode; sources: Source[]; year: number | string; periodLabel?: string; children: ReactNode;
 }) {
   return (
     <section>
       <h2 className="text-xl font-semibold tracking-tight">{title}</h2>
       {children}
-      <SourceNote sources={sources} year={year} />
+      <SourceNote sources={sources} year={year} periodLabel={periodLabel} />
     </section>
   );
 }

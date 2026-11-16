@@ -1,0 +1,5 @@
+# Réseaux sociaux de la mairie de La Trinité — aucun site internet officiel listé, donc rien de pré-rempli (10 nov. 2026).
+# À compléter par un observateur (guide : docs/branches/B1-CHANNELS-GUIDE.md, page d'observation : channels_page.py),
+# puis relu par JM. Rien n'est publié avant observed_on + reviewed_by.
+commune: '97230'
+observations: []

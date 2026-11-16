@@ -3,6 +3,21 @@
 One observation = one account (or one platform where nothing was found), on one day, by one person.
 Facts only: no opinion on quality, no comparison between communes. The repo is public: **screenshots never go into git**.
 
+## The quickest way: the observer page (10 Nov 2026)
+You don't need to edit YAML.
+1. Claude builds the page (`python -I scripts/communes/audit/channels_page.py`) and publishes it as a private artifact.
+   JM shares it with the observers.
+2. On the page: initials and date at the top, then for each commune and platform « Compte trouvé » (fill in the fields) or
+   « Aucun compte trouvé » (where you looked). A card says « prêt » when nothing is missing, using the rules below.
+3. Save each screenshot under the name shown below the platform, and send the screenshots to JM. They never go into git.
+4. Touch « Copier mon relevé » at the end of each session and paste the text into the conversation with Claude.
+   `apply_channels.py` then:
+   - completes the pre-filled draft, or adds a new entry (an old observation is never edited);
+   - adds the screenshot's sha256 when the file is in `data/raw/communes/channels-evidence/`.
+5. `build_channels.py` lists anything still missing. JM reviews (`reviewed_by: JM`). The load into Supabase needs his go.
+
+The rules below are the same, whichever way you record.
+
 ## Before you start
 - Use a normal browser. If you are logged in, note it in `note:` (counts can differ when logged out).
 - No tools that collect data automatically, no browser extensions that export posts, no unofficial APIs.

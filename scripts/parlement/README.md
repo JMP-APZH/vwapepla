@@ -9,11 +9,14 @@ python -I scripts/parlement/build.py                                          # 
 python -I scripts/core/media.py --domain parlement [--upload]                  # official portraits (data/parlement/media/portraits.yaml)
 python -I scripts/core/load_supabase.py --domain parlement                    # upsert (secret key in .env.local)
 python -I scripts/parlement/prune.py [--dry-run]                              # delete B2's own rows the build no longer has
-python -I scripts/parlement/weekly.py [--dry-run]                             # all of the above, weekly (Q10)
+python -I scripts/parlement/weekly.py [--dry-run] [--download-only | --skip-download] [--closed-budget-minutes N]  # weekly (Q10)
 ```
 - `weekly.py`: current-term jobs every run; closed-legislature archives only when missing from the manifest; amendments
   last; then build (its checks stop the run), load, prune. Exit 1 if a current-term download failed (previous file used);
-  a missing archive is only reported (stated data gap).
+  a missing archive is only reported (stated data gap). Closed archives share a time budget (default 100 min), the rest
+  waits for next week. Guard: a closed amendments archive missing here but loaded online stops the run before the build
+  (else the cards would say « pas encore chargés » next to loaded rows). CI runs `--download-only`, saves the cache, then
+  `--skip-download`.
 - `links.py`: candidate `person_links` (same name and sex as a person of another domain), printed with the evidence to
   check (Sénat list of local offices, official page). Writes nothing; links JM validates go to
   `data/parlement/person_links.yaml`.

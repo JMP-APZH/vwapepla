@@ -21,7 +21,7 @@ concurrency:
 jobs:
   rebuild:
     runs-on: ubuntu-latest
-    timeout-minutes: 180
+    timeout-minutes: 340 # hosted runners stop at 360; weekly.py keeps closed archives to a 100-min budget
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -30,7 +30,10 @@ jobs:
       - run: pip install pyyaml # data/parlement/*.yaml (build.py)
       # Raw files (gitignored) are kept between runs: the closed legislatures' archives (up to 650 MB zips on a slow
       # server) are downloaded once; current-term files are downloaded again every week anyway.
-      - uses: actions/cache@v4
+      # restore + save (not actions/cache): the cache is saved right after the downloads, even when a later step fails,
+      # so a run stopped by the guard or the job limit still keeps what it downloaded (first run, 9 Nov 2026: cancelled,
+      # nothing kept).
+      - uses: actions/cache/restore@v4
         with:
           path: data/raw/parlement
           key: parlement-raw-${{ github.run_id }}
@@ -42,8 +45,15 @@ jobs:
           test -n "$SUPABASE_SECRET_KEY" || { echo "Repository secret SUPABASE_SECRET_KEY is not set"; exit 1; }
           URL=$(grep '^NEXT_PUBLIC_SUPABASE_URL=' .env | cut -d= -f2-)
           printf 'SUPABASE_URL=%s\nSUPABASE_SECRET_KEY=%s\n' "$URL" "$SUPABASE_SECRET_KEY" > .env.local
-      - name: Download, build, load, prune
-        run: python -I scripts/parlement/weekly.py
+      - name: Download (current terms every week, closed archives when missing, 100-min budget)
+        run: python -I scripts/parlement/weekly.py --download-only
+      - uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: data/raw/parlement
+          key: parlement-raw-${{ github.run_id }}
+      - name: Guard, build, load, prune
+        run: python -I scripts/parlement/weekly.py --skip-download
       - name: Remove .env.local
         if: always()
         run: rm -f .env.local

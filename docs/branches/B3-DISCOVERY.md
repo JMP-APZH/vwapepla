@@ -116,7 +116,7 @@ in the legal review.
 | Listing | Items (site counter) | Index downloaded this sprint |
 |---|---|---|
 | Délibérations de l'Assemblée de Martinique `/downloads/deliberations-de-lassemblee-de-martinique/` | 1,808 | **done**: 1,808 rows, `data/raw/ctm/actes/ctm-deliberations-assemblee_2026-11-03.csv` |
-| Arrêtés délibérés du Président du Conseil exécutif `/downloads/arretes-deliberes-du-president-du-conseil-executif/` | 4,304 | **not yet**: the run was stopped by the machine (low memory) during this job; rerun `--only ctm-arretes-deliberes-ce` |
+| Arrêtés délibérés du Président du Conseil exécutif `/downloads/arretes-deliberes-du-president-du-conseil-executif/` | 4,304 | **done** (rerun on 5 Nov): 4,304 rows, `data/raw/ctm/actes/ctm-arretes-deliberes-ce_2026-11-05.csv` |
 | Arrêtés du Président du Conseil exécutif | 3,726 | not indexed (individual decisions; later) |
 | Arrêtés du Président de l'Assemblée | 74 | not indexed (later) |
 

@@ -18,7 +18,7 @@ export function VotesBlock({ member, lines, sources, period }: { member: Member;
     result: l.scrutin.result_label, byDelegation: l.byDelegation, correction: l.correction, status: l.status,
   }));
   return (
-    <FactBlock title={parlement.votesTitle.fr} sources={sources} year={period}>
+    <FactBlock title={parlement.votesTitle.fr} sources={sources} periodLabel="" year={period}>
       <p className="mt-1 text-sm text-slate-600">
         {fill((an ? parlement.votesIntro : parlement.votesIntroSEN).fr, { rule: "V1" })}{" "}
         <Link href="/parlementaires/methode" className="underline">{parlement.votesRuleLink.fr}</Link>
@@ -60,7 +60,7 @@ export function AmendmentsBlock({ member, own, sources }: { member: Member; own:
   const rapporteur = own.filter((a) => a.as_rapporteur).length;
   const sorted = [...own].sort((a, b) => (b.filed ?? "").localeCompare(a.filed ?? "") || b.id.localeCompare(a.id));
   return (
-    <FactBlock title={parlement.amendmentsTitle.fr} sources={sources} year="mandat en cours">
+    <FactBlock title={parlement.amendmentsTitle.fr} sources={sources} periodLabel="" year="mandat en cours">
       <p className="mt-2 text-sm"><span className="text-2xl font-semibold">{int(c.total)}</span> {parlement.amendmentsFirst.fr.toLowerCase()}</p>
       <ul className="mt-1 text-sm text-slate-700">
         <li>{int(c.adopted)} {parlement.amendmentsAdopted.fr} · {int(c.rejected)} {parlement.amendmentsRejected.fr}</li>
@@ -92,7 +92,7 @@ export function QuestionsBlock({ questions, sources }: { questions: Question[]; 
   const counts = questionCounts(questions);
   const sorted = [...questions].sort((a, b) => (b.asked ?? "").localeCompare(a.asked ?? ""));
   return (
-    <FactBlock title={parlement.questionsTitle.fr} sources={sources} year="mandat en cours">
+    <FactBlock title={parlement.questionsTitle.fr} sources={sources} periodLabel="" year="mandat en cours">
       <ul className="mt-2 grid gap-2 text-sm sm:grid-cols-3">
         {counts.map((c) => (
           <li key={c.kind} className="rounded-lg bg-slate-50 p-2">
