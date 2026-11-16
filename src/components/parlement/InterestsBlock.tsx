@@ -13,7 +13,7 @@ export function InterestsBlock({ declarations, items, sources, former = false }:
   const groups = bySection(items);
   const first = items[0];
   return (
-    <FactBlock title={parlement.interestsTitle.fr} sources={sources} year={former ? "mandats terminés" : "mandat en cours"}>
+    <FactBlock title={parlement.interestsTitle.fr} sources={sources} periodLabel="" year={former ? "mandats terminés" : "mandat en cours"}>
       <p className="mt-1 text-sm text-slate-600">{parlement.interestsIntro.fr}</p>
       <ul className="mt-2 space-y-1 text-sm">
         {sortDeclarations(declarations).map((d) => (

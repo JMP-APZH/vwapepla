@@ -40,7 +40,7 @@ export function MandateBlock({ member, memberships, today, sources }: {
   const current = groupByKind(memberships.filter((m) => isCurrent(m, today)));
   const past = groupByKind(memberships.filter((m) => !isCurrent(m, today)));
   return (
-    <FactBlock title={parlement.mandateTitle.fr} sources={sources} year={member.chamber === "AN" ? "XVIIe législature" : "mandat en cours"}>
+    <FactBlock title={parlement.mandateTitle.fr} sources={sources} periodLabel="" year={member.chamber === "AN" ? "XVIIe législature" : "mandat en cours"}>
       <p className="mt-1 text-sm text-slate-600">{parlement.mandateIntro.fr}</p>
       {member.suppleant && (
         <p className="mt-3 text-sm">
