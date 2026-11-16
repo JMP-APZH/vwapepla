@@ -195,6 +195,12 @@ def index_year(year, folder, cache_dir, log=print):
                 pdf = pathlib.Path(tmp) / "raa.pdf"
                 try:
                     patient(lambda: download(b["url"], pdf), b["name"])
+                    if pdf.stat().st_size == 0:  # one more try, then accept it: the site itself serves an empty file
+                        time.sleep(PAUSE)
+                        patient(lambda: download(b["url"], pdf), b["name"])
+                    if pdf.stat().st_size == 0:  # (2024-533, 16 Nov 2026). Not cached: a re-run asks again.
+                        problems.append(f"{b['name']}: fichier vide sur le site (0 octet, lu deux fois)")
+                        continue
                     found = sommaire(pdf)
                 except Exception as e:  # noqa: BLE001 — one unreadable bulletin must not stop the year
                     unread.append(f"{b['name']}: {e}")

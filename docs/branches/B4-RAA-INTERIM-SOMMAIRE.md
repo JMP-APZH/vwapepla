@@ -1,8 +1,10 @@
 # B4 — Proposals: interim periods from the RAA, service headings over two lines (16 Nov 2026)
 
 Both proposals use only the act list already on disk (`data/raw/prefet/raa/cache/`, 2 431 bulletins read on 16 Nov).
-Nothing here is applied. Code changes to `scripts/prefet/raa.py` wait until the running import has finished, so one
-import never uses two parsers.
+**JM's decisions (16 Nov 2026):** §1 interim rules and §2 heading fix approved; §3 approved and applied the same day
+(`index_year` in `raa.py`). §1 and §2 are applied after the running import, so one import never uses two parsers. The
+§2 re-read is a heavy job: started only when B2's XVth amendments **and** B3's PR E download have finished (remind JM
+then).
 
 ## 1. Interim periods (« intérim », « suppléance »)
 
