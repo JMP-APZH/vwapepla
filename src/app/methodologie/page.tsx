@@ -66,6 +66,12 @@ export default async function Methodologie() {
             à l&apos;ancien compte de même libellé (octroi de mer régional = compte 7374 « Taxe additionnelle à l&apos;octroi de mer »).
           </li>
           <li>
+            Octroi de mer des communes (page « L&apos;octroi de mer ») : les montants reçus par les 34 communes (comptes de la
+            DGFiP 7373 / 73431, les mêmes que sur les fiches des communes) sont montrés à côté de l&apos;octroi de mer régional de
+            la CTM, jamais additionnés ; les communes sont listées par ordre alphabétique, sans classement. Les chiffres tirés de
+            délibérations publiées en image sont recopiés avec leur page et la phrase exacte.
+          </li>
+          <li>
             Élus : l&apos;Assemblée d&apos;après le Répertoire national des élus (RNE). Le RNE ne liste qu&apos;une partie du Conseil
             exécutif ; les autres membres viennent des déclarations publiées par la HATVP et restent marqués « non vérifié »
             jusqu&apos;à l&apos;archivage de la délibération d&apos;élection.
