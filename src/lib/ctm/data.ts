@@ -6,6 +6,7 @@ import type { Actual, MetricDef } from "./budget";
 import type { CaLine } from "./ca";
 import { AMENDMENTS, type ForecastDoc, type ForecastFigure } from "./forecast";
 import type { FunctionalRow } from "./functions";
+import type { Commune, CommuneOctroi, OctroiAct, OctroiFigure } from "./octroi";
 import type { ElectoralList, ListMember, MandateRow, SectionRow } from "./people";
 
 // CTM domain (B3): typed, cached reads of the ctm_* tables and the CTM's core rows. Data changes a few times a year
@@ -132,4 +133,28 @@ export async function getForecast(): Promise<{ docs: ForecastDoc[]; figures: For
     figures: check(figures, "ctm_forecast_figures") as ForecastFigure[],
     amendments: check(amendments, "ctm_acts") as Act[],
   };
+}
+
+/** Octroi de mer page: the Assemblée's acts and transcribed figures (ctm_ tables), and the communes' octroi de mer read
+ *  from team B1's tables (com_actuals metric octroi_de_mer, com_communes), read-only. */
+export async function getOctroi(): Promise<{
+  kinds: OctroiAct[]; figures: OctroiFigure[]; acts: Act[]; communes: Commune[]; rows: CommuneOctroi[];
+}> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("data");
+  const [kinds, figures, communes, rows] = await Promise.all([
+    supabase.from("ctm_octroi_acts").select("act_id,kind").order("act_id"),
+    supabase.from("ctm_octroi_figures").select("deliberation,line_key,label,value,unit,page,quote,source_id").order("deliberation"),
+    supabase.from("com_communes").select("code,slug,name").order("name"),
+    supabase.from("com_actuals").select("commune_code,year,amount,eur_per_hab,provisional,source_id")
+      .eq("metric_key", "octroi_de_mer").order("year").limit(PAGE),
+  ]);
+  const k = check(kinds, "ctm_octroi_acts") as OctroiAct[];
+  const acts = check(
+    await supabase.from("ctm_acts").select("id,body,number,year,title,page_url,source_id").in("id", k.map((x) => x.act_id)),
+    "ctm_acts",
+  ) as Act[];
+  return { kinds: k, figures: check(figures, "ctm_octroi_figures") as OctroiFigure[], acts,
+           communes: check(communes, "com_communes") as Commune[], rows: check(rows, "com_actuals") as CommuneOctroi[] };
 }
